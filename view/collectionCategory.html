@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="title">Collection Category</title>
+
+    <style>
+    .box {
+    margin-top: 50px;
+    margin-left: 40px;
+    border: 1px solid gainsboro; /* Add an outer border with your desired color */
+    padding: 20px; /* Add some padding around the content */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); /* Box shadow for a subtle effect */
+    width: 350px; /* Set a fixed width for the container */
+     
+    }
+
+    .box div {
+    margin-bottom: 10px; /* Add spacing between inner divs */
+    }
+
+    div label {
+        
+        color: green; /* Green label text color */
+    }
+   
+
+    .toolbar {
+    margin-top: 50px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    width: 92%;
+    background-color: #1CAC78; /* Background color for the toolbar */
+    color: #fff; /* Text color */
+    display: flex;
+    justify-content: space-between;
+    font-size: large;
+    font-weight: bold;
+    padding: 10px;
+    }
+
+    h2{
+        text-align: center;
+    }
+    
+
+  
+
+   
+    .headtoolbar {
+        background-color:  #1CAC78; /* Background color for the toolbar */
+        color: #fff; /* Text color */
+        text-align: center; /* Center the text horizontally */
+        padding: 10px;
+        }
+
+        .toolbar-title {
+        font-weight: bold; /* Bold font for the title */
+        margin: 0; /* Remove default margin */
+        }
+
+        #bleta {
+        margin-top: 50px;
+        text-align: center;
+        width: 94.2%;
+        margin: 0;
+        border: 1px solid black; /* Add an outer border with your desired color */
+        border-collapse: collapse; /* Optional: collapse border spacing */
+        
+        }
+
+        #alignn label {
+        text-align: left;
+        display: inline-block;
+        width: 100px; /* Adjust the width as needed */
+        margin-right: 10px; /* Add some space between label and input */
+      }
+      #alignn input[type="text"] {
+        width: auto;
+        text-align: left;
+      }
+
+      label {
+        width: 150px; /* Adjust the width as needed */
+        display: inline-block;
+        vertical-align: middle;
+        font-size: large;
+    }
+    th,td{
+        border: 1px solid;
+        padding: 5px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select {
+        width: 250px; /* Adjust the width as needed */
+        display: inline-block;
+        vertical-align: middle;
+    }
+    </style>
+    
+
+    <style>
+
+        #form-container {
+        display: flex; /* Use flexbox */
+        justify-content: space-between; /* Space elements evenly */
+        }
+
+        #form-column-1,
+        #form-column-2 {
+        margin: 10px; /* Add margin for spacing */
+        }
+
+        #form-column-1 {
+        flex: 1; /* Let it take up equal space */
+        /* Add your custom styling for the form column */
+        }
+
+        #form-column-2 {
+        margin-left: 20px;
+        flex: 2; /* Give it more space compared to form-column-1 */
+        /* Add your custom styling for the toolbar column */
+        }
+
+        #collections-container {
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+        border: 2px solid gainsboro; /* Add a border with your desired color and thickness */
+        padding: 10px; /* Add some padding to create space inside the box */
+        margin-top: 20px; /* Adjust the margin as needed to separate it from other content */
+        overflow: auto; /* Add overflow property to handle scrolling if content overflows */
+        border-bottom-width: 3px;
+        height: 650px;
+    }
+
+    #Fee::-webkit-inner-spin-button,
+        #Fee::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        appearance: none;
+        margin: 0;
+        }
+
+        #button {
+        text-align: center;
+        
+    }
+
+    #add {
+        padding: 10px 20px; /* Adjust padding as needed */
+        background-color: green; /* Change background color */
+        color: #fff; /* Change text color */
+        border: none; /* Remove button border */
+        border-radius: 5px; /* Add rounded corners */
+        cursor: pointer;
+        margin-top: 15px;
+        font-size: 16px; /* Adjust font size */
+        margin-left: 100px;
+        
+    }
+
+    /* Hover effect */
+    #add:hover {
+        background-color: #1CAC78; /* Change background color on hover */
+    }
+    #magin{
+        margin-left: 13%;
+    }
+
+    .popup {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 20px;
+        border: 1px black;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        width: 259px; /* Adjust the width as needed */
+        }
+
+        .button {
+            
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        /* Remove button styles */
+        .remove-btn {
+            background-color: #FF5733; /* Red color */
+            color: white;
+            margin-top: 10px;
+            float: left;
+        }
+
+        /* Close button styles */
+        .close-btn {
+            background-color: #3498DB; /* Blue color */
+            color: white;
+            margin-top: 10px;
+            float: right;
+        }
+
+        /* Button hover effect */
+        .button:hover {
+            opacity: 0.8;
+        }
+    </style>
+
+</head>
+<body>
+
+    <div class="headtoolbar">
+        <h1 class="toolbar-title">Collection Category</h1>
+      </div>
+<div id="collections-container">
+      <div id="form-container">
+<div id="form-column-1">
+    <div class="box">
+        
+        <h2 id="tt">Add Collection New Category</h2>
+        <div id="magin">
+            <label for="CollectionID" >Collection ID:</label>
+            <input id="CollectionID" type="text" placeholder="Collection ID"><br>
+        
+            <label for="collectionName" >Collection Name:</label>
+            <input id="collectionName" type="text" placeholder="Collection Name"><br>
+
+            <label for="Description" >Description:</label>
+            <input id="Description" type="text" placeholder="Description"><br>
+         
+            <label for="Fee" >Fee:</label>
+            <input id="Fee" type="number"  placeholder="Fee"><br>
+
+            
+            <label for="Status" >Status:</label>
+            <select id="Status" name="Status">
+            <option value="" disabled selected>--- Select Status ---</option>
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+              </select>
+            
+            <div id="buttom">
+                <button id="add">Add</button>
+            </div>
+        </div>
+            </div>
+      
+    </div> 
+      
+    <div id="form-column-2">
+      <div class="toolbar">
+        
+          <span>Collection Categories</span>
+        
+      </div>
+      <div id="collections">
+
+        <table id="bleta">
+            <tr>
+                <th>Collection ID</th>
+                <th>Collection Name</th>
+                <th>Fee</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+            <tr>
+                <td>123123</td>
+                <td>123123</td>
+                <td>213123</td>
+                <td>123123</td>
+                <td>12321</td>
+            </tr>
+        </table>
+
+    </div>
+    </div>
+</div>
+</div>
+
+<div class="popup">
+
+    <label for="popCollectionID" >Collection ID:</label>
+    <input id="popCollectionID" type="text" placeholder="Collection ID" disabled><br>
+
+    <label for="popcollectionName" >Collection Name:</label>
+    <input id="popcollectionName" type="text" placeholder="Collection Name"disabled><br>
+
+    <label for="popDescription" >Description:</label>
+    <input id="popDescription" type="text" placeholder="Description"disabled><br>
+ 
+    <label for="popFee" >Fee:</label>
+    <input id="popFee" type="number"  placeholder="Fee"disabled><br>
+
+    <label for="popStatus" >Status:</label>
+    <input id="popStatus" type="text"  placeholder="Status"disabled><br>
+
+    <button class="remove-btn" id="remove" onclick="">Remove Category</button>
+
+    <button class="close-btn" id="close">Close</button>
+</div>
+    
+        
+        
+
+      
+
+      <script type="module" src="../assets/js/collectionCategory.js"></script>
+</body>
+</html>

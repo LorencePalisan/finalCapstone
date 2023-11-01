@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Details</title>
+    
+
+    <style>
+        #enterID::-webkit-inner-spin-button,
+        #enterID::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        appearance: none;
+        margin: 0;
+        }
+
+        #age::-webkit-inner-spin-button,
+        #age::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        appearance: none;
+        margin: 0;
+        }
+
+        #bal::-webkit-inner-spin-button,
+        #bal::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        appearance: none;
+        margin: 0;
+        }
+
+          /* Container for the form */
+    #form-container {
+      max-width: 600px;
+      margin: 0 auto;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+    }
+
+  
+
+    
+    #searchBar input
+    {
+      width: 100%;
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+    }
+
+    /* Clear the right margin for the last column */
+    .form-column:last-child {
+      margin-right: 0;
+    }
+
+     /* Style for the table */
+     table {
+      border-collapse: collapse;
+      width: 100%;
+      max-width: 80%;
+      margin: 20px auto;
+      background-color: white;
+      border: 1px solid green; /* Add border to the table */
+      border-radius: 5px;
+      box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Style for table header (th) */
+    th {
+      background-color: #1CAC78;
+      color: white;
+      padding: 10px;
+      text-align: center;
+      width: 25%;
+    }
+
+    /* Style for table data (td) */
+    td {
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
+      text-align: center;
+    }
+
+    /* Style for alternating row colors */
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+      width: 20px;
+    }
+
+     /* Center-align buttons */
+     .button-container {
+      text-align: center;
+    }
+
+    /* Style for the buttons */
+    button {
+      width: 150px; /* Adjust the width to your preferred size */
+      height: 40px; /* Adjust the height to your preferred size */
+      background-color: #1CAC78;
+      color: white;
+      padding: 0; /* Remove padding */
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    button:hover {
+      background-color: #ff6666;
+      color: #fff;
+    }
+     /* Container for the button */
+     .buttonclear-container {
+      text-align: right;
+      margin-top: 20px;
+    }
+
+    /* Style for the "clear" button */
+    button.clear-button {
+      background-color: #ff6666; /* Red background color for clear theme */
+      color: white;
+      padding: 5px 10px; /* Adjust padding to reduce button size */
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-left: 5px; /* Add some spacing to the left of the button */
+      font-size: 14px; /* Adjust font size to reduce button text size */
+    
+    }
+     /* Style for the toolbar */
+     .toolbar {
+      background-color: #1CAC78; /* Background color for the toolbar */
+      color: white;
+      padding: 10px;
+      text-align: center;
+    }
+
+    /* Style for the toolbar title */
+    .toolbar-title {
+      font-size: 24px; /* Font size for the title */
+      margin: 0; /* Remove margin to align the title at the center */
+    }
+
+    #span {
+      text-align: center; /* Center-align the content within the div */
+    }
+
+    #pageIndicator {
+      border: 1px solid black; /* Add a border around the span */
+      padding: 5px; /* Add some padding to make the border visible */
+    }
+  
+
+    #add {
+      float: right;
+      background-color: green;
+      color: #fff;
+      margin-left: auto;
+    }
+    #add:hover {
+      background-color: #16bb47;
+      color: white;
+      
+    }
+
+
+    #popup {
+  border: 2px solid #ccc;
+  padding: 20px;
+  width: 1000px; /* Adjust the width as needed */
+  margin: 20px auto;
+  display: none;
+ 
+  grid-template-columns: 1fr 1fr; /* Two columns for two labels and inputs */
+  grid-template-rows: repeat(2, auto); /* Two rows with automatic height */
+  gap: 10px;
+}
+
+#popup label {
+  grid-column: 1; /* Place labels in the first column */
+  margin-bottom: 5px;
+}
+
+#popup input,
+#popup select {
+  grid-column: 2; /* Place inputs/selects in the second column */
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
+
+.button-container,
+.buttonclear-container {
+  grid-column: span 2; /* Make these buttons span both columns */
+  text-align: center;
+}
+
+button {
+  padding: 10px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.clear-button {
+  background-color: #f44336;
+}
+
+/* Divide into two columns with 7 pairs each */
+.label-input-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two columns for two labels and inputs */
+  grid-template-rows: repeat(2, auto); /* Two rows with automatic height */
+  gap: 10px;
+}
+
+.label-input-pair label {
+  grid-column: 1; /* Place labels in the first column */
+  text-align: center;
+  margin-top: 10px;
+}
+
+.label-input-pair input, .label-input-pair select {
+  grid-column: 2; /* Place inputs/selects in the second column */
+}
+
+/* Add styles for row 1 */
+.label-input-pair:nth-child(odd) label {
+  background-color: #fff; /* Example background color for odd rows */
+}
+
+/* Add styles for row 2 */
+.label-input-pair:nth-child(even) label {
+  background-color: #fff; /* Example background color for even rows */
+}
+
+
+    </style>
+</head>
+<body onload="restrictMaxInputLength()">
+
+    <div class="toolbar">
+        <h1 class="toolbar-title">Member Details</h1>
+      </div>
+    
+      <button id="add" onclick="togglePopup()">Add Member</button>
+      <div id="popup" class="popup">
+        <div class="label-input-pair">
+       
+        <label for="enterID" >Member ID:</label>
+        <input id="enterID" type="number" placeholder="Enter your ID">
+        
+        <label for="memberName">Member Name:</label>
+        <input id="memberName" type="text" placeholder="Member Name">
+        
+        <label for="spouseName"> Spouse Name:</label>
+        <input id="spouseName" type="text" placeholder="Spouse Name">
+        
+        <label for="occupation">Occupation:</label>
+        <input id="occupation" type="text" placeholder="Occupation">
+        
+        <label for="PlaceOfBirth">Place of Birth:</label>
+        <input id="PlaceOfBirth" type="text" placeholder="Place of Birth">
+        
+        <label for="age">Age:</label>
+        <input id="age" type="number" placeholder="Age">
+        
+        <label for="birthday">Birthday:</label>
+        <input id="birthday" type="date" onchange="validateDate(this)" style="text-transform: uppercase;">
+    </div>
+    
+    <div class="label-input-pair">
+        
+        <label for="civilStatus">Civil Status:</label>
+        <input id="civilStatus" type="text"  placeholder="Civil Status">
+        
+        <label for="citizenship">Citizenship:</label>
+        <input id="citizenship" type="text"  placeholder="Citizenship">
+        
+        <label for="contactNum">Contact #:</label>
+        <input id="contactNum" type="number" placeholder="Contact #">
+        
+        <label for="sourceOfIncome">Source of Income:</label>
+        <input id="sourceOfIncome" type="text" placeholder="Source of Income">
+        
+        <label for="memberCategory">Member Category:</label>
+        <select id="memberCategory" name="memberCategory" >
+          <option value="" disabled selected>--- Select Member Category ---</option>
+          <option value="Member">Member</option>
+          <option value="Renter">Renter</option>
+        </select>
+
+        <label for="memberStatus">Member Status:</label>
+        <select id="memberStatus" name="memberStatus">
+          <option value="" disabled selected>--- Select Member Status ---</option>
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+        </select>
+
+        <label for="gender">Gender:</label>
+        <select id="gender" name="gender">
+          <option value="" disabled selected>--- Select Gender ---</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+        </select>
+
+        <label for="bal">Lot Amortization</label>
+        <input type="number"  id="bal">
+    </div>
+
+        <div class="button-container">
+          <button id="addMember">Add Member</button>
+          <!-- <button id="updateMember">Update Member</button> -->
+          <button class="clear-button" id="clear">Clear</button>
+        </div>
+
+    
+      </div>
+
+
+          
+          <div id="searchBar" style="width: 100%; max-width: 600px; margin: 20px auto; border: #ccc;">
+            <label for="searchInput" style="display: block; font-size: 25px; text-align: center; font-weight: bold;">Search Bar</label>
+            <input type="text" id="searchInput" placeholder="Search by Name">
+        </div>
+        
+
+
+        <table id="memberTable">
+            <tr>
+                <th>Member ID</th>
+                <th>Member Name</th>
+                <th>Member Status</th>
+                <th>Action</th>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              
+        </table>
+
+        <script>
+
+function validateDate(input) {
+  const selectedDate = new Date(input.value);
+  const currentDate = new Date();
+
+  // Remove the time portion from both dates
+  currentDate.setHours(0, 0, 0, 0);
+  selectedDate.setHours(0, 0, 0, 0);
+
+  // Calculate the difference in days
+  const dayDifference = Math.floor((currentDate - selectedDate) / (24 * 60 * 60 * 1000));
+
+  if (dayDifference < 0) {
+    alert("Selected date must be a past date. Please choose a valid date.");
+    input.value = ''; // Reset the input field
+  }
+}
+            // Function to restrict the maximum input length to 11 digits for the "contactNum" input
+        function restrictMaxInputLength() {
+          const contactNumInput = document.getElementById("contactNum");
+
+          contactNumInput.addEventListener("input", function() {
+            if (this.value.length > 11) {
+              this.value = this.value.slice(0, 11); // Truncate input to 11 characters
+            }
+          });
+        }
+
+        function togglePopup() {
+     
+     var popup = document.getElementById("popup");
+      if (popup.style.display === "none" || popup.style.display === "") {
+        // Show the popup
+        popup.style.display = "grid";
+      } else {
+        // Hide the popup
+        popup.style.display = "none";
+      }
+    }
+        </script>
+        <script type="module" src="../assets/js/member.js"></script>
+</body>
+</html>
