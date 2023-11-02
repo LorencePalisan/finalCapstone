@@ -1,5 +1,5 @@
 
-import { doc, getDoc,getDocs, setDoc,collection,deleteDoc,addDoc} from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
+import { doc, getDoc,getDocs, setDoc,collection,updateDoc} from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
 
 import { db } from "../credentials/firebaseModule.js";
 
@@ -23,7 +23,7 @@ const remove = document.getElementById("remove");
 const memberTable = document.getElementById("bleta");
 //=======================add===========================================
 
-async function addMember() {
+async function addCategory() {
     const enteredColID = CollectionID?.value;
     
     // Check if enterID is empty or undefined
@@ -115,6 +115,7 @@ async function fetchAndPopulateTable() {
     document.getElementById("popFee").value = data.Fee;
     document.getElementById("popStatus").value = data.Status;
     
+
     // Show the popup
     togglePopup();
   }
@@ -139,42 +140,91 @@ function togglePopup() {
     var closeButton = document.querySelector('.close-btn');
     closeButton.addEventListener('click', closePopup);
 
-  //================ remove collection======================
+  //================ edit collection======================
 
-  async function RemoveData() {
-    const docRef = collection(db, "RecyCategory"); // Reference to the collection
-    
-    const data = {
-      collectionName: popcollectionName?.value,
-      Description: popDescription?.value,
-      Fee: popFee?.value,
-      Status: popStatus?.value,
-    };
-  
-    try {
-      // Use addDoc to automatically generate an ID
-      const newDocRef = await addDoc(docRef, data);
-      console.log("Added Successfully with ID: ", newDocRef.id);
-  
-      const deleteID = document.getElementById("popCollectionID").value;
-      
+  function enableEdit() {
+    // Select all input elements within the popup
+    var inputElements = document.querySelectorAll(".popup input");
+
+    // Loop through the input elements and remove the "disabled" attribute
+    inputElements.forEach(function(inputElement) {
+        inputElement.removeAttribute("disabled");
+    });
+    var saveButton = document.getElementById("save");
+    saveButton.removeAttribute("disabled");
+    // Disable the "Edit" button to prevent further edits
+    document.getElementById("edit").setAttribute("disabled", "disabled");
+
+
+}
+
+function disableFields() {
+  // Select all input elements within the popup
+  var inputElements = document.querySelectorAll(".popup input");
+
+  // Loop through the input elements and set the "disabled" attribute
+  inputElements.forEach(function(inputElement) {
+      inputElement.setAttribute("disabled", "disabled");
+  });
+
+  // Enable the "Edit" button
+  document.getElementById("edit").removeAttribute("disabled");
+}
+
+async function updateCAtegory() {
+
+
+  // Check if a document with the same enterID exists
+  const docRef = doc(db, "CollectionCategory", popCollectionID?.value);
+  const docSnap = await getDoc(docRef);
+
+  const data = {
+    CollectionID: popCollectionID?.value,
+    collectionName: popcollectionName?.value,
+    Description: popDescription?.value,
+    Fee: popFee?.value,
+    Status: popStatus?.value
+  };
+
+  if (docSnap.exists()) {
+      // If the document exists, update it
       try {
-        await deleteDoc(doc(db, "CollectionCategory", deleteID));
-        alert("Data deleted successfully");
-        fetchAndPopulateTable();
+          await updateDoc(docRef, data);
+          alert("Updated Successfully");
+
+          togglePopup();
+          disableFields();
+          disableSaveButtonEnableEditButton();
       } catch (e) {
-        console.error("Error deleting document: ", e);
+          console.error("Error updating document: ", e);
       }
-    } catch (e) {
-      console.error("Error adding document: ", e);
-      // Handle error here
-    }
-    closePopup();
+  } else {
+      // If the document does not exist, add a new one
+      try {
+          await setDoc(docRef, data);
+          alert("Added Successfully");
+      } catch (e) {
+          console.error("Error adding document: ", e);
+      }
   }
+
+  fetchAndPopulateTable();
+}
+
+function disableSaveButtonEnableEditButton() {
+  var editButton = document.getElementById("edit");
+  var saveButton = document.getElementById("save");
   
+  // Enable the "Edit" button
+  editButton.removeAttribute("disabled");
+  
+  // Disable the "Save" button
+  saveButton.setAttribute("disabled", "disabled");
+}
 
 
-
-  addB.addEventListener("click", addMember);
-  closeB.addEventListener("click", closePopup);
-  remove.addEventListener("click", RemoveData);
+document.getElementById("edit").addEventListener("click", enableEdit);
+document.getElementById("save").addEventListener("click", updateCAtegory);
+addB.addEventListener("click", addCategory);
+closeB.addEventListener("click", closePopup);
+  

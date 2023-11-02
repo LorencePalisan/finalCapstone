@@ -327,6 +327,17 @@ select {
   display: none;
   z-index: 1;
 }
+
+.colCat-iframe-wrapper{
+  position: fixed;
+  top: 50px; 
+  left: 200px;
+  width: calc(100% - 200px); 
+  height: calc(100% - 50px); 
+  background-color: #F5F5F5;
+  display: none;
+  z-index: 1;
+}
     </style>
 </head>
 <body>
@@ -344,24 +355,24 @@ select {
                 <span><label>MODULES</label></span>
             </div>
             
-            <div class="menu-item" onclick="showMemberDetails()">
+            <div class="menu-item" id="member">
                 <i class="fas fa-user"></i>
                 <span>Members Details</span>
             </div>
-            <div class="menu-item" onclick="showCollectionlist()">
+            <div class="menu-item" id="collectionList" >
                 <i class="fas fa-chart-bar"></i>
                 <span>Collection List</span>
             </div>
-            <div class="menu-item" onclick="showProperty()">
+            <div class="menu-item" id="property">
                 <i class="fas fa-home"></i>
                 <span>Property List</span>
             </div>
-            <div class="menu-item" onclick="Reservation()">
+            <div class="menu-item" id="reserve" >
                 <i class="fas fa-calendar-alt"></i>
                 <span>Reservation</span>
             </div>
             <div class="menu-item">
-                <select id="certificateSelect" onchange="handleCertificateSelection(this)">
+                <select id="certificateSelect" >
                     <option value="" disabled selected>Certificate</option>
                     <option value="building">Building Clearance</option>
                     <option value="membership">Certificate of Membership</option>
@@ -375,12 +386,18 @@ select {
                 <span><label>Admin Modules</label></span>
             </div>
 
-            <div class="menu-item" onclick="Account()">
+            <div class="menu-item" id="account" >
                 <i class="fas fa-clipboard"></i>
                 <span>Accounts</span>
             </div>
+
+            <div class="menu-item" id="colCat" >
+                <i class="fas fa-clipboard"></i>
+                <span>Collection Category</span>
+            </div>
+
             <div class="menu-item">
-            <select id="certificateSelect" onchange="handleReports(this)">
+            <select id="reportSelect">
                 <option value="" disabled selected>Reports</option>
                 <option value="collectionList">Collection List</option>
                 <option value="property">Property</option>
@@ -390,7 +407,9 @@ select {
             </div> 
         </div>    
         </div>
-        
+        <div class="colCat-iframe-wrapper" id="iframeWrapper_colCat">
+            <iframe id="colCat-iframe" src=""></iframe>
+        </div>
 
         <div class="memberdetails-iframe-wrapper" id="iframeWrapper_memberdetails">
             <iframe id="memberdetails-iframe" src=""></iframe>
@@ -444,168 +463,8 @@ select {
             <iframe id="reservationReport-iframe" src=""></iframe>
         </div>
     </div>
-    
-    <script>
-
-    function handleReports(selectElement) {
-        var selectedValue = selectElement.value;
-        if (selectedValue === "collectionList") {
-            collectionListReport();
-        } else if (selectedValue === "property") {
-            propertyReport();
-        } else if (selectedValue === "reservation") {
-            reservationReport();
-        }
-    }
-
-    function reservationReport() {
-            if (activeIframe) {
-                activeIframe.style.display = 'none';
-            }
-            var reservationReport = document.querySelector('.reservationReport-iframe-wrapper');
-            reservationReport.style.display = 'block';
-            reservationReport.style.width = '100%';
-            var propertyIframe = document.getElementById('reservationReport-iframe');
-            propertyIframe.src = 'reportReservation.html';
-            activeIframe = reservationReport;
-            }
-
-    function propertyReport() {
-            if (activeIframe) {
-                activeIframe.style.display = 'none';
-            }
-            var collectionReport = document.querySelector('.collectionReport-iframe-wrapper');
-            collectionReport.style.display = 'block';
-            collectionReport.style.width = '100%';
-            var propertyIframe = document.getElementById('collectionReport-iframe');
-            propertyIframe.src = 'reportProperty.html';
-            activeIframe = collectionReport;
-            }
-
-    function collectionListReport() {
-            if (activeIframe) {
-                activeIframe.style.display = 'none';
-            }
-            var collectionReport = document.querySelector('.collectionReport-iframe-wrapper');
-            collectionReport.style.display = 'block';
-            collectionReport.style.width = '100%';
-            var propertyIframe = document.getElementById('collectionReport-iframe');
-            propertyIframe.src = 'reportCollectionList.html';
-            activeIframe = collectionReport;
-            }
 
 
-            function handleCertificateSelection(selectElement) {
-        var selectedValue = selectElement.value;
-        if (selectedValue === "building") {
-            building();
-        } else if (selectedValue === "membership") {
-            membership();
-        } else if (selectedValue === "owner") {
-            owner();
-        }
-    }
-    
-        var activeIframe = null;
-        
-            function showMemberDetails() {
-                if (activeIframe) {
-                    activeIframe.style.display = 'none';
-                }
-                var memberlistIframeWrapper = document.querySelector('.memberdetails-iframe-wrapper');
-                memberlistIframeWrapper.style.display = 'block';
-                var memberlistIframe = document.getElementById('memberdetails-iframe');
-                memberlistIframe.src = 'members.html';
-                activeIframe = memberlistIframeWrapper;
-            }
-    
-                function showCollectionlist() {
-            if (activeIframe) {
-                activeIframe.style.display = 'none';
-            }
-            var collectionIframeWrapper = document.querySelector('.collectionlist-iframe-wrapper');
-            collectionIframeWrapper.style.display = 'block';
-            var collectionIframe = document.getElementById('collectionlist-iframe');
-            collectionIframe.src = 'collectionList.html';
-            activeIframe = collectionIframeWrapper;
-            }
-    
-        
-            function showProperty() {
-            if (activeIframe) {
-                activeIframe.style.display = 'none';
-            }
-            var propertyIframeWrapper = document.querySelector('.property-iframe-wrapper');
-            propertyIframeWrapper.style.display = 'block';
-            var propertyIframe = document.getElementById('property-iframe');
-            propertyIframe.src = 'property.html';
-            activeIframe = propertyIframeWrapper;
-            }
-    
-            function Reservation() {
-            if (activeIframe) {
-                activeIframe.style.display = 'none';
-            }
-            var reservationIframeWrapper = document.querySelector('.reservation-iframe-wrapper');
-            reservationIframeWrapper.style.display = 'block';
-            reservationIframeWrapper.style.width = '100%';
-            var propertyIframe = document.getElementById('reservation-iframe');
-            propertyIframe.src = 'Reservation.html';
-            activeIframe = reservationIframeWrapper;
-            }
-    
-            function building() {
-            if (activeIframe) {
-                activeIframe.style.display = 'none';
-            }
-            var buildingIframeWrapper = document.querySelector('.building-iframe-wrapper');
-            buildingIframeWrapper.style.display = 'block';
-            buildingIframeWrapper.style.width = '100%';
-            var propertyIframe = document.getElementById('building-iframe');
-            propertyIframe.src = 'buildingclearance.html';
-            activeIframe = buildingIframeWrapper;
-            }
-    
-            function membership() {
-            if (activeIframe) {
-                activeIframe.style.display = 'none';
-            }
-            var membershipIframeWrapper = document.querySelector('.membership-iframe-wrapper');
-            membershipIframeWrapper.style.display = 'block';
-            membershipIframeWrapper.style.width = '100%';
-            var propertyIframe = document.getElementById('membership-iframe');
-            propertyIframe.src = 'certificateofmembership.html';
-            activeIframe = membershipIframeWrapper;
-            }
-    
-            function owner() {
-            if (activeIframe) {
-                activeIframe.style.display = 'none';
-            }
-            var ownerIframeWrapper = document.querySelector('.owner-iframe-wrapper');
-            ownerIframeWrapper.style.display = 'block';
-            ownerIframeWrapper.style.width = '100%';
-            var propertyIframe = document.getElementById('owner-iframe');
-            propertyIframe.src = 'titlecertificate.html';
-            activeIframe = ownerIframeWrapper;
-            }
-    
-    
-    
-        function Account() {
-            if (activeIframe) {
-                activeIframe.style.display = 'none';
-            }
-            var accountIframeWrapper = document.querySelector('.accounts-iframe-wrapper');
-            accountIframeWrapper.style.display = 'block';
-            accountIframeWrapper.style.width = '100%';
-            var propertyIframe = document.getElementById('accounts-iframe');
-            propertyIframe.src = 'accounts.html';
-            activeIframe = accountIframeWrapper;
-            }
-    
-    </script>
-
-    <script type="module" src="../assets/js/dashboard.js"></script>
+    <script type="module" src="../assets/credentials/dashboard.js"></script>
 </body>
 </html>

@@ -1,7 +1,3 @@
-
-
-
-
 import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
 import { doc, setDoc, getDoc,collection,getDocs } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
 
@@ -185,7 +181,7 @@ async function fetchAndPopulateTable() {
       // viewButton.addEventListener("click", () => {
       //   toggleUpdate();
       // });
-      // viewCell.appendChild(viewButton);
+      // viewCell.appendChild(viewButton);  
     });
   } catch (error) {
     console.error("Error fetching data: ", error);

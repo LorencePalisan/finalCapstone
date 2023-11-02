@@ -54,6 +54,7 @@ try {
     document.getElementById("block").value = data.blockNum;
     document.getElementById("lot").value = data.lotNumber;
     document.getElementById("lotSize").value = data.lotSize;
+
   } else {
     console.log("No documents found for MemID:", MemID);
     document.getElementById("block").value = "No Property Yet";
@@ -65,14 +66,7 @@ try {
 }
 
 
-const buttonText = statusButton.textContent.toLowerCase();
-
-if (buttonText === "active") {
-  statusButton.style.backgroundColor = "#03AC13"; // Green background for "active"
-} else {
-  statusButton.style.backgroundColor = "#ff0000"; // Red background for "inactive"
-}
-
+     
 
 
 //==================member=======================================
@@ -103,13 +97,15 @@ try {
 } catch (error) {
   console.error("Error getting document:", error);
 }
-//==================property=======================================
 
 
+const buttonText = statusButton.textContent.toLowerCase();
 
-
-console.log(MemID)
-
+if (buttonText === "active") {
+  statusButton.style.backgroundColor = "#03AC13";
+} else {
+  statusButton.style.backgroundColor = "#ff0000"; 
+}
 //===============================================================================================================================================
 
 // Move outside of collectionMenu
@@ -447,8 +443,7 @@ try {
   if (docSnap.exists()) {
     const data = docSnap.data();
     
-    // Update your HTML elements with the data
-//kani buhata
+
     document.getElementById('enterID').value = data.enterID;
     document.getElementById('memberName').value = data.memberName;
     document.getElementById('spouseName').value = data.spouseName;

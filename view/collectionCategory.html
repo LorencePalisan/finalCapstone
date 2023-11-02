@@ -6,6 +6,12 @@
     <title id="title">Collection Category</title>
 
     <style>
+        body{
+
+            width: 89%;
+
+        }
+
     .box {
     margin-top: 50px;
     margin-left: 40px;
@@ -168,6 +174,7 @@
     }
 
     .popup {
+        height: 300px;
         display: none;
         position: fixed;
         top: 50%;
@@ -191,18 +198,26 @@
 
         /* Remove button styles */
         .remove-btn {
-            background-color: #FF5733; /* Red color */
+
+            background-color: #34db5b; /* Red color */
             color: white;
             margin-top: 10px;
             float: left;
+            width: 100px;
+            height: 25px;
+        }
+        #save{
+            margin-left: 56px;
         }
 
         /* Close button styles */
         .close-btn {
-            background-color: #3498DB; /* Blue color */
+            background-color: #db3434; /* Blue color */
             color: white;
             margin-top: 10px;
             float: right;
+            width: 100px;
+            height: 25px;
         }
 
         /* Button hover effect */
@@ -298,10 +313,16 @@
 
     <label for="popStatus" >Status:</label>
     <input id="popStatus" type="text"  placeholder="Status"disabled><br>
-
-    <button class="remove-btn" id="remove" onclick="">Remove Category</button>
-
+    
+   
+    <div>
+    <button  class="remove-btn" id="edit">Edit</button>
+    <button  class="remove-btn" id="save" disabled>Save</button>
     <button class="close-btn" id="close">Close</button>
+    
+    
+    </div>
+    
 </div>
     
         

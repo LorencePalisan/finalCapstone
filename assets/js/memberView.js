@@ -27,7 +27,7 @@ const statusButton = document.getElementById("statusButton");
 
 //==================member=======================================
 
-  
+   
 
 const docRef = doc(db, "Members", memberID);
 
@@ -43,7 +43,7 @@ try {
     document.getElementById("name").value = data.memberName;
     document.getElementById("category").value = data.memberCategory;
     document.getElementById("statusButton").textContent = data.memberStatus;
-
+    document.getElementById("lotAmort").value = data.lotAmort;
    
   } else {
     console.log("No such document!");
@@ -68,6 +68,8 @@ try {
     document.getElementById("block").value = data.blockNum;
     document.getElementById("lot").value = data.lotNumber;
     document.getElementById("lotSize").value = data.lotSize;
+    
+    
   } else {
     console.log("No documents found for MemID:", MemID);
     document.getElementById("block").value = "No Property Yet";
