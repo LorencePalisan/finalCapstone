@@ -148,9 +148,8 @@ async function updateLotAmort() {
     }
   }
 
-async function collectionMenu() {
 
-
+  async function collectionMenu() {
     // Clear existing rows in the table, but keep the first row (header)
     while (addColTable.rows.length > 1) {
       addColTable.deleteRow(1);
@@ -165,66 +164,67 @@ async function collectionMenu() {
       // Loop through the documents in the collection
       querySnapshot.forEach((docSnapshot) => {
         const data = docSnapshot.data();
-        const row = addColTable.insertRow(-1); // Add a new row to the table
+        if (data.Status === "Active") {
+          const row = addColTable.insertRow(-1); // Add a new row to the table
   
-        // Create and populate table cells for each data field
-        const checkboxCell = row.insertCell(0);
-        const checkBox = document.createElement("input");
-        checkBox.type = "checkbox";
-        checkboxCell.appendChild(checkBox); // Append checkbox to the cell
+          // Create and populate table cells for each data field
+          const checkboxCell = row.insertCell(0);
+          const checkBox = document.createElement("input");
+          checkBox.type = "checkbox";
+          checkboxCell.appendChild(checkBox); // Append checkbox to the cell
   
-        const idCell = row.insertCell(1);
-        idCell.textContent = data.CollectionID;
+          const idCell = row.insertCell(1);
+          idCell.textContent = data.CollectionID;
   
-        const nameCell = row.insertCell(2);
-        nameCell.textContent = data.collectionName;
+          const nameCell = row.insertCell(2);
+          nameCell.textContent = data.collectionName;
   
-        const feeCell = row.insertCell(3);
+          const feeCell = row.insertCell(3);
   
-  let feeValue = parseFloat(data.Fee);
-  if (isNaN(feeValue)) {
-    feeValue = 0; // Set default value for calculation
-  }
-  
-  // Check if CollectionID is "001"
-  if (data.CollectionID === "001") {
-    inputFee = document.createElement("input");
-    inputFee.type = "text";
-    inputFee.placeholder = "Enter fee";
-  
-    let timeout;
-  
-    inputFee.addEventListener("input", (event) => {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => {
-        const newFee = parseFloat(event.target.value);
-        feeValue = isNaN(newFee) ? 0 : newFee;
-        feeCell.textContent = isNaN(newFee) ? "" : newFee.toFixed(2);
-  
-        // Assign the value to inputFee
-        inputFee = event.target.value;
-        
-        let parsedLotAmortVal = parseFloat(lotAmortVal);
-        let parsedInputFee = parseFloat(inputFee);
-  
-        // Use parsedLotAmortVal and parsedInputFee as needed in your code
-      }, 2000); // Adjust the delay as needed
-    });
-  
-    feeCell.appendChild(inputFee);
-  } else {
-    feeCell.textContent = feeValue.toFixed(2);
-  }
-  
-  
-        checkBox.addEventListener("change", () => {
-          if (checkBox.checked) {   
-            totalFee += feeValue;
-          } else {
-            totalFee -= feeValue;
+          let feeValue = parseFloat(data.Fee);
+          if (isNaN(feeValue)) {
+            feeValue = 0; // Set default value for calculation
           }
-          updateTotalFee(totalFee);
-        });
+  
+          // Check if CollectionID is "001"
+          if (data.CollectionID === "001") {
+            inputFee = document.createElement("input");
+            inputFee.type = "text";
+            inputFee.placeholder = "Enter fee";
+  
+            let timeout;
+  
+            inputFee.addEventListener("input", (event) => {
+              clearTimeout(timeout);
+              timeout = setTimeout(() => {
+                const newFee = parseFloat(event.target.value);
+                feeValue = isNaN(newFee) ? 0 : newFee;
+                feeCell.textContent = isNaN(newFee) ? "" : newFee.toFixed(2);
+  
+                // Assign the value to inputFee
+                inputFee = event.target.value;
+                
+                let parsedLotAmortVal = parseFloat(lotAmortVal);
+                let parsedInputFee = parseFloat(inputFee);
+  
+                // Use parsedLotAmortVal and parsedInputFee as needed in your code
+              }, 2000); // Adjust the delay as needed
+            });
+  
+            feeCell.appendChild(inputFee);
+          } else {
+            feeCell.textContent = feeValue.toFixed(2);
+          }
+  
+          checkBox.addEventListener("change", () => {
+            if (checkBox.checked) {
+              totalFee += feeValue;
+            } else {
+              totalFee -= feeValue;
+            }
+            updateTotalFee(totalFee);
+          });
+        }
       });
   
       const totalFeeRow = document.createElement("tr");
@@ -238,6 +238,98 @@ async function collectionMenu() {
       console.error("Error fetching data: ", error);
     }
   }
+
+// async function collectionMenu() {
+
+
+//     // Clear existing rows in the table, but keep the first row (header)
+//     while (addColTable.rows.length > 1) {
+//       addColTable.deleteRow(1);
+//     }
+  
+//     const membersCollection = collection(db, "CollectionCategory");
+  
+//     try {
+//       const querySnapshot = await getDocs(membersCollection);
+  
+//       // Loop through the documents in the collection
+//       querySnapshot.forEach((docSnapshot) => {
+//         const data = docSnapshot.data();
+//          if (data.Status === "Active") {
+//         const row = addColTable.insertRow(-1); // Add a new row to the table
+  
+//         // Create and populate table cells for each data field
+//         const checkboxCell = row.insertCell(0);
+//         const checkBox = document.createElement("input");
+//         checkBox.type = "checkbox";
+//         checkboxCell.appendChild(checkBox); // Append checkbox to the cell
+  
+//         const idCell = row.insertCell(1);
+//         idCell.textContent = data.CollectionID;
+  
+//         const nameCell = row.insertCell(2);
+//         nameCell.textContent = data.collectionName;
+  
+//         const feeCell = row.insertCell(3);
+//  }
+  
+//   let feeValue = parseFloat(data.Fee);
+//   if (isNaN(feeValue)) {
+//     feeValue = 0; // Set default value for calculation
+//   }
+//   // Check if CollectionID is "001"
+//   if (data.CollectionID === "001") {
+//     inputFee = document.createElement("input");
+//     inputFee.type = "text";
+//     inputFee.placeholder = "Enter fee";
+  
+//     let timeout;
+  
+//     inputFee.addEventListener("input", (event) => {
+//       clearTimeout(timeout);
+//       timeout = setTimeout(() => {
+//         const newFee = parseFloat(event.target.value);
+//         feeValue = isNaN(newFee) ? 0 : newFee;
+//         feeCell.textContent = isNaN(newFee) ? "" : newFee.toFixed(2);
+  
+//         // Assign the value to inputFee
+//         inputFee = event.target.value;
+        
+//         let parsedLotAmortVal = parseFloat(lotAmortVal);
+//         let parsedInputFee = parseFloat(inputFee);
+  
+//         // Use parsedLotAmortVal and parsedInputFee as needed in your code
+//       }, 2000); // Adjust the delay as needed
+//     });
+  
+//     feeCell.appendChild(inputFee);
+//   } else {
+//     feeCell.textContent = feeValue.toFixed(2);
+//   }
+  
+  
+//         checkBox.addEventListener("change", () => {
+//           if (checkBox.checked) {   
+//             totalFee += feeValue;
+//           } else {
+//             totalFee -= feeValue;
+//           }
+//           updateTotalFee(totalFee);
+//         });
+//       });
+  
+//       const totalFeeRow = document.createElement("tr");
+//       const totalFeeCell = document.createElement("td");
+//       totalFeeCell.textContent = `Total Fee: $${totalFee.toFixed(2)}`;
+//       totalFeeCell.colSpan = 4;
+//       totalFeeCell.id = "totalFee";
+//       totalFeeRow.appendChild(totalFeeCell);
+//       addColTable.appendChild(totalFeeRow);
+      
+//     } catch (error) {
+//       console.error("Error fetching data: ", error);
+//     }
+//   }
 
 
 

@@ -51,7 +51,7 @@ async function addMember() {
 
   // Check if enterID is empty or undefined
   if (!enteredID || !enteredmemberName || !enteredspouseName  || !enteredoccupation  || !enteredPlaceOfBirth ||
-      !enteredage       || !enteredbirthday   || !centeredivilStatus || !enteredcitizenship || !enteredcontactNum   || 
+      !enteredage       || !enteredbirthday   || !enteredcivilStatus || !enteredcitizenship || !enteredcontactNum   || 
       !enteredsourceOfIncome || !enteredmemberCategory || !enteredmemberStatus || !enteredgender || !enteredbalance) {
     alert("Please fill all the information.");
     return;
@@ -200,7 +200,7 @@ function openProfileTab(memberId) {
   // Create a URL with the memberId as a query parameter
   const url = `profile.html?memberID=${encodeURIComponent(memberId)}`;
 
-  // Open a new tab with the profile.html page
+
   window.open(url, '_blank');
 }
 

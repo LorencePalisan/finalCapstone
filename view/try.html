@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+
+    <script type="module">
+
+        send();
+
+        function send(){
+        const accountSid = 'AC742b7ba6892b69b4277023579cc4d01c';
+        const authToken = 'e7678749e895f1dca0c14df10a8896b9';
+        const client = require('twilio')(accountSid, authToken);
+
+        client.messages
+            .create({
+                body: 'i love you',
+                from: '+15644641528',
+                to: '+639959831815'
+            })
+            .then(message => console.log(message.sid))
+            .done();
+        }
+    </script>
+</body>
+</html>

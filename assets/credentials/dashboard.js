@@ -1,162 +1,108 @@
-import { signOut } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
+import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
 import { auth } from "./firebaseModule.js";
 
-    
-    const urlParams = new URLSearchParams(window.location.search);
-    const signInEmail = urlParams.get("email");
-    const singInUserType = urlParams.get("userType");
+const urlParams = new URLSearchParams(window.location.search);
+const signInEmail = urlParams.get("email");
+const signInUserType = urlParams.get("userType");
 
-    let email = signInEmail;
-    let userType =singInUserType;
-    
+let email = signInEmail;
+let userType = signInUserType;
 
-    const signOutB = document.getElementById('signOut');
-    const adminModuleWrapper = document.getElementById('adminModule'); 
+const emailElement = document.getElementById("Email");
+const userTypeElement = document.getElementById("userType");
+const adminModuleWrapper = document.getElementById("adminModule");
+const signOutButton = document.getElementById("signOut");
 
-    
-    onLoad();
+ // Call the function to show member details
 
-    function onLoad() {
-        document.getElementById("Email").textContent = signInEmail;
-        document.getElementById("userType").textContent = singInUserType;
+onLoad();
+window.onload = function() {
+  showMemberDetails();
+};
+function onLoad() {
+ 
+  emailElement.textContent = signInEmail;
+  userTypeElement.textContent = signInUserType;
 
-        
-        if (userType === 'staff') {
-            adminModuleWrapper.style.display = 'none'; 
-            showMemberDetails();
-        }else if(userType == 'admin'){
-            adminModuleWrapper.style.display = 'block'; 
-            showMemberDetails();
-        }
+  if (userType === 'staff') {
+    adminModuleWrapper.style.display = 'none';
+  } else if (userType === 'admin') {
+    adminModuleWrapper.style.display = 'block';
+  }
 
-        if (!email|| !userType) {
-            // Disable or hide modules when signInEmail or signInUserType is not available
-            disableModules();
-        } 
+  if (!email || !userType) {
+    // Disable or hide modules when signInEmail or signInUserType is not available
+    disableModules();
+  }
+}
+
+function disableModules() {
+  // Disable or hide all modules here
+  const modules = [
+    'member', 'collectionList', 'property', 'reserve', 'certificateSelect', 'account', 'reportSelect', 'colCat'
+  ];
+
+  modules.forEach(moduleId => {
+    const moduleElement = document.getElementById(moduleId);
+    moduleElement.style.display = 'none'; // or disable the module in another way
+  });
+}
+
+const logout = async () => {
+  const url = `http://127.0.0.1:5500/index.html`;
+  await signOut(auth);
+  window.location.href = url;
+  window.location.replace(url);
+}
+
+signOutButton.addEventListener("click", logout);
+
+// Check if the user is authenticated
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    // User is authenticated
+    if (!signInEmail || !signInUserType) {
+      // Redirect to the login page if session information is missing
+      redirectToLogin();
+      return;
     }
 
-    function disableModules() {
-        // Disable or hide all modules here
-        const modules = [
-            'member', 'collectionList', 'property', 'reserve', 'certificateSelect', 'account', 'reportSelect', 'colCat'
-        ];
-    
-        modules.forEach(moduleId => {
-            const moduleElement = document.getElementById(moduleId);
-            moduleElement.style.display = 'none'; // or disable the module in another way
-        });
+    emailElement.textContent = signInEmail;
+    userTypeElement.textContent = signInUserType;
+
+    if (signInUserType === 'staff') {
+      adminModuleWrapper.style.display = 'none';
+      // Handle staff-specific modules here
+    } else if (signInUserType === 'admin') {
+      adminModuleWrapper.style.display = 'block';
+      // Handle admin-specific modules here
     }
 
-
-    const logout = async () => {
-        const url = `http://127.0.0.1:5500/index.html`;
-        await signOut(auth);
-        window.location.href = url;
-        window.location.replace(url);
-    }
-
-    signOutB.addEventListener("click", logout);
-
-   
-        
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    signOutButton.addEventListener('click', logout);
+  } else {
+    // User is not authenticated, redirect to the login page
+    redirectToLogin();
+  }
+});
+
+function redirectToLogin() {
+  const url = 'http://127.0.0.1:5500/index.html';
+  signOut(auth); // Sign out the user
+  window.location.href = url;
+}
 
 
 
 
   //start modules  
-    document.getElementById('member').addEventListener('click', showMemberDetails);    
-    document.getElementById('collectionList').addEventListener('click', showCollectionlist);
-    document.getElementById('property').addEventListener('click', showProperty);
-    document.getElementById('reserve').addEventListener('click', Reservation);
-    document.getElementById('certificateSelect').addEventListener('change', handleCertificateSelection);
-    document.getElementById('account').addEventListener('click', Account);
-    document.getElementById('reportSelect').addEventListener('change',handleReports );
-    document.getElementById('colCat').addEventListener('click', collectionCat);
+  document.getElementById('member').addEventListener('click', showMemberDetails);
+  document.getElementById('collectionList').addEventListener('click', showCollectionlist);
+  document.getElementById('property').addEventListener('click', showProperty);
+  document.getElementById('reserve').addEventListener('click', Reservation); // Make sure the function name matches the case
+  document.getElementById('certificateSelect').addEventListener('change', handleCertificateSelection);
+  document.getElementById('account').addEventListener('click', Account);
+  document.getElementById('reportSelect').addEventListener('change', handleReports);
+  document.getElementById('colCat').addEventListener('click', collectionCat);
 //end modules
 
 

@@ -62,47 +62,63 @@
         }
 
         #addCol {
-        margin: 20px auto; /* Center horizontally and add top margin */
-        border: 1px solid #ccc;
-        width: 500px;
-        height: auto;
-        padding: 10px 20px; /* Simplify padding */
-        text-align: center; /* Center the content horizontally */
-        flex-direction: column;
-        justify-content: center; /* Center the content vertically */
-        display: none;
-        position: fixed;
-        background-color: white;
-        transform: translate(-50%, -50%);
-        top: 50%;
-        left: 50%;
-        }
+    margin: 20px auto; /* Center horizontally and add top margin */
+    border: 1px solid #ccc;
+    width: 800px; /* Adjust the width to accommodate two columns */
+    padding: 10px 20px; /* Simplify padding */
+    text-align: center; /* Center the content horizontally */
+    display: none;
+    position: fixed;
+    background-color: white;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+}
 
+.form-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Create two columns */
+    grid-gap: 10px; /* Add some spacing between columns */
+}
 
-        .form-group {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            margin-bottom: 10px;
-            padding: 1%;
-        }
+.left-column {
+    padding: 1%;
+}
 
-        #addCol label {
-            flex: 1;
-            text-align: right;
-            margin-right: 4%;
-           
-        }
+.right-column {
+    text-align: center;
+}
 
-        #addCol input {
-            flex: 2;
-            border: 1px solid #ccc;
-            margin-right: 10%;
-        }
+.form-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 1%;
+}
 
-        #addCol h3{
-            text-align: center;
-        }
+#addCol label {
+    flex: 1;
+    text-align: right;
+    margin-right: 4%;
+}
+
+#addCol input {
+    flex: 2;
+    border: 1px solid #ccc;
+    margin-right: 10%;
+}
+
+#addCol h3 {
+    text-align: center;
+}
+
+.button-container {
+    text-align: center;
+}
+
+/* Add any other CSS styles you need */
+
 
         .centered-table {
             margin: 0 auto; /* Center the table horizontally */
@@ -285,53 +301,51 @@
 
 
       <div id="addCol">
-
         <h3>Add Collection</h3>
-
-        <div class="form-group">
-            <label for="tranNum">Transaction #:</label>
-            <input type="number" id="tranNum" placeholder="Transaction #">
-          </div>
-          
-          <div class="form-group">
-            <label for="memID">Member ID:</label>
-            <input type="number" id="memID" placeholder="Member ID">
-          </div>
-          
-          <div class="form-group">
-            <label for="memName">Member Name:</label>
-            <input type="text" id="memName" placeholder="Member Name">
-          </div>
-
-          <div class="form-group">
-            <label for="collName">Collector Name:</label>
-            <input type="text" id="collName" placeholder="Collector Name">
-          </div>
-          
-          <div class="form-group">
-            <label for="tranDate">Date:</label>
-            <input type="date" id="tranDate" onchange="validateDate(this)">
-          </div>
-            <div id="colCat" style="text-align: center;">
-                <table id="addColTable" class="centered-table">      
-                    <tr>
-                        <th>Select</th>
-                        <th>Collection ID</th>
-                        <th>Collection Name</th>
-                        <th>Fee</th>
-                    </tr>     
-                    <tr>
-                        <td></td>
-                    </tr>           
-                </table>
+        <div class="form-container">
+            <div class="left-column">
+                <div class="form-group">
+                    <label for="tranNum">Transaction #:</label>
+                    <input type="number" id="tranNum" placeholder="Transaction #">
+                </div>
+                <div class="form-group">
+                    <label for="memID">Member ID:</label>
+                    <input type="number" id="memID" placeholder="Member ID">
+                </div>
+                <div class="form-group">
+                    <label for="memName">Member Name:</label>
+                    <input type="text" id="memName" placeholder="Member Name">
+                </div>
+                <div class="form-group">
+                    <label for="collName">Collector Name:</label>
+                    <input type="text" id="collName" placeholder="Collector Name">
+                </div>
+                <div class="form-group">
+                    <label for="tranDate">Date:</label>
+                    <input type="date" id="tranDate" onchange="validateDate(this)">
+                </div>
             </div>
-          
-
-          <div class="button-container">
+            <div class="right-column">
+                <div id="colCat" style="text-align: center;">
+                    <table id="addColTable" class="centered-table">      
+                        <tr>
+                            <th>Select</th>
+                            <th>Collection ID</th>
+                            <th>Collection Name</th>
+                            <th>Fee</th>
+                        </tr>     
+                        <tr>
+                            <td></td>
+                        </tr>           
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="button-container">
             <button id="add">Add</button> 
             <button id="cancel">Cancel</button>
-          </div>
-      </div>
+        </div>
+    </div>
      
       <div id="viewCollection">
         <h3>Collection Details</h3>

@@ -1,28 +1,45 @@
-import { signOut } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
-import { doc, getDoc,getDocs,collection, query, where} from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
-import { db ,auth} from "../credentials/firebaseModule.js";
-  
+import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
+import { doc, getDoc, getDocs, collection, query, where } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
+import { db, auth } from "../credentials/firebaseModule.js";
 
 displayCollection();
 
-
 const viewColCancel = document.getElementById("viewColCancel");
-const cancelB =  document.getElementById("cancel");
-const eventB =  document.getElementById("eventB");
-
-const logoutB =  document.getElementById("logout");
-
-
+const cancelB = document.getElementById("cancel");
+const eventB = document.getElementById("eventB");
+const logoutB = document.getElementById("logout");
+const statusButton = document.getElementById("statusButton");
 
 // Get the memberID query parameter from the URL
 const urlParams = new URLSearchParams(window.location.search);
 const memberID = urlParams.get("memID");
-const MemID = memberID.value;
-// const memberID = String(22);
-// const MemID = String(22);
 
-//Elements
-const statusButton = document.getElementById("statusButton");
+// Add the onAuthStateChanged event listener
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
+    // User is not authenticated, redirect to the login page
+    redirectToLogin();
+  }
+  // If the user is authenticated, you can add any necessary logic here.
+  // You may want to fetch and display user-specific data, etc.
+});
+
+// Define a logout function
+const logout = async () => {
+  const url = "http://127.0.0.1:5500/index.html";
+  await signOut(auth);
+  window.location.href = url;
+};
+
+// Define a redirectToLogin function
+function redirectToLogin() {
+  const url = "http://127.0.0.1:5500/index.html";
+  signOut(auth); // Sign out the user
+  window.location.href = url;
+}
+
+
+
 
 
 //==================member=======================================
@@ -194,12 +211,7 @@ function viewCollection(data) {
 //===============================================================================================================================================
 
 
-const logout = async () => {
-  const url = `http://127.0.0.1:5500/index.html`;
-  await signOut(auth);
-  window.location.href = url;
-  window.location.replace(url);
-}
+
 //===============================================================================================================================================
 
 viewColCancel.addEventListener("click", () => {

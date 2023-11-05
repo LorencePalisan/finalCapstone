@@ -1,9 +1,10 @@
 import {doc, getDoc,getDocs, setDoc,collection, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
 import { db } from "../credentials/firebaseModule.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
+import { auth } from "../credentials/firebaseModule.js";
 
 import { accountSid, authToken, twilioPhoneNumber } from '../credentials/twilioCredentials.js';
 
-// Now you can use the imported values.
 
 
 displayCollection();
@@ -30,9 +31,39 @@ let inputFee;
 const urlParams = new URLSearchParams(window.location.search);
 const memberID = urlParams.get("memberID");
 const MemID = memberID;
-
 //Elements
 const statusButton = document.getElementById("statusButton");
+
+function sendSMS() {
+ 
+  const recipientPhoneNumber = document.getElementById('recipientNumber').value;
+  const messageBody = document.getElementById('messageBody').value;
+  const apiUrl = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
+  try {
+  
+    fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Basic ' + btoa(accountSid + ':' + authToken),
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({
+        From: twilioPhoneNumber,
+        To: recipientPhoneNumber,
+        Body: messageBody,
+      }),
+    })
+      .then(response => response.json())
+      .then(data => console.log(data.sid))
+      .catch(error => console.error(error));
+    
+    toggleButton();
+  } catch (error) {
+      console.error('An unexpected error occurred:', error);
+      alert('An unexpected error occurred. Please check the console for details.');
+  }
+  
+}
 
 //================================================================================================================================
 
@@ -132,66 +163,67 @@ async function collectionMenu() {
     // Loop through the documents in the collection
     querySnapshot.forEach((docSnapshot) => {
       const data = docSnapshot.data();
-      const row = addColTable.insertRow(-1); // Add a new row to the table
+      if (data.Status === "Active") {
+        const row = addColTable.insertRow(-1); // Add a new row to the table
 
-      // Create and populate table cells for each data field
-      const checkboxCell = row.insertCell(0);
-      const checkBox = document.createElement("input");
-      checkBox.type = "checkbox";
-      checkboxCell.appendChild(checkBox); // Append checkbox to the cell
+        // Create and populate table cells for each data field
+        const checkboxCell = row.insertCell(0);
+        const checkBox = document.createElement("input");
+        checkBox.type = "checkbox";
+        checkboxCell.appendChild(checkBox); // Append checkbox to the cell
 
-      const idCell = row.insertCell(1);
-      idCell.textContent = data.CollectionID;
+        const idCell = row.insertCell(1);
+        idCell.textContent = data.CollectionID;
 
-      const nameCell = row.insertCell(2);
-      nameCell.textContent = data.collectionName;
+        const nameCell = row.insertCell(2);
+        nameCell.textContent = data.collectionName;
 
-      const feeCell = row.insertCell(3);
+        const feeCell = row.insertCell(3);
 
-let feeValue = parseFloat(data.Fee);
-if (isNaN(feeValue)) {
-  feeValue = 0; // Set default value for calculation
-}
-
-// Check if CollectionID is "001"
-if (data.CollectionID === "001") {
-  inputFee = document.createElement("input");
-  inputFee.type = "text";
-  inputFee.placeholder = "Enter fee";
-
-  let timeout;
-
-  inputFee.addEventListener("input", (event) => {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => {
-      const newFee = parseFloat(event.target.value);
-      feeValue = isNaN(newFee) ? 0 : newFee;
-      feeCell.textContent = isNaN(newFee) ? "" : newFee.toFixed(2);
-
-      // Assign the value to inputFee
-      inputFee = event.target.value;
-      
-      let parsedLotAmortVal = parseFloat(lotAmortVal);
-      let parsedInputFee = parseFloat(inputFee);
-
-      // Use parsedLotAmortVal and parsedInputFee as needed in your code
-    }, 2000); // Adjust the delay as needed
-  });
-
-  feeCell.appendChild(inputFee);
-} else {
-  feeCell.textContent = feeValue.toFixed(2);
-}
-
-
-      checkBox.addEventListener("change", () => {
-        if (checkBox.checked) {
-          totalFee += feeValue;
-        } else {
-          totalFee -= feeValue;
+        let feeValue = parseFloat(data.Fee);
+        if (isNaN(feeValue)) {
+          feeValue = 0; // Set default value for calculation
         }
-        updateTotalFee(totalFee);
-      });
+
+        // Check if CollectionID is "001"
+        if (data.CollectionID === "001") {
+          inputFee = document.createElement("input");
+          inputFee.type = "text";
+          inputFee.placeholder = "Enter fee";
+
+          let timeout;
+
+          inputFee.addEventListener("input", (event) => {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+              const newFee = parseFloat(event.target.value);
+              feeValue = isNaN(newFee) ? 0 : newFee;
+              feeCell.textContent = isNaN(newFee) ? "" : newFee.toFixed(2);
+
+              // Assign the value to inputFee
+              inputFee = event.target.value;
+              
+              let parsedLotAmortVal = parseFloat(lotAmortVal);
+              let parsedInputFee = parseFloat(inputFee);
+
+              // Use parsedLotAmortVal and parsedInputFee as needed in your code
+            }, 2000); // Adjust the delay as needed
+          });
+
+          feeCell.appendChild(inputFee);
+        } else {
+          feeCell.textContent = feeValue.toFixed(2);
+        }
+
+        checkBox.addEventListener("change", () => {
+          if (checkBox.checked) {
+            totalFee += feeValue;
+          } else {
+            totalFee -= feeValue;
+          }
+          updateTotalFee(totalFee);
+        });
+      }
     });
 
     const totalFeeRow = document.createElement("tr");
@@ -205,6 +237,7 @@ if (data.CollectionID === "001") {
     console.error("Error fetching data: ", error);
   }
 }
+
 
 //===============================================================================================================================================
 
@@ -516,43 +549,7 @@ async function updateMember() {
 //===============================================================================================================================================
 
 
-function sendSMS() {
-  try {
-    
 
-    const recipientPhoneNumber = document.getElementById('recipientNumber').value;
-    const messageBody = document.getElementById('messageBody').value;
-    
-    const twilioApiUrl = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
-    
-    const base64Credentials = btoa(`${accountSid}:${authToken}`);
-    const headers = new Headers({
-        'Authorization': `Basic ${base64Credentials}`,
-        'Content-Type': 'application/x-www-form-urlencoded'
-    });
-    
-    const data = new URLSearchParams();
-    data.append('To', recipientPhoneNumber);
-    data.append('From', twilioPhoneNumber);
-    data.append('Body', messageBody);
-    
-    fetch(twilioApiUrl, {
-        method: 'POST',
-        headers: headers,
-        body: data
-    })
-    .then(response => response.json())
-    .then(data => console.log('Message sent successfully.' + data.sid))
-    .catch(error => alert('Error sending message: ' + error.message));
-    alert('Message sent successfully.');
-    
-    toggleButton();
-  } catch (error) {
-      console.error('An unexpected error occurred:', error);
-      alert('An unexpected error occurred. Please check the console for details.');
-  }
-  
-}
 
 function toggleButton() {
   var button = document.getElementById("smsForm");
