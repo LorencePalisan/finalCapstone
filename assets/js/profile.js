@@ -69,38 +69,6 @@ function sendSMS() {
 
 
 
-// Query the "Property" collection to find documents that match the MemID field
-console.log("MemID to query:", MemID);
-const queryid = query(collection(db, "Property"), where("ownerID", "==", MemID));
-
-try {
-  const querySnapshot = await getDocs(queryid);
-
-  if (!querySnapshot.empty) {
-    const docSnap = querySnapshot.docs[0];
-    const data = docSnap.data();
-    console.log("Document data:", data);
-
-    // Update your HTML elements with the data
-    document.getElementById("block").value = data.blockNum;
-    document.getElementById("lot").value = data.lotNumber;
-    document.getElementById("lotSize").value = data.lotSize;
-
-  } else {
-    console.log("No documents found for MemID:", MemID);
-    document.getElementById("block").value = "No Property Yet";
-    document.getElementById("lot").value = "No Property Yet";
-    document.getElementById("lotSize").value = "No Property Yet";
-  }
-} catch (error) {
-  console.error("Error getting document:", error);
-}
-
-
-     
-
-
-//==================member=======================================
 const docRef = doc(db, "Members", memberID);
 
 try {
@@ -137,6 +105,57 @@ if (buttonText === "active") {
 } else {
   statusButton.style.backgroundColor = "#ff0000"; 
 }
+
+  const lotTable = document.getElementById("lotTable");
+  const lotTableBody = lotTable.querySelector('tbody');
+
+  // Clear existing rows in the table body
+  while (lotTableBody.rows.length > 1) {
+    lotTableBody.deleteRow(1);
+  }
+
+  // Query the "Property" collection to find documents that match the MemID field
+  console.log("MemID to query:", MemID);
+  const queryid = query(collection(db, "Property"), where("ownerID", "==", MemID));
+
+  try {
+    const querySnapshot = await getDocs(queryid);
+
+    querySnapshot.forEach((docSnapshot) => {
+      const data = docSnapshot.data();
+
+      // Create a new row for each document and populate the cells
+      const newRow = lotTableBody.insertRow(-1);
+      const blockCell = newRow.insertCell(0);
+      const lotCell = newRow.insertCell(1);
+      const lotSizeCell = newRow.insertCell(2);
+
+      blockCell.textContent = data.lotNumber;
+      lotCell.textContent = data.blockNum;
+      lotSizeCell.textContent = data.lotSize;
+    });
+
+    if (querySnapshot.empty) {
+      console.log("No documents found for MemID:", MemID);
+
+      // Display a message in the first row if no data is found
+      const noDataMessage = lotTableBody.insertRow(-1);
+      const messageCell = noDataMessage.insertCell(0);
+      messageCell.textContent = "No Property Yet";
+      messageCell.colSpan = 3; // Span across all columns
+    }
+  } catch (error) {
+    console.error("Error getting documents:", error);
+  }
+
+
+
+
+     
+
+
+//==================member=======================================
+
 //===============================================================================================================================================
 
 // Move outside of collectionMenu

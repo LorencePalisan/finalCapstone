@@ -223,7 +223,7 @@ function redirectToLogin() {
             reservationIframeWrapper.style.display = 'block';
             reservationIframeWrapper.style.width = '100%';
             var propertyIframe = document.getElementById('reservation-iframe');
-            propertyIframe.src = 'Reservation.html';
+            propertyIframe.src = 'requestEvent.html';
             activeIframe = reservationIframeWrapper;
             }
     

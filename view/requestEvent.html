@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Event Handler</title>
+    
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            width: 86%;
+        }
+
+
+
+        .toolbar {
+            background-color: #1CAC78;
+            padding: 10px;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .toolbar label{
+            font-size: 30px;
+            font-style: normal;
+            font-weight: 200;
+            margin-left: 50px;
+
+        }
+
+        #addAC {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        #addAC:hover {
+            background-color: #08d835;
+            color: beige;
+        }
+
+        .form-container {
+            font-family: 'Arial', sans-serif;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+            transform: translate(-50%, -50%);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+        }
+
+        .form-container h2{
+          text-align: center;
+
+        }  
+            
+.form-box {
+    background-color: #fff;
+    padding: 10px; /* Reduced padding */
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+}
+
+.form-box label {
+    display: block;
+    margin-bottom: 4px; /* Reduced margin */
+    font-weight: bold;
+    font-size: 14px; /* Smaller font size */
+}
+
+.form-box input {
+    width: 100%;
+    padding: 4px; /* Reduced padding */
+    margin-bottom: 8px; /* Reduced margin */
+    box-sizing: border-box;
+    font-size: 14px; /* Smaller font size */
+}
+
+.form-box button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 16px; /* Reduced padding */
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px; /* Smaller font size */
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.form-box button:hover {
+    background-color: #45a049;
+}
+
+.form-box select {
+    height: 36px; /* Reduced height */
+    width: 300px;
+    padding: 4px; /* Reduced padding */
+    margin-bottom: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px; /* Smaller font size */
+    background-color: #fff;
+}
+
+.form-box select:hover,
+.form-box select:focus {
+    border-color: #4CAF50;
+}
+
+.form-box select option {
+    font-size: 14px; /* Smaller font size */
+    background-color: #f4f4f4;
+}
+
+        
+        #memberID::-webkit-inner-spin-button,
+        #memberID::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        appearance: none;
+        margin: 0;
+        }
+        
+        #contactNum::-webkit-inner-spin-button,
+        #contactNum::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        appearance: none;
+        margin: 0;
+        }
+        #container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      
+    }
+
+    table {
+      width: 80%;
+      margin: 20px auto;
+      border-collapse: collapse;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      background-color: #fff;
+    }
+
+    th, td {
+      padding: 15px;
+      text-align: center; /* Align contents to the center */
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    tr:hover {
+      background-color: #f5f5f5;
+    }
+    .password-container {
+      position: relative;
+      display: inline-block;
+      width: 300px;
+    }
+
+
+    .password-icon {
+      position: absolute;
+      top: 35%;
+      right: 10px;
+      transform: translateY(-50%);
+      cursor: pointer;
+    }
+    .match {
+      border: 2px solid rgb(13, 245, 13);
+    }
+    #searchBar input
+    {
+      width: 100%;
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+    }
+   
+    #cal {
+    background-color: #4CAF50; 
+    color: white; 
+    border: none;
+    padding: 10px 20px;
+    margin-top: 15px;
+    margin-left: 20px;
+    height: 40px;
+    cursor: pointer;
+    border-radius: 30px;
+    }
+
+    #cal:hover {
+        background-color: #45A049;
+    }
+ 
+    </style>
+</head>
+<body >
+    <div class="toolbar">
+        <span><label>Event Handler</label></span>
+    </div>
+    <div >
+        <button id="cal">Event Calendar</button>
+    </div>
+  <div id="searchBar" style="width: 100%; max-width: 600px; margin: 20px auto; border: #ccc;">
+    <label for="searchInput" style="display: block; font-size: 25px; text-align: center; font-weight: bold;">Search Bar</label>
+    
+    <input type="text" id="searchInput" placeholder="Search by Name">
+</div>
+
+<div class="container">
+    <table id="eventsTable">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Facility</th>
+          <th>Reserved By</th>
+          <th>Title</th>
+          <th>Time</th>
+          <th>Confirm</th>
+          <th>Reject</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Member</td>
+          <td>john.doe@example.com</td>
+          <td>09959831815</td>
+          <td>09959831815</td>
+          <td><button>Confirm</button></td>
+          <td><button>Reject</button></td>
+        </tr>
+      
+        <!-- Add more rows as needed -->
+      </tbody>
+    </table>
+  </div>
+
+ 
+
+<script type="module" src="../assets/js/requestEvent.js"></script>
+
+</body>
+</html>

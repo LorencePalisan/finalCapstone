@@ -3,7 +3,7 @@ import {getDocs, query, where,addDoc,collection} from "https://www.gstatic.com/f
 import { db } from "../credentials/firebaseModule.js";
 
 
-
+const requestDB = collection(db, "EventRequest");
 const eventDB = collection(db, "EventDatabase");
 const eventsSnapshot = await getDocs(collection(db, 'EventDatabase'));
 
@@ -498,7 +498,7 @@ addEventSubmit.addEventListener("click", async () => {
     timeTo: timeTo,
   };
 
-  addDoc(eventDB, newEvent);
+  addDoc(requestDB, newEvent);
 
   eventsArr.push({
     day: activeDay,

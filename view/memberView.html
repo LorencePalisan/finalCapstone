@@ -469,6 +469,32 @@ body ::-webkit-scrollbar {
                 flex-direction: column;
             }
         }
+        #lotTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#lotTable th, #lotTable td {
+    padding: 8px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+#lotTable th {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+#lotTable th, #lotTable td:first-child {
+    width: 20%;
+}
+
+#lotTable td {
+   
+  font-weight: normal;
+}
+
+
   </style>
     
 
@@ -502,14 +528,18 @@ body ::-webkit-scrollbar {
 
         <h3 >Property</h3>
 
-        <label for="block">Block #</label>
-        <input type="text" id="block" disabled>
-
-        <label for="lot">Lot #</label>
-        <input type="text" id="lot" disabled>
-
-        <label for="lotSize">Lot Size</label>
-        <input type="text" id="lotSize" disabled>
+        <table id="lotTable">
+          <tr>
+          <th>Lot #</th>
+          <th>Block #</th>
+          <th>Lot Size</th>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+         </table>
     
 
       <div>
