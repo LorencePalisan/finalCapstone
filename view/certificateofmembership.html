@@ -256,7 +256,7 @@ document.addEventListener('DOMContentLoaded', function () {
       jsPDF: { format: 'letter', orientation: 'portrait' },
     };
 
-    if (memNameInput.value === "" || adminInput.value === "") {
+    if (memNameInput.value === " " || adminInput.value === " ") {
       alert("Please fill all the information needed.");
       return;
     }
