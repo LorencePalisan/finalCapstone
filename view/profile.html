@@ -573,17 +573,21 @@ text-align: center;
 <div id="form-column-1">
   <div class="box">
     <div>
-        <label for="id">ID</label>
-        <input type="text" id="id" disabled>
 
         <label for="name">Fullname</label>
         <input type="text" id="name" disabled>
+
+        <label for="cont">Contact Number</label>
+        <input type="text" id="cont" disabled>
 
         <label for="category">Category</label>
         <input type="text" id="category" disabled>
 
         <label for="balance">Lot Amortization</label>
         <input type="number" id="balance" disabled>
+
+        <label for="currentPenalty">Current Penalty</label>
+        <input type="number" id="currentPenalty" disabled>
 
         <h3 >Property</h3>
 
@@ -609,7 +613,7 @@ text-align: center;
     </div>
 </div>
 
-
+<div id="paginationControls"></div>
     </div> 
       
     <div id="form-column-2">
@@ -657,13 +661,8 @@ text-align: center;
     </div>
     
     <div class="form-group">
-      <label for="memID">Member ID:</label>
-      <input type="number" id="memID" placeholder="Member ID">
-    </div>
-    
-    <div class="form-group">
       <label for="memName">Member Name:</label>
-      <input type="text" id="memName" placeholder="Member Name" disabled>
+      <input type="text" id="memName" placeholder="Member Name" disabled >
     </div>
 
     <div class="form-group">
@@ -762,8 +761,6 @@ text-align: center;
 <div id="popup" class="popup">
   <div class="label-input-pair">
  
-  <label for="enterID" >Member ID:</label>
-  <input id="enterID" type="number" placeholder="Enter your ID" disabled>
   
   <label for="memberName">Member Name:</label>
   <input id="memberName" type="text" placeholder="Member Name">
@@ -773,21 +770,21 @@ text-align: center;
   
   <label for="occupation">Occupation:</label>
   <input id="occupation" type="text" placeholder="Occupation">
-  
-  <label for="PlaceOfBirth">Place of Birth:</label>
-  <input id="PlaceOfBirth" type="text" placeholder="Place of Birth">
-  
+
   <label for="age">Age:</label>
   <input id="age" type="number" placeholder="Age">
   
   <label for="birthday">Birthday:</label>
   <input id="birthday" type="date" onchange="validateDate(this)" style="text-transform: uppercase;">
+
+  <label for="civilStatus">Civil Status:</label>
+  <input id="civilStatus" type="text"  placeholder="Civil Status">
+  
 </div>
 
 <div class="label-input-pair">
   
-  <label for="civilStatus">Civil Status:</label>
-  <input id="civilStatus" type="text"  placeholder="Civil Status">
+  
   
   <label for="citizenship">Citizenship:</label>
   <input id="citizenship" type="text"  placeholder="Citizenship">
@@ -795,8 +792,6 @@ text-align: center;
   <label for="contactNum">Contact #:</label>
   <input id="contactNum" type="number" placeholder="Contact #">
   
-  <label for="sourceOfIncome">Source of Income:</label>
-  <input id="sourceOfIncome" type="text" placeholder="Source of Income">
   
   <label for="memberCategory">Member Category:</label>
   <select id="memberCategory" >

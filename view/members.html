@@ -235,7 +235,37 @@ button {
   background-color: #fff; /* Example background color for even rows */
 }
 
+#paginationControls{
+  margin: 20px;
+  text-align: center;
+}
 
+#paginationControls button{
+  font-size: small;
+  width: 20%;
+  height: 40px;
+}
+#quer{
+ 
+  border-collapse: collapse;
+  width: 100%;
+  max-width: 80%;
+  margin: 20px auto;
+  background-color: white;
+}
+
+#quer select{
+  height: 25px;
+  border-radius: 10px;
+  width: 120px;
+}
+#quer label{
+font-size: large;
+}
+
+#quer option{
+font-size: medium;
+}
     </style>
 </head>
 <body onload="restrictMaxInputLength()">
@@ -245,44 +275,42 @@ button {
       </div>
     
       <button id="add" onclick="togglePopup()">Add Member</button>
+     
       <div id="popup" class="popup">
+          
         <div class="label-input-pair">
-       
-        <label for="enterID" >Member ID:</label>
-        <input id="enterID" type="number" placeholder="Enter your ID">
         
         <label for="memberName">Member Name:</label>
-        <input id="memberName" type="text" placeholder="Member Name">
+        <input id="memberName" type="text" placeholder="Member Name" >
         
         <label for="spouseName"> Spouse Name:</label>
-        <input id="spouseName" type="text" placeholder="Spouse Name">
+        <input id="spouseName" type="text" placeholder="Spouse Name" >
         
         <label for="occupation">Occupation:</label>
-        <input id="occupation" type="text" placeholder="Occupation">
+        <input id="occupation" type="text" placeholder="Occupation" >
         
-        <label for="PlaceOfBirth">Place of Birth:</label>
-        <input id="PlaceOfBirth" type="text" placeholder="Place of Birth">
+        
         
         <label for="age">Age:</label>
-        <input id="age" type="number" placeholder="Age">
+        <input id="age" type="number" placeholder="Age" >
         
         <label for="birthday">Birthday:</label>
-        <input id="birthday" type="date" onchange="validateDate(this)" style="text-transform: uppercase;">
-    </div>
-    
-    <div class="label-input-pair">
-        
+        <input id="birthday" type="date" onchange="validateDate(this)" style="text-transform: uppercase;" >
+
         <label for="civilStatus">Civil Status:</label>
-        <input id="civilStatus" type="text"  placeholder="Civil Status">
+        <input id="civilStatus" type="text"  placeholder="Civil Status" >
+    </div>
+    <div class="label-input-pair">
+      
+      
         
         <label for="citizenship">Citizenship:</label>
-        <input id="citizenship" type="text"  placeholder="Citizenship">
+        <input id="citizenship" type="text"  placeholder="Citizenship" >
         
         <label for="contactNum">Contact #:</label>
-        <input id="contactNum" type="number" placeholder="Contact #">
+        <input id="contactNum" type="number" placeholder="Contact #" >
         
-        <label for="sourceOfIncome">Source of Income:</label>
-        <input id="sourceOfIncome" type="text" placeholder="Source of Income">
+        
         
         <label for="memberCategory">Member Category:</label>
         <select id="memberCategory" name="memberCategory" >
@@ -305,7 +333,7 @@ button {
           <option value="female">Female</option>
         </select>
 
-        <label for="bal">Lot Amortization</label>
+        <label for="bal">Lot Amortization</label required>
         <input type="number"  id="bal">
     </div>
 
@@ -317,33 +345,49 @@ button {
 
     
       </div>
-
+   
 
           
           <div id="searchBar" style="width: 100%; max-width: 600px; margin: 20px auto; border: #ccc;">
             <label for="searchInput" style="display: block; font-size: 25px; text-align: center; font-weight: bold;">Search Bar</label>
             <input type="text" id="searchInput" placeholder="Search by Name">
         </div>
+      <div id="quer">
+          <label for="">Category:</label>
+          <select id="categ" name="Category">
+            <!-- <option value="" disabled selected>--Select Here--</option> -->
+            <option value="Member">Member</option>
+            <option value="Renter">Renter</option>
+          </select>
+
+          <label for="">Status:</label>
+          <select id="stat" name="Category">
+            <!-- <option value="" disabled selected>--Select Here--</option> -->
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+          </select>
+        </div>
+       
         
 
-
+<div>
         <table id="memberTable">
             <tr>
-                <th>Member ID</th>
-                <th>Member Name</th>
-                <th>Member Status</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Status</th>
                 <th>Action</th>
             </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-              </tr>
+            
               
         </table>
-
+      </div>
+        <div id="paginationControls"></div>
         <script>
+
+
+
+
 
 function validateDate(input) {
   const selectedDate = new Date(input.value);
@@ -378,9 +422,12 @@ function validateDate(input) {
       if (popup.style.display === "none" || popup.style.display === "") {
         // Show the popup
         popup.style.display = "grid";
+        document.getElementById("add").textContent = "Close";
+        
       } else {
         // Hide the popup
         popup.style.display = "none";
+        document.getElementById("add").textContent = "Add Member";
       }
     }
         </script>

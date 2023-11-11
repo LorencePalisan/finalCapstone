@@ -30,7 +30,7 @@ async function displayEvent() {
   
         // Populate the row with event information
         const date = row.insertCell(0);
-        date.textContent = data.date;
+        date.textContent = data.fullDate;
   
         const facility = row.insertCell(1);
         facility.textContent = data.facility;

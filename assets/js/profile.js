@@ -1,4 +1,4 @@
-import {doc, getDoc,getDocs, setDoc,collection, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
+import {doc, getDoc,getDocs, setDoc,collection, updateDoc, query, where, orderBy, limit, startAfter, endBefore, limitToLast, } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
 import { db } from "../credentials/firebaseModule.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
 import { auth } from "../credentials/firebaseModule.js";
@@ -7,8 +7,7 @@ import { accountSid, authToken, twilioPhoneNumber } from '../credentials/twilioC
 
 
 
-displayCollection();
-collectionMenu();
+
 
 
 const viewColCancel = document.getElementById("viewColCancel");
@@ -21,66 +20,51 @@ const closeB = document.getElementById("close");
 const updateB = document.getElementById("updateMember");
 const sendBbb = document.getElementById("sendBB");
 const sendB =  document.getElementById("send");
-
+const memName =  document.getElementById("memName");
 
 let totalFee = 0; 
 let lotAmortVal; 
 let inputFee;
+let penaltyFee;
+
+let currentPage = 1; 
+const pageSize = 10; 
+let lastVisible = null; 
+let firstVisible = null; 
+
+document.addEventListener('DOMContentLoaded', (event) => {
+  displayCollection(); 
+  createPaginationControls();
+  collectionMenu();
+});
+
 
 // Get the memberID query parameter from the URL
 const urlParams = new URLSearchParams(window.location.search);
-const memberID = urlParams.get("memberID");
-const MemID = memberID;
+const Name = urlParams.get("memberName");
 //Elements
 const statusButton = document.getElementById("statusButton");
+console.log(Name);
 
-function sendSMS() {
- 
-  const recipientPhoneNumber = document.getElementById('recipientNumber').value;
-  const messageBody = document.getElementById('messageBody').value;
-  const apiUrl = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
-  try {
-  
-    fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Authorization': 'Basic ' + btoa(accountSid + ':' + authToken),
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: new URLSearchParams({
-        From: twilioPhoneNumber,
-        To: recipientPhoneNumber,
-        Body: messageBody,
-      }),
-    })
-      .then(response => response.json())
-      .then(data => console.log(data.sid))
-      .catch(error => console.error(error));
-    
-    toggleButton();
-  } catch (error) {
-      console.error('An unexpected error occurred:', error);
-      alert('An unexpected error occurred. Please check the console for details.');
-  }
-  
-}
 
 //================================================================================================================================
+let globalDocId;
 
-
-
-const docRef = doc(db, "Members", memberID);
+const membersCollectionRef = collection(db, "Members");
+const q = query(membersCollectionRef, where("memberName", "==", Name));
 
 try {
-  const docSnap = await getDoc(docRef);
+  const querySnapshot = await getDocs(q);
 
-  if (docSnap.exists()) {
+  if (!querySnapshot.empty) {
+    // Assuming you're interested in the first match if there are multiple documents with the same name
+    const docSnap = querySnapshot.docs[0];
     const data = docSnap.data();
-    
+  
     // Update your HTML elements with the data
-
-    document.getElementById("id").value = data.enterID;
+    
     document.getElementById("name").value = data.memberName;
+    document.getElementById("cont").value = data.contactNum;
     document.getElementById("category").value = data.memberCategory;
     document.getElementById("statusButton").textContent = data.memberStatus;
     document.getElementById("recipientNumber").value = '+63' + data.contactNum.substring(1);
@@ -88,13 +72,13 @@ try {
 
     lotAmortVal = parseFloat(data.lotAmort).toFixed(2);
 
+    // ... (any other code that uses the data)
 
-   
   } else {
-    console.log("No such document!");
+    console.log("No such document with the provided name!");
   }
 } catch (error) {
-  console.error("Error getting document:", error);
+  console.error("Error getting document by name:", error);
 }
 
 
@@ -106,6 +90,7 @@ if (buttonText === "active") {
   statusButton.style.backgroundColor = "#ff0000"; 
 }
 
+
   const lotTable = document.getElementById("lotTable");
   const lotTableBody = lotTable.querySelector('tbody');
 
@@ -114,12 +99,13 @@ if (buttonText === "active") {
     lotTableBody.deleteRow(1);
   }
 
-  // Query the "Property" collection to find documents that match the MemID field
-  console.log("MemID to query:", MemID);
-  const queryid = query(collection(db, "Property"), where("ownerID", "==", MemID));
+
+
+  const PropertyCollectionRef = collection(db, "Property");
+const p = query(PropertyCollectionRef, where("ownerName", "==", Name));
 
   try {
-    const querySnapshot = await getDocs(queryid);
+    const querySnapshot = await getDocs(p);
 
     querySnapshot.forEach((docSnapshot) => {
       const data = docSnapshot.data();
@@ -136,7 +122,7 @@ if (buttonText === "active") {
     });
 
     if (querySnapshot.empty) {
-      console.log("No documents found for MemID:", MemID);
+
 
       // Display a message in the first row if no data is found
       const noDataMessage = lotTableBody.insertRow(-1);
@@ -149,14 +135,101 @@ if (buttonText === "active") {
   }
 
 
+//==================Edit=================================================================================================
+
+async function updateHTMLElements() {
+  const w = query(membersCollectionRef, where("memberName", "==", Name));
+
+  try {
+    const querySnapshot = await getDocs(w);
+
+    if (!querySnapshot.empty) {
+      const docRef = querySnapshot.docs[0].ref; // Get a reference to the first document
+      globalDocId = docRef.id;
+      // Assuming you want to update the elements with the first document found
+      const data = querySnapshot.docs[0].data();
 
 
-     
+      document.getElementById('memberName').value = data.memberName || '';
+      document.getElementById('spouseName').value = data.spouseName || '';
+      document.getElementById('occupation').value = data.occupation || '';
+      document.getElementById('age').value = data.age || '';
+      document.getElementById('birthday').value = data.birthday || '';
+      document.getElementById('civilStatus').value = data.civilStatus || '';
+      document.getElementById('citizenship').value = data.citizenship || '';
+      document.getElementById('contactNum').value = data.contactNum || '';
+      document.getElementById('sourceOfIncome').value = data.sourceOfIncome || '';
+      document.getElementById('memberCategory').value = data.memberCategory || '';
+      document.getElementById('memberStatus').value = data.memberStatus || '';
+      document.getElementById('gender').value = data.gender || '';
+
+    } else {
+      console.log("No such document with the provided name!");
+    }
+  } catch (error) {
+    console.error("Error getting documents:", error);
+  }
+}
 
 
-//==================member=======================================
+  function poppop() {
+  var pop = document.querySelector('#popup');
+  if (pop.style.display === 'none' || pop.style.display === '') {
+    pop.style.display = 'grid';
+  } else {
+    pop.style.display = 'none';
+  }
+  } 
+//================================================Upadate=================================================================
 
-//===============================================================================================================================================
+async function updateMember() {
+
+  if (!globalDocId) {
+    console.error("No document ID is set. Please fetch the member details first.");
+    return;
+  }
+
+  // Check if a document with the same enterID exists
+  const docRef = doc(db, "Members", globalDocId);
+  const docSnap = await getDoc(docRef);
+
+  if (!docSnap.exists()) {
+    console.error("enterID not found. This ID does not exist in the database.");
+    return;
+  }
+
+  const data = {
+    
+    memberName: memberName?.value,
+    spouseName: spouseName?.value,
+    occupation: occupation?.value,
+    age: age?.value,
+    birthday: birthday?.value,
+    civilStatus: civilStatus?.value,
+    citizenship: citizenship?.value,
+    contactNum: contactNum?.value,
+    memberCategory: memberCategory?.value,
+    memberStatus: memberStatus?.value,
+    gender: gender?.value
+  };
+
+  const updateConfirmed = confirm("Please check again before updating this member's information?");
+  if (updateConfirmed) {
+    // If the user confirmed, proceed with the update
+    try {
+      await updateDoc(docRef, data); // Update the document using the global document ID
+      alert("Updated Successfully");
+      location.reload(); // Consider the implications of reloading the page here
+    } catch (e) {
+      console.error("Error updating document: ", e);
+    }
+  } else {
+    // If the user did not confirm, log it and stop the function
+    console.log("Update canceled by the user.");
+  }
+}
+
+// //===============================================================================================================================================
 
 // Move outside of collectionMenu
 
@@ -168,6 +241,9 @@ function updateTotalFee(totalFee) {
 }
 
 async function collectionMenu() {
+
+  document.getElementById("memName").value = Name;
+
   // Clear existing rows in the table, but keep the first row (header)
   while (addColTable.rows.length > 1) {
     addColTable.deleteRow(1);
@@ -205,7 +281,7 @@ async function collectionMenu() {
         }
 
         // Check if CollectionID is "001"
-        if (data.CollectionID === "001") {
+        if (data.CollectionID === "001" || data.CollectionID === "008") {
           inputFee = document.createElement("input");
           inputFee.type = "text";
           inputFee.placeholder = "Enter fee";
@@ -234,6 +310,7 @@ async function collectionMenu() {
           feeCell.textContent = feeValue.toFixed(2);
         }
 
+
         checkBox.addEventListener("change", () => {
           if (checkBox.checked) {
             totalFee += feeValue;
@@ -247,7 +324,7 @@ async function collectionMenu() {
 
     const totalFeeRow = document.createElement("tr");
     const totalFeeCell = document.createElement("td");
-    totalFeeCell.textContent = `Total Fee: $${totalFee.toFixed(2)}`;
+    totalFeeCell.textContent = `Total Fee: ₱${totalFee.toFixed(2)}`;
     totalFeeCell.colSpan = 4;
     totalFeeCell.id = "totalFee";
     totalFeeRow.appendChild(totalFeeCell);
@@ -258,12 +335,12 @@ async function collectionMenu() {
 }
 
 
-//===============================================================================================================================================
+// //===============================================================================================================================================
 
 
 
 
-//===============================================================================================================================================
+// //===============================================================================================================================================
 
 function togglePopup() {
   var addCol = document.querySelector('#addCol');
@@ -279,7 +356,7 @@ function togglePopup() {
     cancelCollcetion();
   }
   }
-//===============================================================================================================================================
+// //===============================================================================================================================================
   function cancelCollcetion() {
     // Uncheck all checkboxes
     const checkboxes = document.querySelectorAll('input[type="checkbox"]');
@@ -293,25 +370,8 @@ function togglePopup() {
     // Update the "Total Fee" row
     updateTotalFee();
 }
-//===============================================================================================================================================
-memID.addEventListener("click", async () => {
-  document.getElementById("memID").value = MemID;
-  // Check if memID is empty or undefined
-  if (!memID.value) {
-      console.error("memID is empty or undefined.");
-      return;
-  }
 
-  // Check if a document with the same memID exists
-  const docRef = doc(db, "Members", memID.value);
-  const docSnap = await getDoc(docRef);
-
-  if (docSnap.exists()) {
-      const memberData = docSnap.data();
-      document.getElementById("memName").value = memberData.memberName;
-  }
-});
-//===============================================================================================================================================
+// //===============================================================================================================================================
 async function addCollection() {
 
   const buttonText = statusButton.textContent.toLowerCase();
@@ -324,10 +384,9 @@ async function addCollection() {
   const checkedRows = Array.from(document.querySelectorAll('#colCat table input[type="checkbox"]:checked'));
   const dataToAdd = {
       TransactionNum: document.getElementById('tranNum').value, 
-      Date: document.getElementById('tranDate').value, 
+      Date: document.getElementById('tranDate').value,
       Collector: document.getElementById('collName').value, 
-      Member: document.getElementById('memName').value, 
-      MemberID: document.getElementById('memID').value, 
+      Member: document.getElementById('memName').value,  
       TotalFee: totalFee,
       lotAmortBal: currentBal,
       Categories: []
@@ -347,7 +406,9 @@ async function addCollection() {
               dataToAdd.Categories.push({ collectionID: idCell, collectionName: nameCell, collectionFee: feeCell }); // Use the correct field names
           }
       });
-
+      
+      const userConfirmed = confirm("Are you sure you want to add this collection?");
+      if (userConfirmed) {
       try {
           const transactionRef = doc(db, "CollectionList", dataToAdd.TransactionNum); // Use dataToAdd.TransactionNum
           const snapshot = await getDoc(transactionRef);
@@ -364,59 +425,209 @@ async function addCollection() {
       } catch (error) {
           alert("Error adding data: " + error);
       }
+
+    }else {
+        alert("Data addition cancelled by user.");
+    }
   }
   
 }
-//===============================================================================================================================================
+//====================================================================================================================================
+async function updateLotAmort() {
+  const q = query(membersCollectionRef, where("memberName", "==", Name));
 
-async function displayCollection() {
+  const querySnapshot = await getDocs(q);
+
+  if (!querySnapshot.empty) {
+    // Get the first document from the query results
+    const docRef = querySnapshot.docs[0].ref;
+    globalDocId = docRef.id; // Assign the document ID to the global variable
+  } else {
+    console.log("No such document with the provided name!");
+  }
+
+
+  // Ensure globalDocId is the ID of the member you wish to update
+  if (!globalDocId) {
+    console.error("Document ID (globalDocId) is not set.");
+    return;
+  }
+
+  // Ensure that inputFee is defined and is a number
+  if (isNaN(inputFee) || inputFee === "") {
+    console.error("Input Fee (inputFee) is not a valid number.");
+    return;
+  }
+
+  // Reference the document
+  const docRef = doc(db, "Members", globalDocId);
+  
+  try {
+    // Get the current document snapshot
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      // Get the current value and parse it as a float
+      const currentLotAmort = parseFloat(docSnap.data().lotAmort);
+      console.log(`Current Lot Amortization: ${currentLotAmort}`);
+
+      // Parse the input fee and perform the subtraction
+      const parsedInputFee = parseFloat(inputFee);
+      console.log(`Input Fee: ${parsedInputFee}`);
+
+      // Subtract the input fee from the current lot amortization
+      const newLotAmort = currentLotAmort - parsedInputFee;
+      console.log(`New Lot Amortization: ${newLotAmort}`);
+
+      // Update the document
+      await updateDoc(docRef, { lotAmort: newLotAmort });
+      console.log("Lot amortization updated successfully.");
+
+    } else {
+      console.error("Document does not exist.");
+    }
+  } catch (e) {
+    console.error("Error updating lot amortization:", e);
+  }
+}
+
+
+
+
+// //===============================================================================================================================================
+
+
+async function displayCollection(next = true) {
+  const collectionRef = collection(db, "CollectionList");
+  let queryCol;
+
+  // Calculate the maximum number of pages
+  const totalDocumentsQuery = query(collectionRef, where("Member", "==", Name));
+  const totalDocumentsSnapshot = await getDocs(totalDocumentsQuery);
+  const totalDocuments = totalDocumentsSnapshot.size;
+  let maxPages = Math.ceil(totalDocuments / pageSize);
+
+  // Define the base query with a page size limit
+  if (next && lastVisible && currentPage < maxPages) {
+    // If fetching the next page
+    queryCol = query(collectionRef, where("Member", "==", Name), orderBy("TransactionNum", "desc"), startAfter(lastVisible), limit(pageSize));
+    currentPage++;
+  } else if (!next && firstVisible && currentPage > 1) {
+    // If fetching the previous page
+    queryCol = query(collectionRef, where("Member", "==", Name), orderBy("TransactionNum", "desc"), endBefore(firstVisible), limitToLast(pageSize));
+    currentPage--;
+  } else {
+    // This is the default query for the first page
+    queryCol = query(collectionRef, where("Member", "==", Name), orderBy("TransactionNum", "desc"), limit(pageSize));
+    currentPage = 1; // Reset to the first page
+    firstVisible = null; // Reset first document snapshot
+    lastVisible = null; // Reset last document snapshot
+  }
+
   // Clear existing rows in the table
   while (bleta.rows.length > 1) {
     bleta.deleteRow(1);
   }
 
-  // Reference to the "Members" collection in Firestore
-  const collectionRef = collection(db, "CollectionList");
-
   try {
-    const querySnapshot = await getDocs(collectionRef);
+    const querySnapshot = await getDocs(queryCol);
+    const documentSnapshots = querySnapshot.docs;
 
-    // Loop through the documents in the collection
-    querySnapshot.forEach((docSnapshot) => {
+    // Pagination controls update
+    if (documentSnapshots.length > 0) {
+      // Set the first and last document for pagination controls
+      firstVisible = documentSnapshots[0];
+      lastVisible = documentSnapshots[documentSnapshots.length - 1];
+    }
+
+    // Populate the table with the documents
+    documentSnapshots.forEach((docSnapshot) => {
       const data = docSnapshot.data();
-      
-      // Check if the "MemberID" matches the desired value
-      if (data.MemberID === MemID) {
-        const row = bleta.insertRow(-1); // Add a new row to the table
-
-        // Populate the row with member information
-        const transactionID = row.insertCell(0);
-        transactionID.textContent = data.TransactionNum;
-
-        const memberName = row.insertCell(1);
-        memberName.textContent = data.Member;
-
-        const date = row.insertCell(2);
-        date.textContent = data.Date;
-
-        const amount = row.insertCell(3);
-        amount.textContent = data.TotalFee;
-
-        const viewCell = row.insertCell(4);
-        const viewButton = document.createElement("button");
-        viewButton.textContent = "View";
-        viewButton.addEventListener("click", () => viewCollection(data));
-        viewCell.appendChild(viewButton);
-
-      }
+      // ... populate the row with data ...
+      if (data.Member === Name) {
+                const row = bleta.insertRow(-1); // Add a new row to the table
+        
+                // Populate the row with member information
+                const transactionID = row.insertCell(0);
+                transactionID.textContent = data.TransactionNum;
+        
+                const memberName = row.insertCell(1);
+                memberName.textContent = data.Member;
+        
+                const date = row.insertCell(2);
+                date.textContent = data.Date;
+        
+                const amount = row.insertCell(3);
+                amount.textContent = data.TotalFee;
+        
+                const viewCell = row.insertCell(4);
+                const viewButton = document.createElement("button");
+                viewButton.textContent = "View";
+                viewButton.addEventListener("click", () => viewCollection(data));
+                viewCell.appendChild(viewButton);
+        
+              }
     });
+
+    updatePageDisplay(currentPage, maxPages); // Update the page display
   } catch (error) {
     console.error("Error fetching data: ", error);
   }
 }
 
-//===============================================================================================================================================
-// Function to display the selected data in "viewCollection" HTML
+function updatePageDisplay(currentPage, maxPages) {
+  const pageInfo = document.getElementById('pageInfo');
+  if (!pageInfo) {
+    console.error('Page information element not found!');
+    return;
+  }
+  pageInfo.textContent = `Page ${currentPage} / ${maxPages}`;
+}
+
+function createPaginationControls() {
+  const nextButton = document.createElement("button");
+  nextButton.textContent = "Next";
+  nextButton.onclick = () => displayCollection(true);
+
+  // const prevButton = document.createElement("button");
+  // prevButton.textContent = "Previous";
+  // prevButton.onclick = () => displayCollection(false);
+
+  const prevButton = document.createElement("button");
+  prevButton.textContent = "Previous";
+  let alreadyAutoClicked = false; // Flag to ensure the auto-click only happens once
+  
+  prevButton.addEventListener('click', function handlePrevButtonClick() {
+    displayCollection(false); // Call your function to handle the click
+  
+    // Check if the button has not been auto-clicked yet
+    if (!alreadyAutoClicked) {
+      // Set the flag to true to prevent further auto-clicks
+      alreadyAutoClicked = true;
+      // Dispatch a new click event programmatically
+      prevButton.dispatchEvent(new MouseEvent('click'));
+    }
+  });
+
+
+  // Assuming you have a div with id="paginationControls" in your HTML
+  const controlsContainer = document.getElementById('paginationControls');
+  controlsContainer.appendChild(prevButton);
+  controlsContainer.appendChild(nextButton);
+  const pageInfo = document.createElement('div');
+  pageInfo.id = 'pageInfo';
+  pageInfo.textContent = 'Page 1 / 1'; // Initial text
+  controlsContainer.appendChild(pageInfo);
+}
+
+
+
+
+
+
+
+// //===============================================================================================================================================
+// // Function to display the selected data in "viewCollection" HTML
 
 function viewCollection(data) {
   const addCol = document.querySelector('#viewCollection');
@@ -466,7 +677,7 @@ function viewCollection(data) {
 
 
 
-//===============================================================================================================================================
+// //===============================================================================================================================================
 
 viewColCancel.addEventListener("click", () => {
   var addCol = document.querySelector('#viewCollection');
@@ -475,97 +686,10 @@ viewColCancel.addEventListener("click", () => {
 
 
 
-function poppop() {
-  var pop = document.querySelector('#popup');
-  if (pop.style.display === 'none' || pop.style.display === '') {
-    pop.style.display = 'grid';
-  } else {
-    pop.style.display = 'none';
-  }
-  } 
-
-//===============================================================================================================================================
-// Common function to update HTML elements
-async function updateHTMLElements() {
-const docRefe = doc(db, "Members", memberID);
-
-try {
-  const docSnap = await getDoc(docRefe);
-
-  if (docSnap.exists()) {
-    const data = docSnap.data();
-    
-
-    document.getElementById('enterID').value = data.enterID;
-    document.getElementById('memberName').value = data.memberName;
-    document.getElementById('spouseName').value = data.spouseName;
-    document.getElementById('occupation').value = data.occupation;
-    document.getElementById('PlaceOfBirth').value = data.PlaceOfBirth;
-    document.getElementById('age').value = data.age;
-    document.getElementById('birthday').value = data.birthday;
-    document.getElementById('civilStatus').value = data.civilStatus;
-    document.getElementById('citizenship').value = data.citizenship;
-    document.getElementById('contactNum').value = data.contactNum;
-    document.getElementById('sourceOfIncome').value = data.sourceOfIncome;
-    document.getElementById('memberCategory').value = data.memberCategory;
-    document.getElementById('memberStatus').value = data.memberStatus;
-    document.getElementById('gender').value = data.gender;
-   
-  } else {
-    console.log("No such document!");
-  }
-} catch (error) {
-  console.log(error);
-}
-
-}
 
 
-async function updateMember() {
-  const enteredID = enterID?.value;
 
-  // Check if enterID is empty or undefined
-  if (!enteredID) {
-    console.error("enterID is empty or undefined.");
-    return;
-  }
-
-  // Check if a document with the same enterID exists
-  const docRef = doc(db, "Members", enteredID);
-  const docSnap = await getDoc(docRef);
-
-  if (!docSnap.exists()) {
-    console.error("enterID not found. This ID does not exist in the database.");
-    return;
-  }
-
-  const data = {
-    enterID: enteredID,
-    memberName: memberName?.value,
-    spouseName: spouseName?.value,
-    occupation: occupation?.value,
-    PlaceOfBirth: PlaceOfBirth?.value,
-    age: age?.value,
-    birthday: birthday?.value,
-    civilStatus: civilStatus?.value,
-    citizenship: citizenship?.value,
-    contactNum: contactNum?.value,
-    sourceOfIncome: sourceOfIncome?.value,
-    memberCategory: memberCategory?.value,
-    memberStatus: memberStatus?.value,
-    gender: gender?.value
-  };
-
-  try {
-    await updateDoc(docRef, data); // Use updateDoc to update the existing document
-    alert("Updated Successfully");
-    location.reload();
-
-  } catch (e) {
-    console.error("Error updating document: ", e);
-  }
-}
-//===============================================================================================================================================
+// //===============================================================================================================================================
 
 
 
@@ -579,34 +703,45 @@ function toggleButton() {
 }
 
 
-//===============================================================================================================================================
-
-async function updateLotAmort() {
-  let parsedLotAmortVal = parseFloat(lotAmortVal);
-  let parsedInputFee = parseFloat(inputFee);
-   
-let subResult = parsedLotAmortVal  - parsedInputFee ;
-  // Check if a document with the same enterID exists
-  const docRef = doc(db, "Members", MemID);
-  const docSnap = await getDoc(docRef);
+// //===============================================================================================================================================
 
 
-  const data = {
-    lotAmort:subResult
-  };
 
+
+
+
+
+
+function sendSMS() {
+ 
+  const recipientPhoneNumber = document.getElementById('recipientNumber').value;
+  const messageBody = document.getElementById('messageBody').value;
+  const apiUrl = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
   try {
-    await updateDoc(docRef, data);
-    console.log(subResult);
-    location.reload();
-
-  } catch (e) {
-    console.error("Error updating document: ", e);
+  
+    fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Basic ' + btoa(accountSid + ':' + authToken),
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({
+        From: twilioPhoneNumber,
+        To: recipientPhoneNumber,
+        Body: messageBody,
+      }),
+    })
+      .then(response => response.json())
+      .then(data => console.log(data.sid))
+      .catch(error => console.error(error));
+    
+    toggleButton();
+  } catch (error) {
+      console.error('An unexpected error occurred:', error);
+      alert('An unexpected error occurred. Please check the console for details.');
   }
+  
 }
-
-
-
 
 collectionAdd.addEventListener("click", addCollection);
 addB.addEventListener("click", togglePopup);

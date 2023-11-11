@@ -26,6 +26,20 @@ function handleMemberView(memID) {
   // Use window.location.replace() to prevent going back to the login form
   window.location.replace(url);
 }
+document.getElementById("adminPassword").addEventListener("keydown", function(event) {
+  if (event.key === "Enter") {
+    event.preventDefault(); 
+    adminSignIn();
+  }
+});
+
+
+document.getElementById("memberPassword").addEventListener("keydown", function(event) {
+  if (event.key === "Enter") {
+    event.preventDefault(); 
+    memberSignIn();
+  }
+});
 
 async function adminSignIn() {
   const email = adminEmail.value;
@@ -35,7 +49,7 @@ async function adminSignIn() {
   const querySnapshot = await getDocs(q);
 
   if (querySnapshot.size === 0) {
-    alert("Admin email not found.");
+    alert("Admin/Staff not found.");
     return;
   }
 
@@ -48,6 +62,7 @@ async function adminSignIn() {
       console.log("Login Success");
       handleDashboard(email, userType);
     } catch (error) {
+      alert("Login Failed");
       console.log(`There was an error: ${error}`);
       console.log(error);
     }
@@ -64,7 +79,7 @@ async function memberSignIn() {
   const querySnapshot = await getDocs(q);
 
   if (querySnapshot.size === 0) {
-    alert("Member email not found.");
+    alert("Member not found.");
     return;
   }
 
@@ -77,6 +92,7 @@ async function memberSignIn() {
     console.log("Login Success");
     handleMemberView(memID);
   } catch (error) {
+    alert("Login Failed");
     console.log(`There was an error: ${error}`);
     console.log(error);
   }
