@@ -1,9 +1,9 @@
-// import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
-// import { doc, setDoc, getDoc,collection,getDocs } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
+import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
+import { doc, setDoc, getDoc,collection,getDocs } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
 
-// import { db, auth } from "../credentials/firebaseModule.js";
+import { db, auth } from "../credentials/firebaseModule.js";
 
-const { db, Property, Accounts, CollectionList, CollectionCategory, Members, EventDatabase, EventRequest } = require('./firebase');
+
 
 
 const submit = document.getElementById("submit");

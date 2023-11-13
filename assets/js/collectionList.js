@@ -1,5 +1,5 @@
 
-import { doc, getDoc,getDocs, setDoc,collection,updateDoc } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
+import { doc, getDoc,getDocs, setDoc,collection,updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
 
 import { db } from "../credentials/firebaseModule.js";
 
@@ -17,11 +17,188 @@ let inputFee = 0;
 let lotAmortVal;
 
 
+displayCollection();
+collectionMenu();
    
-   
 
 
 
+
+async function displayCollection(next = true) {
+  const collectionRef = collection(db, "CollectionList");
+  let queryCol;
+
+  // Calculate the maximum number of pages
+  const totalDocumentsQuery = query(collectionRef, where("Member", "==", Name));
+  const totalDocumentsSnapshot = await getDocs(totalDocumentsQuery);
+  const totalDocuments = totalDocumentsSnapshot.size;
+  let maxPages = Math.ceil(totalDocuments / pageSize);
+
+  // Define the base query with a page size limit
+  if (next && lastVisible && currentPage < maxPages) {
+    // If fetching the next page
+    queryCol = query(collectionRef, where("Member", "==", Name), orderBy("TransactionNum", "desc"), startAfter(lastVisible), limit(pageSize));
+    currentPage++;
+  } else if (!next && firstVisible && currentPage > 1) {
+    // If fetching the previous page
+    queryCol = query(collectionRef, where("Member", "==", Name), orderBy("TransactionNum", "desc"), endBefore(firstVisible), limitToLast(pageSize));
+    currentPage--;
+  } else {
+    // This is the default query for the first page
+    queryCol = query(collectionRef, where("Member", "==", Name), orderBy("TransactionNum", "desc"), limit(pageSize));
+    currentPage = 1; // Reset to the first page
+    firstVisible = null; // Reset first document snapshot
+    lastVisible = null; // Reset last document snapshot
+  }
+
+  // Clear existing rows in the table
+  while (bleta.rows.length > 1) {
+    bleta.deleteRow(1);
+  }
+
+  try {
+    const querySnapshot = await getDocs(queryCol);
+    const documentSnapshots = querySnapshot.docs;
+
+    // Pagination controls update
+    if (documentSnapshots.length > 0) {
+      // Set the first and last document for pagination controls
+      firstVisible = documentSnapshots[0];
+      lastVisible = documentSnapshots[documentSnapshots.length - 1];
+    }
+
+    // Populate the table with the documents
+    documentSnapshots.forEach((docSnapshot) => {
+      const data = docSnapshot.data();
+      // ... populate the row with data ...
+      if (data.Member === Name) {
+                const row = bleta.insertRow(-1); // Add a new row to the table
+        
+                // Populate the row with member information
+                const transactionID = row.insertCell(0);
+                transactionID.textContent = data.TransactionNum;
+        
+                const memberName = row.insertCell(1);
+                memberName.textContent = data.Member;
+        
+                const date = row.insertCell(2);
+                date.textContent = data.Date;
+        
+                const amount = row.insertCell(3);
+                amount.textContent = data.TotalFee;
+        
+                const viewCell = row.insertCell(4);
+                const viewButton = document.createElement("button");
+                viewButton.textContent = "View";
+                viewButton.addEventListener("click", () => viewCollection(data));
+                viewCell.appendChild(viewButton);
+        
+              }
+    });
+
+    updatePageDisplay(currentPage, maxPages); // Update the page display
+  } catch (error) {
+    console.error("Error fetching data: ", error);
+  }
+}
+
+function updatePageDisplay(currentPage, maxPages) {
+  const pageInfo = document.getElementById('pageInfo');
+  if (!pageInfo) {
+    console.error('Page information element not found!');
+    return;
+  }
+  pageInfo.textContent = `Page ${currentPage} / ${maxPages}`;
+}
+
+function createPaginationControls() {
+  const nextButton = document.createElement("button");
+  nextButton.textContent = "Next";
+  nextButton.onclick = () => displayCollection(true);
+
+  // const prevButton = document.createElement("button");
+  // prevButton.textContent = "Previous";
+  // prevButton.onclick = () => displayCollection(false);
+
+  const prevButton = document.createElement("button");
+  prevButton.textContent = "Previous";
+  let alreadyAutoClicked = false; // Flag to ensure the auto-click only happens once
+  
+  prevButton.addEventListener('click', function handlePrevButtonClick() {
+    displayCollection(false); // Call your function to handle the click
+  
+    // Check if the button has not been auto-clicked yet
+    if (!alreadyAutoClicked) {
+      // Set the flag to true to prevent further auto-clicks
+      alreadyAutoClicked = true;
+      // Dispatch a new click event programmatically
+      prevButton.dispatchEvent(new MouseEvent('click'));
+    }
+  });
+
+
+  // Assuming you have a div with id="paginationControls" in your HTML
+  const controlsContainer = document.getElementById('paginationControls');
+  controlsContainer.appendChild(prevButton);
+  controlsContainer.appendChild(nextButton);
+  const pageInfo = document.createElement('div');
+  pageInfo.id = 'pageInfo';
+  pageInfo.textContent = 'Page 1 / 1'; // Initial text
+  controlsContainer.appendChild(pageInfo);
+}
+
+
+// async function displayCollection() {
+    
+  
+//   // Clear existing rows in the table
+//   while (trans.rows.length > 1) {
+//       trans.deleteRow(1);
+//   }
+
+//   // Reference to the "Members" collection in Firestore
+//   const collectionRef = collection(db, "CollectionList");
+
+//   try {
+//     const querySnapshot = await getDocs(collectionRef);
+
+//     // Loop through the documents in the collection
+//     querySnapshot.forEach((docSnapshot) => {
+//       const data = docSnapshot.data();
+//       const row = trans.insertRow(-1); // Add a new row to the table
+
+//       // Populate the row with member information
+//       const transactionID = row.insertCell(0);
+//       transactionID.textContent = data.TransactionNum;
+
+//       const memberName = row.insertCell(1);
+//       memberName.textContent = data.Member;
+
+//       const date = row.insertCell(2);
+//       date.textContent = data.Date;
+
+//       const amount = row.insertCell(3);
+//       amount.textContent = data.TotalFee;
+
+//       const viewCell = row.insertCell(4);
+//       const viewButton = document.createElement("button");
+//       viewButton.textContent = "View";
+//       viewButton.addEventListener("click",  () => viewCollection(data));
+//       viewCell.appendChild(viewButton);
+
+      
+
+//       return function() {
+//           moveDataToBin(data);           
+//         };
+
+
+        
+//     });
+//   } catch (error) {
+//     console.error("Error fetching data: ", error);
+//   }
+// }
 
 // Function to show/hide the popup
 function togglePopup() {
@@ -48,133 +225,166 @@ function closePopup() {
 
 //=======================================================================
 
-function updateTotalFee() {
-    const totalFeeCell = document.getElementById("totalFee");
-    if (totalFeeCell) {
-        totalFeeCell.textContent = `Total Fee: $${totalFee.toFixed(2)}`;
+function updateTotalFee(totalFee) {
+  const totalFeeCell = document.getElementById("totalFee");
+  if (totalFeeCell) {
+    totalFeeCell.textContent = `Total Fee: $${totalFee.toFixed(2)}`;
+  }
+}
+
+async function updateLotAmort() {
+  const q = query(membersCollectionRef, where("memberName", "==", Name));
+
+  const querySnapshot = await getDocs(q);
+
+  if (!querySnapshot.empty) {
+    // Get the first document from the query results
+    const docRef = querySnapshot.docs[0].ref;
+    globalDocId = docRef.id; // Assign the document ID to the global variable
+  } else {
+    console.log("No such document with the provided name!");
+  }
+
+
+  // Ensure globalDocId is the ID of the member you wish to update
+  if (!globalDocId) {
+    console.error("Document ID (globalDocId) is not set.");
+    return;
+  }
+
+  // Ensure that inputFee is defined and is a number
+  if (isNaN(inputFee) || inputFee === "") {
+    console.error("Input Fee (inputFee) is not a valid number.");
+    return;
+  }
+
+  // Reference the document
+  const docRef = doc(db, "Members", globalDocId);
+  
+  try {
+    // Get the current document snapshot
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      // Get the current value and parse it as a float
+      const currentLotAmort = parseFloat(docSnap.data().lotAmort);
+      console.log(`Current Lot Amortization: ${currentLotAmort}`);
+
+      // Parse the input fee and perform the subtraction
+      const parsedInputFee = parseFloat(inputFee);
+      console.log(`Input Fee: ${parsedInputFee}`);
+
+      // Subtract the input fee from the current lot amortization
+      const newLotAmort = currentLotAmort - parsedInputFee;
+      console.log(`New Lot Amortization: ${newLotAmort}`);
+
+      // Update the document
+      await updateDoc(docRef, { lotAmort: newLotAmort });
+      console.log("Lot amortization updated successfully.");
+
+    } else {
+      console.error("Document does not exist.");
     }
+  } catch (e) {
+    console.error("Error updating lot amortization:", e);
+  }
 }
 
 
-async function updateLotAmort() {
-   
 
+async function collectionMenu() {
 
-    let parsedLotAmortVal = parseFloat(lotAmortVal);
-    let parsedInputFee = parseFloat(inputFee);
-     
-  let subResult = parsedLotAmortVal  - parsedInputFee ;
-    // Check if a document with the same enterID exists
-    const docRef = doc(db, "Members", memID?.value);
-    const docSnap = await getDoc(docRef);
-  
-  
-    const data = {
-      lotAmort:subResult
-    };
-  
-    try {
-      await updateDoc(docRef, data);
-      console.log(subResult);
-      location.reload();
-  
-    } catch (e) {
-      console.error("Error updating document: ", e);
-    }
+ 
+
+  // Clear existing rows in the table, but keep the first row (header)
+  while (addColTable.rows.length > 1) {
+    addColTable.deleteRow(1);
   }
 
+  // Reference to the "Members" collection in Firestore
+  const membersCollection = collection(db, "CollectionCategory");
 
-  async function collectionMenu() {
-    // Clear existing rows in the table, but keep the first row (header)
-    while (addColTable.rows.length > 1) {
-      addColTable.deleteRow(1);
-    }
-  
-    // Reference to the "Members" collection in Firestore
-    const membersCollection = collection(db, "CollectionCategory");
-  
-    try {
-      const querySnapshot = await getDocs(membersCollection);
-  
-      // Loop through the documents in the collection
-      querySnapshot.forEach((docSnapshot) => {
-        const data = docSnapshot.data();
-        if (data.Status === "Active") {
-          const row = addColTable.insertRow(-1); // Add a new row to the table
-  
-          // Create and populate table cells for each data field
-          const checkboxCell = row.insertCell(0);
-          const checkBox = document.createElement("input");
-          checkBox.type = "checkbox";
-          checkboxCell.appendChild(checkBox); // Append checkbox to the cell
-  
-          const idCell = row.insertCell(1);
-          idCell.textContent = data.CollectionID;
-  
-          const nameCell = row.insertCell(2);
-          nameCell.textContent = data.collectionName;
-  
-          const feeCell = row.insertCell(3);
-  
-          let feeValue = parseFloat(data.Fee);
-          if (isNaN(feeValue)) {
-            feeValue = 0; // Set default value for calculation
-          }
-  
-          // Check if CollectionID is "001"
-          if (data.CollectionID === "001") {
-            inputFee = document.createElement("input");
-            inputFee.type = "text";
-            inputFee.placeholder = "Enter fee";
-  
-            let timeout;
-  
-            inputFee.addEventListener("input", (event) => {
-              clearTimeout(timeout);
-              timeout = setTimeout(() => {
-                const newFee = parseFloat(event.target.value);
-                feeValue = isNaN(newFee) ? 0 : newFee;
-                feeCell.textContent = isNaN(newFee) ? "" : newFee.toFixed(2);
-  
-                // Assign the value to inputFee
-                inputFee = event.target.value;
-                
-                let parsedLotAmortVal = parseFloat(lotAmortVal);
-                let parsedInputFee = parseFloat(inputFee);
-  
-                // Use parsedLotAmortVal and parsedInputFee as needed in your code
-              }, 2000); // Adjust the delay as needed
-            });
-  
-            feeCell.appendChild(inputFee);
-          } else {
-            feeCell.textContent = feeValue.toFixed(2);
-          }
-  
-          checkBox.addEventListener("change", () => {
-            if (checkBox.checked) {
-              totalFee += feeValue;
-            } else {
-              totalFee -= feeValue;
-            }
-            updateTotalFee(totalFee);
-          });
+  try {
+    const querySnapshot = await getDocs(membersCollection);
+
+    // Loop through the documents in the collection
+    querySnapshot.forEach((docSnapshot) => {
+      const data = docSnapshot.data();
+      if (data.Status === "Active") {
+        const row = addColTable.insertRow(-1); // Add a new row to the table
+
+        // Create and populate table cells for each data field
+        const checkboxCell = row.insertCell(0);
+        const checkBox = document.createElement("input");
+        checkBox.type = "checkbox";
+        checkboxCell.appendChild(checkBox); // Append checkbox to the cell
+
+        const idCell = row.insertCell(1);
+        idCell.textContent = data.CollectionID;
+
+        const nameCell = row.insertCell(2);
+        nameCell.textContent = data.collectionName;
+
+        const feeCell = row.insertCell(3);
+
+        let feeValue = parseFloat(data.Fee);
+        if (isNaN(feeValue)) {
+          feeValue = 0; // Set default value for calculation
         }
-      });
-  
-      const totalFeeRow = document.createElement("tr");
-      const totalFeeCell = document.createElement("td");
-      totalFeeCell.textContent = `Total Fee: $${totalFee.toFixed(2)}`;
-      totalFeeCell.colSpan = 4;
-      totalFeeCell.id = "totalFee";
-      totalFeeRow.appendChild(totalFeeCell);
-      addColTable.appendChild(totalFeeRow);
-    } catch (error) {
-      console.error("Error fetching data: ", error);
-    }
+
+        // Check if CollectionID is "001"
+        if (data.CollectionID === "001" || data.CollectionID === "008") {
+          inputFee = document.createElement("input");
+          inputFee.type = "number";
+          inputFee.placeholder = "Enter fee";
+
+          let timeout;
+
+          inputFee.addEventListener("input", (event) => {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+              const newFee = parseFloat(event.target.value);
+              feeValue = isNaN(newFee) ? 0 : newFee;
+              feeCell.textContent = isNaN(newFee) ? "" : newFee.toFixed(2);
+
+              // Assign the value to inputFee
+              inputFee = event.target.value;
+              
+              let parsedLotAmortVal = parseFloat(lotAmortVal);
+              let parsedInputFee = parseFloat(inputFee);
+
+              // Use parsedLotAmortVal and parsedInputFee as needed in your code
+            }, 2000); // Adjust the delay as needed
+          });
+
+          feeCell.appendChild(inputFee);
+        } else {
+          feeCell.textContent = feeValue.toFixed(2);
+        }
+
+
+        checkBox.addEventListener("change", () => {
+          if (checkBox.checked) {
+            totalFee += feeValue;
+          } else {
+            totalFee -= feeValue;
+          }
+          updateTotalFee(totalFee);
+        });
+      }
+    });
+
+    const totalFeeRow = document.createElement("tr");
+    const totalFeeCell = document.createElement("td");
+    totalFeeCell.textContent = `Total Fee: ₱${totalFee.toFixed(2)}`;
+    totalFeeCell.colSpan = 4;
+    totalFeeCell.id = "totalFee";
+    totalFeeRow.appendChild(totalFeeCell);
+    addColTable.appendChild(totalFeeRow);
+  } catch (error) {
+    console.error("Error fetching data: ", error);
   }
-
-
+}
 
 
 
@@ -290,57 +500,7 @@ memID.addEventListener("input", async () => {
 });
 //=================================display Collection List========================================================
 // Function to fetch data from Firestore and populate the table
-async function displayCollection() {
-    
-  
-    // Clear existing rows in the table
-    while (trans.rows.length > 1) {
-        trans.deleteRow(1);
-    }
-  
-    // Reference to the "Members" collection in Firestore
-    const collectionRef = collection(db, "CollectionList");
-  
-    try {
-      const querySnapshot = await getDocs(collectionRef);
-  
-      // Loop through the documents in the collection
-      querySnapshot.forEach((docSnapshot) => {
-        const data = docSnapshot.data();
-        const row = trans.insertRow(-1); // Add a new row to the table
-  
-        // Populate the row with member information
-        const transactionID = row.insertCell(0);
-        transactionID.textContent = data.TransactionNum;
-  
-        const memberName = row.insertCell(1);
-        memberName.textContent = data.Member;
 
-        const date = row.insertCell(2);
-        date.textContent = data.Date;
-
-        const amount = row.insertCell(3);
-        amount.textContent = data.TotalFee;
-  
-        const viewCell = row.insertCell(4);
-        const viewButton = document.createElement("button");
-        viewButton.textContent = "View";
-        viewButton.addEventListener("click",  () => viewCollection(data));
-        viewCell.appendChild(viewButton);
-
-        
-
-        return function() {
-            moveDataToBin(data);           
-          };
-
-
-          
-      });
-    } catch (error) {
-      console.error("Error fetching data: ", error);
-    }
-  }
   
   //===============================Search Bar======================================================
 
@@ -417,8 +577,7 @@ function viewCollection(data) {
   
 
 
-displayCollection();
-collectionMenu();
+
 cancel.addEventListener("click", closePopup);
 popupMenu.addEventListener("click", togglePopup);
 add.addEventListener("click", addCollection);

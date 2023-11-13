@@ -83,7 +83,7 @@
 
     /* Style for alternating row colors */
     tr:nth-child(even) {
-      background-color: #f2f2f2;
+      background-color: white;
       width: 20px;
     }
 
@@ -162,6 +162,17 @@
       
     }
 
+    #Gen {
+      float: right;
+      background-color: green;
+      color: #fff;
+      margin-left: auto;
+    }
+    #Gen:hover {
+      background-color: #16bb47;
+      color: white;
+      
+    }
 
     #popup {
   border: 2px solid #ccc;
@@ -275,7 +286,7 @@ font-size: medium;
       </div>
     
       <button id="add" onclick="togglePopup()">Add Member</button>
-     
+      <button id="Gen" >Generate Report</button>
       <div id="popup" class="popup">
           
         <div class="label-input-pair">

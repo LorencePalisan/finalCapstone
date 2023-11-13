@@ -283,7 +283,7 @@ async function collectionMenu() {
         // Check if CollectionID is "001"
         if (data.CollectionID === "001" || data.CollectionID === "008") {
           inputFee = document.createElement("input");
-          inputFee.type = "text";
+          inputFee.type = "number";
           inputFee.placeholder = "Enter fee";
 
           let timeout;

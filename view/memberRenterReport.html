@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Report</title>
+    
+
+    <style>
+        #enterID::-webkit-inner-spin-button,
+        #enterID::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        appearance: none;
+        margin: 0;
+        }
+
+        #age::-webkit-inner-spin-button,
+        #age::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        appearance: none;
+        margin: 0;
+        }
+
+        #bal::-webkit-inner-spin-button,
+        #bal::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        appearance: none;
+        margin: 0;
+        }
+
+          /* Container for the form */
+    #form-container {
+      max-width: 600px;
+      margin: 0 auto;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+    }
+
+  
+
+    
+    #searchBar input
+    {
+      width: 100%;
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+    }
+
+    /* Clear the right margin for the last column */
+    .form-column:last-child {
+      margin-right: 0;
+    }
+
+     /* Style for the table */
+     table {
+      border-collapse: collapse;
+      width: 100%;
+      max-width: 90%;
+      margin: 20px auto;
+      background-color: white;
+      border: 1px solid green; /* Add border to the table */
+      border-radius: 5px;
+      box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Style for table header (th) */
+    th {
+      background-color: #1CAC78;
+      color: white;
+      padding: 10px;
+      text-align: center;
+      width: 20%;
+    }
+
+    /* Style for table data (td) */
+    td {
+      width: 10%;
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
+      text-align: center;
+    }
+
+    /* Style for alternating row colors */
+    tr:nth-child(even) {
+      background-color: white;
+      width: 20px;
+    }
+
+  
+
+    /* Style for the buttons */
+    button {
+      width: 150px; /* Adjust the width to your preferred size */
+      height: 40px; /* Adjust the height to your preferred size */
+      background-color: #1CAC78;
+      color: white;
+      padding: 0; /* Remove padding */
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    button:hover {
+      background-color: #ff6666;
+      color: #fff;
+    }
+     /* Container for the button */
+     .buttonclear-container {
+      text-align: right;
+      margin-top: 20px;
+    }
+
+  
+     /* Style for the toolbar */
+     .toolbar {
+      background-color: #1CAC78; /* Background color for the toolbar */
+      color: white;
+      padding: 10px;
+      text-align: center;
+    }
+
+    /* Style for the toolbar title */
+    .toolbar-title {
+      font-size: 24px; /* Font size for the title */
+      margin: 0; /* Remove margin to align the title at the center */
+    }
+
+    #span {
+      text-align: center; /* Center-align the content within the div */
+    }
+
+    #pageIndicator {
+      border: 1px solid black; /* Add a border around the span */
+      padding: 5px; /* Add some padding to make the border visible */
+    }
+  
+
+    #add {
+      float: right;
+      background-color: green;
+      color: #fff;
+      margin-left: auto;
+    }
+    #add:hover {
+      background-color: #16bb47;
+      color: white;
+      
+    }
+
+
+
+
+
+button {
+  padding: 10px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+
+
+#paginationControls{
+  margin: 20px;
+  text-align: center;
+}
+
+#paginationControls button{
+  font-size: small;
+  width: 20%;
+  height: 40px;
+}
+#quer{
+ 
+  border-collapse: collapse;
+  width: 100%;
+  max-width: 80%;
+  margin: 20px auto;
+  background-color: white;
+}
+
+#quer select{
+  height: 25px;
+  border-radius: 10px;
+  width: 120px;
+}
+#quer label{
+font-size: large;
+}
+
+#quer option{
+font-size: medium;
+}
+    </style>
+</head>
+<body >
+
+    <div class="toolbar">
+        <h1 class="toolbar-title">Generate Report</h1>
+      </div>
+    
+      <button id="add" >Generate Report</button>
+    
+      <div id="quer">
+          
+
+          <label for="">Property Status:</label>
+          <select id="stat" name="Category">
+            <!-- <option value="" disabled selected>--- Select Property Status ---</option> -->
+            <option value="Owned">Owned</option>
+            <option value="Rented">Rented</option>
+            <option value="Vacant">Vacant</option>
+          </select>
+        </div>
+       
+        
+
+<div>
+        <table id="propertyTable">
+            <tr>
+                <th>Name</th>
+                <th>Property Status</th>
+                <th colspan="3">Property </br>Lot #/Block #/Lot Size</th>
+                
+                
+            </tr>
+            <tr>
+                <td> </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>  
+              
+        </table>
+        <div id="paginationControls"></div>
+        <script type="module" src="../assets/js/memberRenterReport.js"></script>
+</body>
+</html>

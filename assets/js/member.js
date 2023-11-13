@@ -371,6 +371,10 @@ document.getElementById('stat').addEventListener('change', function() {
   fetchAndPopulateTable();
 });
 
+document.getElementById('Gen').addEventListener('click', function() {
+  window.open('memberRenterReport.html');
+});
+
 
 addData.addEventListener("click", addMember);
 clear.addEventListener("click", clearFields);
