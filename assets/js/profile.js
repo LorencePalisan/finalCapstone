@@ -26,7 +26,8 @@ let totalFee = 0;
 let lotAmortVal; 
 let inputFee;
 let penaltyFee;
-
+let firstFee; 
+let secondFee;
 let currentPage = 1; 
 const pageSize = 10; 
 let lastVisible = null; 
@@ -280,36 +281,56 @@ async function collectionMenu() {
           feeValue = 0; // Set default value for calculation
         }
 
-        // Check if CollectionID is "001"
-        if (data.CollectionID === "001" || data.CollectionID === "008") {
-          inputFee = document.createElement("input");
-          inputFee.type = "number";
-          inputFee.placeholder = "Enter fee";
+       
+if (data.CollectionID === "001") {
+  inputFee = document.createElement("input");
+  inputFee.type = "number";
+  inputFee.placeholder = "Enter fee";
+  inputFee.value = firstFee || ''; // Use the firstFee value holder
 
-          let timeout;
+  let timeout;
 
-          inputFee.addEventListener("input", (event) => {
-            clearTimeout(timeout);
-            timeout = setTimeout(() => {
-              const newFee = parseFloat(event.target.value);
-              feeValue = isNaN(newFee) ? 0 : newFee;
-              feeCell.textContent = isNaN(newFee) ? "" : newFee.toFixed(2);
+  inputFee.addEventListener("input", (event) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      const newFee = parseFloat(event.target.value);
+      feeValue = isNaN(newFee) ? 0 : newFee;
+      feeCell.textContent = isNaN(newFee) ? "" : newFee.toFixed(2);
 
-              // Assign the value to inputFee
-              inputFee = event.target.value;
-              
-              let parsedLotAmortVal = parseFloat(lotAmortVal);
-              let parsedInputFee = parseFloat(inputFee);
+      // Update the specific value holder for CollectionID "001"
+      firstFee = event.target.value; // Store the input value in firstFee
 
-              // Use parsedLotAmortVal and parsedInputFee as needed in your code
-            }, 2000); // Adjust the delay as needed
-          });
+      // ... (existing code)
+    }, 2000);
+  });
 
-          feeCell.appendChild(inputFee);
-        } else {
-          feeCell.textContent = feeValue.toFixed(2);
-        }
+  feeCell.appendChild(inputFee);
+} else if (data.CollectionID === "008") {
+  inputFee = document.createElement("input");
+  inputFee.type = "number";
+  inputFee.placeholder = "Enter fee";
+  inputFee.value = secondFee || ''; // Use the secondFee value holder
 
+  let timeout;
+
+  inputFee.addEventListener("input", (event) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      const newFee = parseFloat(event.target.value);
+      feeValue = isNaN(newFee) ? 0 : newFee;
+      feeCell.textContent = isNaN(newFee) ? "" : newFee.toFixed(2);
+
+      // Update the specific value holder for CollectionID "008"
+      secondFee = event.target.value; // Store the input value in secondFee
+
+      // ... (existing code)
+    }, 2000);
+  });
+
+  feeCell.appendChild(inputFee);
+} else {
+  feeCell.textContent = feeValue.toFixed(2);
+}
 
         checkBox.addEventListener("change", () => {
           if (checkBox.checked) {

@@ -1,5 +1,5 @@
-import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
-import { doc, setDoc, getDoc,collection,getDocs } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
+import { createUserWithEmailAndPassword, sendEmailVerification, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
+import { doc, getDoc,getDocs, setDoc,collection, updateDoc, query, where, orderBy, limit, startAfter, endBefore, limitToLast, } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
 
 import { db, auth } from "../credentials/firebaseModule.js";
 
@@ -10,123 +10,120 @@ const submit = document.getElementById("submit");
 
 let emailInput = document.getElementById("email");
 let userType = document.getElementById("userType");
-let memberID = document.getElementById("memberID");
 let memberName = document.getElementById("memberName");
 let contactNum = document.getElementById("contactNum");
 let passwordInput = document.getElementById("password");
 let confirmPasswordInput = document.getElementById("Cpassword");
-
+const bleta = document.getElementById("accountsTable");
+let currentPage = 1; 
+const pageSize = 20; 
+let lastVisible = null; 
+let firstVisible = null; 
 var heading = document.getElementById("myHeading");
+let user = document.getElementById("user");
 
 
-fetchAndPopulateTable();
+document.addEventListener('DOMContentLoaded', (event) => {
+  fetchAndPopulateTable();
+  createPaginationControls();
+});
+
+user.addEventListener('change', (event) => {
+  fetchAndPopulateTable();
+});
+
+memberName.addEventListener("input", async function () {
+  if (memberName.value) { 
+    const queryRef = query(collection(db, "Members"), where("memberName", "==", memberName.value));
+    try { 
+      const querySnapshot = await getDocs(queryRef);
+      if (!querySnapshot.empty) {
+        const data = querySnapshot.docs[0].data();
+        document.getElementById("contactNum").value = data.contactNum;
+      } else {
+        console.error("Member not found.");
+      }
+    } catch (error) {
+      console.error("Error retrieving member information:", error);
+    }
+  } else {
+    console.error("Member name is required.");
+  }
+});
 
 
-// Create user account
+// Function to create a user account with email verification
 async function createAccount() {
+  // Get input values
+  const email = emailInput?.value;
+  const password = passwordInput?.value;
+  const confirmPassword = confirmPasswordInput?.value;
 
-let email = emailInput?.value;
-let password = passwordInput?.value;
-let confirmPassword = confirmPasswordInput?.value;
-
+  // Validate password match
   if (password !== confirmPassword) {
-    console.error("Passwords do not match");
+    alert.error("Passwords do not match");
     return;
   }
 
-  if (!memberID?.value) {
-    alert("Member ID is empty or undefined.");
+  // Validate member name
+  if (!memberName?.value) {
+    alert("Member name is empty or undefined.");
     return;
   }
-    // Check if a document with the same enterID exists
-    const docRef = doc(db, "Members", memberID?.value);
-    const docSnap = await getDoc(docRef);
-  
-    if (!docSnap.exists()) {
-      // Handle duplicate enterID
-      alert("This member ID does not existed in members list.");
-      return;
-    }
-  
-    const userDocRef = doc(db, "Accounts",memberID?.value);
-    const accSnap = await getDoc(userDocRef);
-    if (accSnap.exists()) {
-      // Handle duplicate enterID
-      alert("This member ID is already used.");
-      return;
-    }
-    const data = {
-      email: email,
-      userType: userType?.value,
-      memberID: memberID?.value,
-      memberName: memberName?.value,
-      contactNum: contactNum?.value,
-    }
-    try{
-      await setDoc(userDocRef, data);
-      console.log("Data added.");
-    }catch(error){
-      console.error("Error adding data:", error);
-    }
-  createUserWithEmailAndPassword(auth, email, password)
-    .then(async (userCredential) => {
-      const user = userCredential.user;
-      alert("Account has been created.");
- 
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.error("Error creating user: ", errorMessage);
-    });
+
+  // Check if a document with the same member name exists
+  const queryRef = query(collection(db, "Members"), where("memberName", "==", memberName?.value));
+  const querySnapshot = await getDocs(queryRef);
+
+  // Handle non-existent member name
+  if (querySnapshot.empty) {
+    alert("This member name does not exist in the members list.");
+    return;
+  }
+
+  // Set up Firestore document reference for the user account
+  const userDocRef = doc(collection(db, "Accounts"));
+
+  // Prepare data for the user account
+  const userData = {
+    email: email,
+    userType: userType?.value,
+    memberName: memberName?.value,
+    contactNum: contactNum?.value,
+  };
+
+  try {
+    // Add user data to Firestore
+    await setDoc(userDocRef, userData);
+
+    // Create user account with email and password
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+
+    // Send email verification
+    await sendEmailVerification(user);
+
+    // Display success message
+    alert("Account has been created. Please check your email for verification.");
+
+    // Fetch and populate the table (assuming these functions are defined elsewhere)
+    fetchAndPopulateTable();
+
+    // Clear input fields
     clear();
+  } catch (error) {
+    // Handle errors
+    console.error("Error creating account:", error);
+  }
 }
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-memberID.addEventListener("input", async function () {
-  const memberIDValue = memberID?.value;
-
-  if (memberIDValue) { // Check if memberIDValue is not empty or undefined
-    const docRef = doc(db, "Members", memberIDValue);
-    const docSnap = await getDoc(docRef);
-
-    if (docSnap.exists()) {
-      const data = docSnap.data();
-      document.getElementById("memberName").value = data.memberName;
-      document.getElementById("contactNum").value = data.contactNum;
-    } else {
-      // Handle the case when the document does not exist
-    }
-  } else {
-    // Handle the case when memberIDValue is empty or undefined
-  }
-});
 //===================================================================================
 function clear(){
  email .value = "";
  userType .value = "";
- memberID .value = "";
  memberName .value = "";
  contactNum .value = "";
  passwordInput .value = "";
@@ -139,7 +136,7 @@ function filterTable() {
   const rows = accountsTable.getElementsByTagName("tr");
 
   for (let i = 1; i < rows.length; i++) {
-    const nameCell = rows[i].getElementsByTagName("td")[3]; // Get the second cell (name cell)
+    const nameCell = rows[i].getElementsByTagName("td")[2]; // Get the second cell (name cell)
     if (nameCell) {
       const name = nameCell.textContent.toLowerCase();
       if (name.includes(searchInput)) {
@@ -161,52 +158,195 @@ document.addEventListener("DOMContentLoaded", filterTable);
 
 //===================================================================================
 
-// Function to fetch data from Firestore and populate the table
-async function fetchAndPopulateTable() {
-  const accountTable = document.getElementById("accountsTable");
+
+async function fetchAndPopulateTable(next = true) {
+  const collectionRef = collection(db, "Accounts");
+  let queryCol;
+
+// Calculate the maximum number of pages
+const totalDocumentsQuery = query(collectionRef);
+const totalDocumentsSnapshot = await getDocs(totalDocumentsQuery);
+const totalDocuments = totalDocumentsSnapshot.size;
+let maxPages = Math.ceil(totalDocuments / pageSize);
+
+// Define the base query with a page size limit
+if (next && lastVisible && currentPage < maxPages) {
+  // If fetching the next page
+  queryCol = query(collectionRef, orderBy("memberName", "asc"), startAfter(lastVisible), limit(pageSize));
+  currentPage++;
+} else if (!next && firstVisible && currentPage > 1) {
+  // If fetching the previous page
+  queryCol = query(collectionRef, orderBy("memberName", "asc"), endBefore(firstVisible), limitToLast(pageSize));
+  currentPage--;
+} else {
+  // This is the default query for the first page
+  queryCol = query(collectionRef, orderBy("memberName", "asc"), limit(pageSize));
+  currentPage = 1; // Reset to the first page
+  firstVisible = null; // Reset first document snapshot
+  lastVisible = null; // Reset last document snapshot
+}
+
 
   // Clear existing rows in the table
-  while (accountTable.rows.length > 1) {
-    accountTable.deleteRow(1);
+  while (bleta.rows.length > 1) {
+    bleta.deleteRow(1);
   }
 
-  // Reference to the "Members" collection in Firestore
-  const accountCollection = collection(db, "Accounts");
-
   try {
-    const querySnapshot = await getDocs(accountCollection);
+    const querySnapshot = await getDocs(queryCol);
+    const documentSnapshots = querySnapshot.docs;
 
-    // Loop through the documents in the collection
-    querySnapshot.forEach((docSnapshot) => {
+    // Pagination controls update
+    if (documentSnapshots.length > 0) {
+      // Set the first and last document for pagination controls
+      firstVisible = documentSnapshots[0];
+      lastVisible = documentSnapshots[documentSnapshots.length - 1];
+    }
+
+    // Populate the table with the documents
+    documentSnapshots.forEach((docSnapshot) => {
       const data = docSnapshot.data();
-      const row = accountTable.insertRow(-1); // Add a new row to the table
-
-      // Populate the row with member information
-      const idCell = row.insertCell(0);
-      idCell.textContent = data.memberID;
-
-      const typeCell = row.insertCell(1);
-      typeCell.textContent = data.userType;
-
-      const emailCell = row.insertCell(2);
-      emailCell.textContent = data.email;
-
-      const nameCell = row.insertCell(3);
-      nameCell.textContent = data.memberName;
-
-      const contact  = row.insertCell(4);
-      contact.textContent = data.contactNum;
-
-      // const viewCell = row.insertCell(5);
-      // const viewButton = document.createElement("button");
-      // viewButton.textContent = "Reset Password";
-      // viewButton.addEventListener("click", () => {
-      //   toggleUpdate();
-      // });
-      // viewCell.appendChild(viewButton);  
+      // ... populate the row with data ...
+      if (data.userType === user.value) {
+                const row = bleta.insertRow(-1); // Add a new row to the table
+        
+                // Populate the row with member information
+                const transactionID = row.insertCell(0);
+                transactionID.textContent = data.userType;
+        
+                const memberName = row.insertCell(1);
+                memberName.textContent = data.email;
+        
+                const date = row.insertCell(2);
+                date.textContent = data.memberName;
+        
+                const amount = row.insertCell(3);
+                amount.textContent = data.contactNum;
+        
+                const resetCell = row.insertCell(4);
+                const resetButton = document.createElement("button");
+                resetButton.textContent = "Reset Password";
+                resetButton.addEventListener("click", () => {
+                        // Call the password reset function with the user's email
+                requestPasswordReset(data.email);
+                });
+                resetCell.appendChild(resetButton);
+        
+              }
     });
+
+    updatePageDisplay(currentPage, maxPages); // Update the page display
   } catch (error) {
     console.error("Error fetching data: ", error);
+  }
+}
+
+function updatePageDisplay(currentPage, maxPages) {
+  const pageInfo = document.getElementById('pageInfo');
+  if (!pageInfo) {
+    console.error('Page information element not found!');
+    return;
+  }
+  pageInfo.textContent = `Page ${currentPage} / ${maxPages}`;
+}
+
+function createPaginationControls() {
+  const nextButton = document.createElement("button");
+  nextButton.textContent = "Next";
+  nextButton.onclick = () => fetchAndPopulateTable(true);
+
+  // const prevButton = document.createElement("button");
+  // prevButton.textContent = "Previous";
+  // prevButton.onclick = () => fetchAndPopulateTable(false);
+
+  const prevButton = document.createElement("button");
+  prevButton.textContent = "Previous";
+  let alreadyAutoClicked = false; // Flag to ensure the auto-click only happens once
+  
+  prevButton.addEventListener('click', function handlePrevButtonClick() {
+    fetchAndPopulateTable(false); // Call your function to handle the click
+  
+    // Check if the button has not been auto-clicked yet
+    if (!alreadyAutoClicked) {
+      // Set the flag to true to prevent further auto-clicks
+      alreadyAutoClicked = true;
+      // Dispatch a new click event programmatically
+      prevButton.dispatchEvent(new MouseEvent('click'));
+    }
+  });
+
+
+  // Assuming you have a div with id="paginationControls" in your HTML
+  const controlsContainer = document.getElementById('paginationControls');
+  controlsContainer.appendChild(prevButton);
+  controlsContainer.appendChild(nextButton);
+  const pageInfo = document.createElement('div');
+  pageInfo.id = 'pageInfo';
+  pageInfo.textContent = 'Page 1 / 1'; // Initial text
+  controlsContainer.appendChild(pageInfo);
+}
+
+// // Function to fetch data from Firestore and populate the table
+// async function fetchAndPopulateTable() {
+//   const accountTable = document.getElementById("accountsTable");
+
+//   // Clear existing rows in the table
+//   while (accountTable.rows.length > 1) {
+//     accountTable.deleteRow(1);
+//   }
+
+//   // Reference to the "Members" collection in Firestore
+//   const accountCollection = collection(db, "Accounts");
+
+//   try {
+//     const querySnapshot = await getDocs(accountCollection);
+
+//     // Loop through the documents in the collection
+//     querySnapshot.forEach((docSnapshot) => {
+//       const data = docSnapshot.data();
+//       const row = accountTable.insertRow(-1); // Add a new row to the table
+
+//       const typeCell = row.insertCell(0);
+//       typeCell.textContent = data.userType;
+
+//       const emailCell = row.insertCell(1);
+//       emailCell.textContent = data.email;
+
+//       const nameCell = row.insertCell(2);
+//       nameCell.textContent = data.memberName;
+
+//       const contactCell = row.insertCell(3);
+//       contactCell.textContent = data.contactNum;
+
+//       const resetCell = row.insertCell(4);
+//       const resetButton = document.createElement("button");
+//       resetButton.textContent = "Reset Password";
+//       resetButton.addEventListener("click", () => {
+//         // Call the password reset function with the user's email
+//         requestPasswordReset(data.email);
+//       });
+//       resetCell.appendChild(resetButton);
+//     });
+//   } catch (error) {
+//     console.error("Error fetching data: ", error);
+//   }
+// }
+
+async function requestPasswordReset(email) {
+  try {
+    // Send a password reset email
+    await sendPasswordResetEmail(auth, email);
+
+    // Display success message to the user
+    alert(`Password reset email sent to ${email}. Check your inbox for further instructions.`);
+  } catch (error) {
+    // Handle errors
+    const errorCode = error.code;
+    const errorMessage = error.message;
+
+    // Display error message to the user
+    alert(`Error sending password reset email: ${errorMessage}`);
+    console.error("Error sending password reset email:", errorCode, errorMessage);
   }
 }
 

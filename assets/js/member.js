@@ -332,7 +332,7 @@ function filterTable() {
   const rows = memberTable.getElementsByTagName("tr");
 
   for (let i = 1; i < rows.length; i++) {
-    const nameCell = rows[i].getElementsByTagName("td")[1]; // Get the second cell (name cell)
+    const nameCell = rows[i].getElementsByTagName("td")[0]; // Get the second cell (name cell)
     if (nameCell) {
       const name = nameCell.textContent.toLowerCase();
       if (name.includes(searchInput)) {

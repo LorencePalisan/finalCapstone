@@ -128,13 +128,7 @@
     background-color: #f4f4f4;
 }
 
-        
-        #memberID::-webkit-inner-spin-button,
-        #memberID::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        appearance: none;
-        margin: 0;
-        }
+
         
         #contactNum::-webkit-inner-spin-button,
         #contactNum::-webkit-outer-spin-button {
@@ -197,6 +191,17 @@
       border-radius: 3px;
     }
    
+    #sortType{
+      margin-left: 10%;
+
+    }
+    #sortType label{
+      font-size: large;
+    }
+    #sortType select{
+      font-size: medium;
+    }
+
 
  
     </style>
@@ -249,21 +254,28 @@
     <input type="text" id="searchInput" placeholder="Search by Name">
 </div>
 
+<div id="sortType">
+  <label for="user">User Type:</label>
+  <select id="user">
+    <option value="member">Member</option>
+    <option value="staff">Staff</option>
+    <option value="admin">Admin</option>
+  </select>
+</div>
+
 <div class="container">
     <table id="accountsTable">
       <thead>
-        <tr>
-          <th>ID</th>
+        <tr>      
           <th>User Type</th>
           <th>Email</th>
           <th>Name</th>
           <th>Contact Number</th>
-          
+          <th>Reset Password</th>         
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>1</td>
           <td>Member</td>
           <td>john.doe@example.com</td>
           <td>09959831815</td>
@@ -274,15 +286,17 @@
       </tbody>
     </table>
   </div>
-
+  <div id="paginationControls"></div>
  
 <script>
     function toggleFormContainer() {
         var formContainer = document.querySelector('.form-container');
         if (formContainer.style.display === 'none' || formContainer.style.display === '') {
             formContainer.style.display = 'flex';
+            document.getElementById('addAC').textContent = "Close";
         } else {
             formContainer.style.display = 'none';
+            document.getElementById('addAC').textContent = "Add Account";
         }
     }
 
