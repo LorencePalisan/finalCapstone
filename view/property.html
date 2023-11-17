@@ -9,7 +9,7 @@
 
         .form-container {
             margin: 20px auto; /* Center horizontally */
-            display: flex;
+            display: none;
             justify-content: space-between;
             flex-wrap: wrap;
             max-width: 400px;
@@ -69,13 +69,6 @@
             text-align: center;
         }
 
-        .ndtoolbar {
-            margin-top: 25px;
-            text-align: center;
-            background-color: #1CAC78; /* Background color of the toolbar */
-            color: #fff; /* Text color */
-            padding: 10px; /* Padding around the toolbar content */
-        }
 
         .title {
             margin: 0; /* Remove default margin for the title */
@@ -297,14 +290,13 @@
 
     <div class="headtoolbar">
         <h1 class="toolbar-title">Property Module</h1>
+        <button id="addProp">Add Property</button>
     </div>
 
     <div class="form-container">
-        <label for="ownerID">Owner ID</label>
-        <input id="ownerID" type="number">
 
         <label for="ownerName">Owner Name</label>
-        <input id="ownerName" type="text" disabled>
+        <input id="ownerName" type="text" >
         
         
         <label for="lotNumber">Lot Number</label>
@@ -318,35 +310,55 @@
         <input id="lotSize" type="number">
         
         <label for="propertyStatus">Property Status</label>
-        <select id="propertyStatus" name="propertyStatus">
+        <select id="propertyStatus" >
             <option value="" disabled selected>--- Select Property Status ---</option>
             <option value="Owned">Owned</option>
             <option value="Rented">Rented</option>
             <option value="Vacant">Vacant</option>
         </select>
+
+        <div class="button-container">
+            <button id="insert" class="button">Insert Property</button>
+            
+            
+        </div>
     </div>
 
-    <div class="button-container">
-        <button id="insert" class="button">Insert</button>
-        
-        
-    </div>
-  
-    <div class="ndtoolbar">
-        <h3 class="title">Property List</h3>
-    </div>
 
 
     <div class="center-container">
         <div id="searchBar">
             <p for="searchInput">Search Bar</p>
-            <input type="number" id="searchInput" placeholder="Search by Lot Number">
+            <input type="number" id="searchInput" placeholder="Search by lot number">
+            <button id="find">Find</button>
         </div>
     </div>
+<div>
+    <label for="sad">Block Number:</label>
+    <select id="sad" >
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+      <option value="6">6</option>
+      <option value="7">7</option>
+      <option value="8">8</option>
+      <option value="9">9</option>
+      <option value="10">10</option>
+      <option value="11">11</option>
+      <option value="12">12</option>
+      <option value="13">13</option>
+      <option value="14">14</option>
+      <option value="15">15</option>
+      <option value="16">16</option>
+      <option value="17">17</option>
+    </select>
 
+    
+</div>
     <table id="table">
         <tr>
-            <th>Owner ID</th>
             <th>Owner Name</th>
             <th>Lot Number</th>
             <th>Block Number</th>
@@ -361,17 +373,12 @@
             <td></td>
             <td></td>
             <td></td>
-            <td></td>
           </tr>
           
     </table>
+    <div id="paginationControls"></div>
     
     <div class="popup">
-        
-        <div class="form-group">
-          <label for="popupownerID">Owner ID:</label>
-          <input type="number" id="popupownerID" placeholder="Owner ID" disabled>
-        </div>
 
         <div class="form-group">
             <label for="popupownerName">Owner Name:</label>

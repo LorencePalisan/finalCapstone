@@ -113,7 +113,7 @@ async function createAccount() {
     clear();
   } catch (error) {
     // Handle errors
-    console.error("Error creating account:", error);
+    alert.error("Error creating account:", error);
   }
 }
 
