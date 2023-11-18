@@ -10,7 +10,8 @@
             background-color: #f5f5f5;
             margin: 0;
             padding: 0;
-            width: 88%;
+            width: 100%;
+            overflow: hidden;
         }
 
         .headtoolbar {
@@ -97,13 +98,7 @@
             margin: 20px;
         }
   
-        table {
-        width: 100%;
-        border-collapse: collapse;
-        margin: 10px 0;
-        font-family: Arial, sans-serif;
-        width: 100%;
-        }
+        
 
         /* Table header styles */
         th {
@@ -149,7 +144,34 @@
 
         #table-container {
             overflow-x: auto;
+            overflow-y: auto;
+            max-height: 460px; 
+            max-width: auto;/* Adjust the maximum height as needed */
         }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            font-family: Arial, sans-serif;
+            white-space: nowrap;
+            border-collapse: collapse;
+            margin: 10px 0;
+            font-family: Arial, sans-serif;
+            
+        }
+
+        thead th {
+            position: sticky;
+            top: 0;
+            background-color: #f2f2f2;
+            text-align: center;
+            padding: 10px;
+            border: 1px solid #ccc;
+            font-weight: bold;
+            z-index: 2; /* Ensure the header stays above the table content */
+        }
+
     </style>
 </head>
 <body>
@@ -166,19 +188,20 @@
         <label for="searchName">Search Name:</label>
         <input type="text" id="searchName" placeholder="Search Name">
 
+        <button id="find">Find</button>
         
         <label for="Select">Select Month:</label>
         <select name="SelectMonth" id="Select">
-            <option value="" disabled selected>Select Month</option>
-            <option value="01">January</option>
-            <option value="02">February</option>
-            <option value="03">March</option>
-            <option value="04">April</option>
-            <option value="05">May</option>
-            <option value="06">June</option>
-            <option value="07">July</option>
-            <option value="08">August</option>
-            <option value="09">September</option>
+            <!-- <option value="" disabled selected>Select Month</option> -->
+            <option value="1">January</option>
+            <option value="2">February</option>
+            <option value="3">March</option>
+            <option value="4">April</option>
+            <option value="5">May</option>
+            <option value="6">June</option>
+            <option value="7">July</option>
+            <option value="8">August</option>
+            <option value="9">September</option>
             <option value="10">October</option>
             <option value="11">November</option>
             <option value="12">December</option>
@@ -187,26 +210,31 @@
 
         <label for="selectYear">Select Year:</label>
         <select id="selectYear">
-            <option value="" disabled selected>Select Year</option>
+            <!-- <option value="" disabled selected>Select Year</option> -->
+            <option value=""></option>
         </select>
 
-        <button id="reset">Reset</button>
+        <button id="reset" >Reset</button>
+        <button id="genReport">General Report</button>
 
     </div>
     <div id="iframe-container">
         <div id="table-container">
        <table id="showTable">
+        <thead>
         <tr>
-            <th>Transaction Number</th>
+            <th>Transaction #</th>
             <th>Member Name</th>
-            <th>Member ID</th>
             <th>Collector</th>
             <th>Date</th>
             <th>Total Fee</th>
             <th>Lot Amort Bal</th>
         </tr>
+        </thead>
+        <tbody>
         <tr>
         </tr>
+    </tbody>
        </table>
     </div>
     </div>

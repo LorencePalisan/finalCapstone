@@ -1,69 +1,201 @@
-import { getDocs,collection } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
+import {getDocs,collection, query, where, orderBy, limit, startAfter, endBefore, limitToLast } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
 
 import { db } from "../credentials/firebaseModule.js";
 
-
-addCategoryHeaders();
-getCategoryNames();
-displayCollection();
-
-// Get references to the select elements
-const selectMonth = document.getElementById("Select");
-const selectYear = document.getElementById("selectYear");
+let month = document.getElementById("Select");
+let year = document.getElementById("selectYear");
+let searchName = document.getElementById("searchName");
 const resetB = document.getElementById("reset");
+const findB = document.getElementById("find");
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  addCategoryHeaders();
+   populateYearOptions();
+});
+
+
+
 
 
 // Add an event listener to the month select element
-selectMonth.addEventListener("change", function () {
-  const selectedMonth = selectMonth.value;
-  console.log("Selected Month: " + selectedMonth);
+document.getElementById('Select').addEventListener("change", function () {
+  displayQueryCollection();
+console.log(month.value);
 });
 
 // Add an event listener to the year select element
-selectYear.addEventListener("change", function () {
-  const selectedYear = selectYear.value;
-  console.log("Selected Year: " + selectedYear);
+document.getElementById('selectYear').addEventListener("change", function () {
+  displayQueryCollection();
+ 
 });
 
 //========================================================================================================================
 function populateYearOptions() {
-    const selectYear = document.getElementById("selectYear");
-    const currentYear = new Date().getFullYear();
-    const yearsToDisplay = 10; // Number of previous and future years to display
+  const selectYear = document.getElementById("selectYear");
+  const currentYear = new Date().getFullYear();
+  const yearsToDisplay = 10; // Number of previous and future years to display
 
-    for (let i = -yearsToDisplay; i <= yearsToDisplay; i++) {
-        const year = currentYear + i;
-        const option = document.createElement("option");
-        option.value = year;
-        option.text = year;
-        selectYear.appendChild(option);
-    }
+  for (let i = -yearsToDisplay; i <= yearsToDisplay; i++) {
+      const year = currentYear + i;
+      const option = document.createElement("option");
+      option.value = year.toString(); // Convert to string
+      option.text = year;
+      selectYear.appendChild(option);
+  }
+
+  // Set the selectYear value to the current year
+  selectYear.value = currentYear.toString(); // Convert to string
 }
 
-    // Call the function to populate year options
-    populateYearOptions();
-
-
-//========================================================================================================================    
-
-    function resetTable() {
-        // Get a reference to the table element by its ID
-        const table = document.getElementById("showTable");
-      
-        // Check if the table exists
-        if (table) {
-          // Remove all rows except the header (first row)
-          const rowCount = table.rows.length;
-          for (let i = rowCount - 1; i > 0; i--) {
-            table.deleteRow(i);
-          }
-        } else {
-          console.log("Table not found.");
-        }
-      }
 
 //========================================================================================================================
-      
+
+async function displayQueryNameCollection() {
+  // Clear existing rows in the table
+  const trans = document.getElementById("showTable");
+  while (trans.rows.length > 1) {
+    trans.deleteRow(1);
+  }
+
+  // Reference to the "CollectionList" collection in Firestore
+  const collectionRef = collection(db, "CollectionList");
+
+  try {
+    // Query the Firestore collection with the date range
+    const querySnapshot = await getDocs(collectionRef);
+
+    // Get the categories from CollectionCategory for checking later
+    const categoryNames = await getCategoryNames();
+
+    // Get the first row of the table (header row)
+    const headerRow = document.getElementById("showTable").rows[0];
+
+    // Loop through the documents in the CollectionList collection
+    querySnapshot.forEach((docSnapshot) => {
+      const data = docSnapshot.data();
+
+      // Convert the document date to a string
+      const docName = data.Member;
+
+      // Check if the document date is within the range
+      if (docName == searchName.value) {
+        const row = trans.insertRow(-1); // Add a new row to the table
+
+        // Populate the row with the desired fields
+        const transactionNumCell = row.insertCell(0);
+        transactionNumCell.textContent = data.TransactionNum;
+
+        const memberNameCell = row.insertCell(1);
+        memberNameCell.textContent = data.Member;
+
+        const collectorCell = row.insertCell(2);
+        collectorCell.textContent = data.Collector;
+
+        const dateCell = row.insertCell(3);
+        dateCell.textContent = data.Date; // Use the converted date string
+
+        const totalFeeCell = row.insertCell(4);
+        totalFeeCell.textContent = data.TotalFee;
+
+        const balLotAmort = row.insertCell(5);
+        balLotAmort.textContent = data.lotAmortBal;
+
+        // Add "Yes" or "No" cells based on category presence
+        categoryNames.forEach((categoryName, index) => {
+          const categoryCell = row.insertCell(6 + index);
+          const matchingCategory = data.Categories.find(category => category.collectionName === categoryName);
+        
+          if (matchingCategory) {
+            categoryCell.textContent = matchingCategory.collectionFee; // Display the collectionFee
+          } else {
+            categoryCell.textContent = ''; // Leave a blank cell for unpaid
+          }
+        });
+      }
+    });
+  } catch (error) {
+    console.error("Error fetching data: ", error);
+  }
+}
+
+async function displayQueryCollection() {
+  // Clear existing rows in the table
+  const trans = document.getElementById("showTable");
+  while (trans.rows.length > 1) {
+    trans.deleteRow(1);
+  }
+
+  // Reference to the "CollectionList" collection in Firestore
+  const collectionRef = collection(db, "CollectionList");
+
+  // Ensure that the month is formatted with two digits
+  const formattedMonth = month.value.toString().padStart(2, '0');
+
+  var startDate = `${year.value}-${formattedMonth}-01`;
+  var lastDay = new Date(year.value, month.value, 0).getDate();
+  var endDate = `${year.value}-${formattedMonth}-${lastDay}`;
+  console.log(startDate + " " + endDate);
+  try {
+    // Query the Firestore collection with the date range
+    const querySnapshot = await getDocs(collectionRef);
+
+    // Get the categories from CollectionCategory for checking later
+    const categoryNames = await getCategoryNames();
+
+    // Get the first row of the table (header row)
+    const headerRow = document.getElementById("showTable").rows[0];
+
+    // Loop through the documents in the CollectionList collection
+    querySnapshot.forEach((docSnapshot) => {
+      const data = docSnapshot.data();
+
+      // Convert the document date to a string
+      const docDate = data.Date;
+
+      // Check if the document date is within the range
+      if (docDate >= startDate && docDate <= endDate) {
+        const row = trans.insertRow(-1); // Add a new row to the table
+
+        // Populate the row with the desired fields
+        const transactionNumCell = row.insertCell(0);
+        transactionNumCell.textContent = data.TransactionNum;
+
+        const memberNameCell = row.insertCell(1);
+        memberNameCell.textContent = data.Member;
+
+        const collectorCell = row.insertCell(2);
+        collectorCell.textContent = data.Collector;
+
+        const dateCell = row.insertCell(3);
+        dateCell.textContent = data.Date; // Use the converted date string
+
+        const totalFeeCell = row.insertCell(4);
+        totalFeeCell.textContent = data.TotalFee;
+
+        const balLotAmort = row.insertCell(5);
+        balLotAmort.textContent = data.lotAmortBal;
+
+        // Add "Yes" or "No" cells based on category presence
+        categoryNames.forEach((categoryName, index) => {
+          const categoryCell = row.insertCell(6 + index);
+          const matchingCategory = data.Categories.find(category => category.collectionName === categoryName);
+        
+          if (matchingCategory) {
+            categoryCell.textContent = matchingCategory.collectionFee; // Display the collectionFee
+          } else {
+            categoryCell.textContent = ''; // Leave a blank cell for unpaid
+          }
+        });
+      }
+    });
+  } catch (error) {
+    console.error("Error fetching data: ", error);
+  }
+}
+
+
+
       async function displayCollection() {
         // Clear existing rows in the table
         const trans = document.getElementById("showTable");
@@ -73,6 +205,7 @@ function populateYearOptions() {
       
         // Reference to the "CollectionList" collection in Firestore
         const collectionRef = collection(db, "CollectionList");
+
       
         try {
           const querySnapshot = await getDocs(collectionRef);
@@ -91,29 +224,32 @@ function populateYearOptions() {
             // Populate the row with the desired fields
             const transactionNumCell = row.insertCell(0);
             transactionNumCell.textContent = data.TransactionNum;
-      
+    
             const memberNameCell = row.insertCell(1);
             memberNameCell.textContent = data.Member;
-      
-            const memberIDCell = row.insertCell(2);
-            memberIDCell.textContent = data.MemberID;
-      
-            const collectorCell = row.insertCell(3);
+    
+            const collectorCell = row.insertCell(2);
             collectorCell.textContent = data.Collector;
-      
-            const dateCell = row.insertCell(4);
-            dateCell.textContent = data.Date;
-      
-            const totalFeeCell = row.insertCell(5);
+    
+            const dateCell = row.insertCell(3);
+            dateCell.textContent = data.Date; // Use the converted date string
+    
+            const totalFeeCell = row.insertCell(4);
             totalFeeCell.textContent = data.TotalFee;
-
-            const balLotAmort = row.insertCell(6);
+    
+            const balLotAmort = row.insertCell(5);
             balLotAmort.textContent = data.lotAmortBal;
       
             // Add "Yes" or "No" cells based on category presence
             categoryNames.forEach((categoryName, index) => {
-              const categoryCell = row.insertCell(7 + index);
-              categoryCell.textContent = data.Categories && data.Categories.some(category => category.collectionName === categoryName) ? "Paid" : "Unpaid";
+              const categoryCell = row.insertCell(6 + index);
+              const matchingCategory = data.Categories.find(category => category.collectionName === categoryName);
+            
+              if (matchingCategory) {
+                categoryCell.textContent = matchingCategory.collectionFee; // Display the collectionFee
+              } else {
+                categoryCell.textContent = ''; // Leave a blank cell for unpaid
+              }
             });
           });
         } catch (error) {
@@ -164,55 +300,6 @@ function populateYearOptions() {
   //=====================================================================================================================================
 
 
-// Function to filter the table based on the selected year
-function filterTableYear() {
-    const selectedYear = document.getElementById("selectYear").value;
-    const memberTable = document.getElementById("showTable");
-    const rows = memberTable.getElementsByTagName("tr");
-  
-    for (let i = 1; i < rows.length; i++) {
-      const dateCell = rows[i].getElementsByTagName("td")[4]; // Get the cell with the date (modify the index if needed)
-      if (dateCell) {
-        const date = dateCell.textContent.trim(); // Get the date value
-        if (selectedYear === "All" || date.includes(selectedYear)) {
-          rows[i].style.display = ""; // Show the row if it matches the selected year or "All"
-        } else {
-          rows[i].style.display = "none"; // Hide the row if it doesn't match the selected year
-        }
-      }
-    }
-  }
-  
-  // Add an event listener to the select element
-  selectYear.addEventListener("change", filterTableYear);
-  
-  // Call the filterTableYear function when the page loads with "All" selected
-  document.addEventListener("DOMContentLoaded", () => {
-    // Set "All" as the default value
-    selectYear.value = "All";
-    filterTableYear();
-  });
-
-//======================================================================================================================================
-
-  function filterTableMonth() {
-    const selectedMonth = document.getElementById("Select").value;
-    const memberTable = document.getElementById("showTable");
-    const rows = memberTable.getElementsByTagName("tr");
-
-    for (let i = 1; i < rows.length; i++) {
-        const dateCell = rows[i].getElementsByTagName("td")[4]; // Get the cell with the date (modify the index if needed)
-        if (dateCell) {
-            const date = dateCell.textContent.trim(); // Get the date value
-            const dateParts = date.split("-"); // Split the date by hyphens
-            if (dateParts.length === 3 && dateParts[1] === selectedMonth) {
-                rows[i].style.display = ""; // Show the row if it matches the selected month
-            } else {
-                rows[i].style.display = "none"; // Hide the row if it doesn't match the selected month
-            }
-        }
-    }
-}
 
 //======================================================================================================================================
 
@@ -263,55 +350,18 @@ document.getElementById('generateReport').addEventListener('click', function () 
   }
 });
 
-
-
-
-// Function to filter the table based on the search input
-function filterTable() {
-  const searchInput = document.getElementById("searchName").value.trim().toLowerCase();
-  const memberTable = document.getElementById("showTable");
-  const rows = memberTable.getElementsByTagName("tr");
-
-  for (let i = 1; i < rows.length; i++) {
-    const nameCell = rows[i].getElementsByTagName("td")[1]; // Get the second cell (name cell)
-    if (nameCell) {
-      const name = nameCell.textContent.toLowerCase();
-      if (name.includes(searchInput)) {
-        rows[i].style.display = ""; // Show the row if it matches the search
-      } else {
-        rows[i].style.display = "none"; // Hide the row if it doesn't match the search
-      }
-    }
+function deleteRowsAndCells() {
+  const trans = document.getElementById("showTable");
+  while (trans.rows.length > 1) {
+    trans.deleteRow(1);
   }
+
 }
+findB.addEventListener("click", displayQueryNameCollection);
+document.getElementById("genReport").addEventListener("click", displayCollection);
 
-// Add an event listener to the search input field
-const searchInput = document.getElementById("searchName");
-searchInput.addEventListener("input", filterTable);
-// Call the filterTable function when the page loads
-document.addEventListener("DOMContentLoaded", filterTable);
+resetB.addEventListener("click",function (){
+  deleteRowsAndCells();
+  console.log("Table Cleared");
 
-
-
-
-
-
-
-
-
-
-
-selectMonth.addEventListener("change", filterTableMonth);
-
-// Call the filterTableMonth function when the page loads with "Select Month" selected
-document.addEventListener("DOMContentLoaded", () => {
-    // Set "Select Month" as the default value
-    selectMonth.value = "";
-    filterTableMonth();
-});
-
-resetB.addEventListener("click", function() {
-  displayCollection();
-  selectMonth.selectedIndex = 0; 
-  selectYear.selectedIndex = 0; 
 });

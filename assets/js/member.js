@@ -3,7 +3,7 @@ import {doc,getDocs, setDoc,collection, query, where ,orderBy, limit, startAfter
 
 import { db } from "../credentials/firebaseModule.js";
 //Elements
-
+// import { admin, db, auth } from './firebase.js';
 // Create a reference to the collection where members are stored
 
 
