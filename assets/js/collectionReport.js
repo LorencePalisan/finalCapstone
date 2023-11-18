@@ -50,7 +50,6 @@ function populateYearOptions() {
 
 
 //========================================================================================================================
-
 async function displayQueryNameCollection() {
   // Clear existing rows in the table
   const trans = document.getElementById("showTable");
@@ -71,6 +70,9 @@ async function displayQueryNameCollection() {
     // Get the first row of the table (header row)
     const headerRow = document.getElementById("showTable").rows[0];
 
+    // Flag to check if searchName is found
+    let searchNameFound = false;
+
     // Loop through the documents in the CollectionList collection
     querySnapshot.forEach((docSnapshot) => {
       const data = docSnapshot.data();
@@ -78,8 +80,9 @@ async function displayQueryNameCollection() {
       // Convert the document date to a string
       const docName = data.Member;
 
-      // Check if the document date is within the range
-      if (docName == searchName.value) {
+      // Check if the document name matches the searchName
+      if (docName.includes(searchName)) { // Modify this condition based on your matching criteria
+        searchNameFound = true; // Set flag to true
         const row = trans.insertRow(-1); // Add a new row to the table
 
         // Populate the row with the desired fields
@@ -114,10 +117,84 @@ async function displayQueryNameCollection() {
         });
       }
     });
+
+    // Check if the searchName was not found and display an alert
+    if (!searchNameFound) {
+      alert(`No matching record found for ${searchName.value}`);
+    }
+
   } catch (error) {
     console.error("Error fetching data: ", error);
   }
 }
+
+// async function displayQueryNameCollection() {
+//   // Clear existing rows in the table
+//   const trans = document.getElementById("showTable");
+//   while (trans.rows.length > 1) {
+//     trans.deleteRow(1);
+//   }
+
+//   // Reference to the "CollectionList" collection in Firestore
+//   const collectionRef = collection(db, "CollectionList");
+
+//   try {
+//     // Query the Firestore collection with the date range
+//     const querySnapshot = await getDocs(collectionRef);
+
+//     // Get the categories from CollectionCategory for checking later
+//     const categoryNames = await getCategoryNames();
+
+//     // Get the first row of the table (header row)
+//     const headerRow = document.getElementById("showTable").rows[0];
+
+//     // Loop through the documents in the CollectionList collection
+//     querySnapshot.forEach((docSnapshot) => {
+//       const data = docSnapshot.data();
+
+//       // Convert the document date to a string
+//       const docName = data.Member;
+
+//       // Check if the document date is within the range
+//       if (docName == searchName.value) {
+//         const row = trans.insertRow(-1); // Add a new row to the table
+
+//         // Populate the row with the desired fields
+//         const transactionNumCell = row.insertCell(0);
+//         transactionNumCell.textContent = data.TransactionNum;
+
+//         const memberNameCell = row.insertCell(1);
+//         memberNameCell.textContent = data.Member;
+
+//         const collectorCell = row.insertCell(2);
+//         collectorCell.textContent = data.Collector;
+
+//         const dateCell = row.insertCell(3);
+//         dateCell.textContent = data.Date; // Use the converted date string
+
+//         const totalFeeCell = row.insertCell(4);
+//         totalFeeCell.textContent = data.TotalFee;
+
+//         const balLotAmort = row.insertCell(5);
+//         balLotAmort.textContent = data.lotAmortBal;
+
+//         // Add "Yes" or "No" cells based on category presence
+//         categoryNames.forEach((categoryName, index) => {
+//           const categoryCell = row.insertCell(6 + index);
+//           const matchingCategory = data.Categories.find(category => category.collectionName === categoryName);
+        
+//           if (matchingCategory) {
+//             categoryCell.textContent = matchingCategory.collectionFee; // Display the collectionFee
+//           } else {
+//             categoryCell.textContent = ''; // Leave a blank cell for unpaid
+//           }
+//         });
+//       }
+//     });
+//   } catch (error) {
+//     console.error("Error fetching data: ", error);
+//   }
+// }
 
 async function displayQueryCollection() {
   // Clear existing rows in the table
