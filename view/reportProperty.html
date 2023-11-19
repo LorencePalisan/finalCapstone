@@ -146,18 +146,22 @@
             <button id="generateReport" >Generate Report</button>
         </div>
 
+        <label for="name">Search Name:</label>
+        <input type="text" name="" id="name">
+        <button id="fbutton">Find</button>
+
         <label for="selecBlock">Select Block #:</label>
         <select name="SelectMonth" id="selecBlock">
             <option value="" disabled selected>Block Number</option>
-            <option value="01">01</option>
-            <option value="02">02</option>
-            <option value="03">03</option>
-            <option value="04">04</option>
-            <option value="05">05</option>
-            <option value="06">06</option>
-            <option value="07">07</option>
-            <option value="08">08</option>
-            <option value="09">09</option>
+            <option value="1">01</option>
+            <option value="2">02</option>
+            <option value="3">03</option>
+            <option value="4">04</option>
+            <option value="5">05</option>
+            <option value="6">06</option>
+            <option value="7">07</option>
+            <option value="8">08</option>
+            <option value="9">09</option>
             <option value="10">10</option>
             <option value="11">11</option>
             <option value="12">12</option>
@@ -176,14 +180,15 @@
             <option value="Vacant">Vacant</option>
             <option value="Rented">Rented</option>
         </select>
-
+        <button id="reportB">General Report</button>
         <button id="reset">Reset</button>
+        
 
     </div>
     <div id="iframe-container">
        <table id="showTable">
         <tr>
-            <th>Owner ID</th>
+            
             <th>Owner Name</th>
             <th>Lot Number</th>
             <th>Block Number</th>
@@ -191,12 +196,6 @@
             <th>Status</th>
         </tr>
         <tr>
-            <td>Owner ID</td>
-            <td>Owner Name</td>
-            <td>Lot Number</td>
-            <td>Block Number</td>
-            <td>Lot Size</td>
-            <td>Status</td>
         </tr>
        </table>
     </div>

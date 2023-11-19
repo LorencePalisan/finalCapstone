@@ -2,13 +2,14 @@ import { getDocs,collection } from "https://www.gstatic.com/firebasejs/10.1.0/fi
 
 import { db } from "../credentials/firebaseModule.js";
 
-
-
+const namekSelect = document.getElementById("name");
+const blockSelect = document.getElementById("selecBlock");
+const statusSelect = document.getElementById("selectStatus");
 const resetB = document.getElementById("reset");
-
-
+const findB = document.getElementById("fbutton");
+const genB =  document.getElementById("reportB");
 //=====================================================================================================================================================
-displayCollection();
+
 
 async function displayCollection() {
     // Clear existing rows in the table
@@ -28,23 +29,21 @@ async function displayCollection() {
         const data = docSnapshot.data();
         const row = trans.insertRow(-1); // Add a new row to the table
   
-        // Populate the row with the desired fields
-        const ownerCell = row.insertCell(0);
-        ownerCell.textContent = data.ownerID;
   
-        const memberNameCell = row.insertCell(1);
+        const memberNameCell = row.insertCell(0);
         memberNameCell.textContent = data.ownerName;
+
   
-        const lotnumber = row.insertCell(2);
+        const lotnumber = row.insertCell(1);
         lotnumber.textContent = data.lotNumber;
   
-        const blocCell = row.insertCell(3);
+        const blocCell = row.insertCell(2);
         blocCell.textContent = data.blockNum;
   
-        const sizeCell = row.insertCell(4);
+        const sizeCell = row.insertCell(3);
         sizeCell.textContent = data.lotSize;
   
-        const statusCell = row.insertCell(5);
+        const statusCell = row.insertCell(4);
         statusCell.textContent = data.propertyStatus;
 
   
@@ -55,60 +54,186 @@ async function displayCollection() {
       console.error("Error fetching data: ", error);
     }
   }
+  
+  async function queryByBlock() {
+    // Clear existing rows in the table
+    const trans = document.getElementById("showTable");
+    while (trans.rows.length > 1) {
+        trans.deleteRow(1);
+    }
+
+    // Reference to the "CollectionList" collection in Firestore
+    const collectionRef = collection(db, "Property");
+
+    try {
+        const querySnapshot = await getDocs(collectionRef);
+
+      
+        // Flag to check if any properties are found in the selected block
+        let propertiesFound = false;
+
+        // Loop through the documents in the CollectionList collection
+        querySnapshot.forEach((docSnapshot) => {
+            const data = docSnapshot.data();
+
+            // Check if the blockNum is equal to the selected block
+            if (data.blockNum === blockSelect.value) {
+                const row = trans.insertRow(-1); // Add a new row to the table
+
+                const memberNameCell = row.insertCell(0);
+                memberNameCell.textContent = data.ownerName;
+
+                const lotnumber = row.insertCell(1);
+                lotnumber.textContent = data.lotNumber;
+
+                const blocCell = row.insertCell(2);
+                blocCell.textContent = data.blockNum;
+
+                const sizeCell = row.insertCell(3);
+                sizeCell.textContent = data.lotSize;
+
+                const statusCell = row.insertCell(4);
+                statusCell.textContent = data.propertyStatus;
+
+                // Set the flag to true if a property is found
+                propertiesFound = true;
+            }
+        });
+
+        // If no properties are found, display a message
+        if (!propertiesFound) {
+            const row = trans.insertRow(-1);
+            const noPropertyCell = row.insertCell(0);
+            noPropertyCell.colSpan = 5; 
+            noPropertyCell.textContent = "No properties found in the selected block.";
+        }
+    } catch (error) {
+        console.error("Error fetching data: ", error);
+    }
+}
+
+
+async function queryByStatus() {
+  // Clear existing rows in the table
+  const trans = document.getElementById("showTable");
+  while (trans.rows.length > 1) {
+      trans.deleteRow(1);
+  }
+
+  // Reference to the "CollectionList" collection in Firestore
+  const collectionRef = collection(db, "Property");
+
+  try {
+      const querySnapshot = await getDocs(collectionRef);
+
+    
+      // Flag to check if any properties are found in the selected block
+      let propertiesFound = false;
+
+      // Loop through the documents in the CollectionList collection
+      querySnapshot.forEach((docSnapshot) => {
+          const data = docSnapshot.data();
+
+          // Check if the blockNum is equal to the selected block
+          if (data.propertyStatus === statusSelect.value) {
+              const row = trans.insertRow(-1); // Add a new row to the table
+
+              const memberNameCell = row.insertCell(0);
+              memberNameCell.textContent = data.ownerName;
+
+              const lotnumber = row.insertCell(1);
+              lotnumber.textContent = data.lotNumber;
+
+              const blocCell = row.insertCell(2);
+              blocCell.textContent = data.blockNum;
+
+              const sizeCell = row.insertCell(3);
+              sizeCell.textContent = data.lotSize;
+
+              const statusCell = row.insertCell(4);
+              statusCell.textContent = data.propertyStatus;
+
+              // Set the flag to true if a property is found
+              propertiesFound = true;
+          }
+      });
+
+      // If no properties are found, display a message
+      if (!propertiesFound) {
+          const row = trans.insertRow(-1);
+          const noPropertyCell = row.insertCell(0);
+          noPropertyCell.colSpan = 5; 
+          noPropertyCell.textContent = "No properties found in the selected status.";
+      }
+  } catch (error) {
+      console.error("Error fetching data: ", error);
+  }
+}
+
+
+async function queryByName() {
+  // Clear existing rows in the table
+  const trans = document.getElementById("showTable");
+  while (trans.rows.length > 1) {
+      trans.deleteRow(1);
+  }
+
+  // Reference to the "CollectionList" collection in Firestore
+  const collectionRef = collection(db, "Property");
+
+  try {
+      const querySnapshot = await getDocs(collectionRef);
+
+    
+      // Flag to check if any properties are found in the selected block
+      let propertiesFound = false;
+
+      // Loop through the documents in the CollectionList collection
+      querySnapshot.forEach((docSnapshot) => {
+          const data = docSnapshot.data();
+
+          // Check if the blockNum is equal to the selected block
+          if (data.ownerName === namekSelect.value) {
+              const row = trans.insertRow(-1); // Add a new row to the table
+
+              const memberNameCell = row.insertCell(0);
+              memberNameCell.textContent = data.ownerName;
+
+              const lotnumber = row.insertCell(1);
+              lotnumber.textContent = data.lotNumber;
+
+              const blocCell = row.insertCell(2);
+              blocCell.textContent = data.blockNum;
+
+              const sizeCell = row.insertCell(3);
+              sizeCell.textContent = data.lotSize;
+
+              const statusCell = row.insertCell(4);
+              statusCell.textContent = data.propertyStatus;
+
+              // Set the flag to true if a property is found
+              propertiesFound = true;
+          }
+      });
+
+      // If no properties are found, display a message
+      if (!propertiesFound) {
+          const row = trans.insertRow(-1);
+          const noPropertyCell = row.insertCell(0);
+          noPropertyCell.colSpan = 5; 
+          noPropertyCell.textContent = "No properties found in the selected name.";
+      }
+  } catch (error) {
+      console.error("Error fetching data: ", error);
+  }
+}
+
 
 
   //===========================================================================================================
 
-  function filterTable() {
 
-   
-
-    const searchInput = document.getElementById("selecBlock").value.trim().toLowerCase();
-    const memberTable = document.getElementById("showTable");
-    const rows = memberTable.getElementsByTagName("tr");
-  
-    for (let i = 1; i < rows.length; i++) {
-      const nameCell = rows[i].getElementsByTagName("td")[3];
-      if (nameCell) {
-        const name = nameCell.textContent.toLowerCase();
-        if (name.includes(searchInput)) {
-          rows[i].style.display = ""; 
-        } else {
-          rows[i].style.display = "none";
-        }
-      }
-    }
-  }
-
-  // Add an event listener to the search input field
- 
-
-
-
-  
-  function filterTableStatus() {
-
-   
-
-    const statusInput = document.getElementById("selectStatus").value.trim().toLowerCase();
-    const memberTable = document.getElementById("showTable");
-    const rows = memberTable.getElementsByTagName("tr");
-  
-    for (let i = 1; i < rows.length; i++) {
-      const nameCell = rows[i].getElementsByTagName("td")[5];
-      if (nameCell) {
-        const name = nameCell.textContent.toLowerCase();
-        if (name.includes(statusInput)) {
-          rows[i].style.display = ""; 
-        } else {
-          rows[i].style.display = "none";
-        }
-      }
-    }
-  }
-
-
-
+//=================================================================================================
   // Function to convert a 2D array to a CSV string
   function convertToCSV(arr) {
     return arr.map(row => row.join(',')).join('\n');
@@ -158,16 +283,26 @@ document.getElementById('generateReport').addEventListener('click', function () 
 
 
 
+findB.addEventListener('click', queryByName);
+
+  statusSelect.addEventListener("change", function(){
+    queryByStatus();
+  });
 
 
-  // Add an event listener to the search input field
-  const statusInput = document.getElementById("selectStatus");
-  statusInput.addEventListener("change", filterTableStatus);
+  blockSelect.addEventListener("change",queryByBlock );
 
-  const searchInput = document.getElementById("selecBlock");
-  searchInput.addEventListener("change", filterTable);
+ 
+  resetB.addEventListener("click", function(){
+    const trans = document.getElementById("showTable");
+    while (trans.rows.length > 1) {
+      trans.deleteRow(1);
+    }
+  
+  });
 
-  resetB.addEventListener("click", displayCollection);
 
-  document.addEventListener("DOMContentLoaded", filterTable);
-  document.addEventListener("DOMContentLoaded", filterTableStatus);
+
+  genB.addEventListener('click', function(){
+displayCollection();
+  });
