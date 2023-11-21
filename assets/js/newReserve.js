@@ -3,7 +3,7 @@ import { db } from "../credentials/firebaseModule.js";
 // import { accountSid, authToken, twilioPhoneNumber } from '../credentials/twillio.js';
 
 const EventDB = collection(db, "EventRequest");
- const filterFacility = document.getElementById('queryFac').value;
+const eventAproveDB = collection(db, "EventDatabase");
 
 
 let date;
