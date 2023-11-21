@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facility Reservation</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.0/main.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.0/main.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column; /* Stack children in a column */
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+            overflow-y: hidden;
+            overflow-x: hidden;
+        }
+
+        .toolbar {
+            background-color: #4CAF50;
+            padding: 10px;
+            color: #fff;
+            width: 100%;
+            margin-top: 5px;
+        }
+
+        .toolbar label {
+            font-size: 30px;
+            font-style: normal;
+            font-weight: 200;
+            text-align: center;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start; /* Align items to the start of the cross axis (vertically) */
+            width: 100%;
+            max-width: 1200px;
+            margin: 20px auto; /* Add margin for spacing */
+        }
+
+        #calendar,
+        #reservationdiv,
+        #contents {
+            flex: 1; 
+        }
+
+        #calendar {
+            max-width: 600px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            margin-left: -100px;
+            border: #8ce98f solid ;
+            margin-right: 20px;
+            
+            
+        }
+
+        #reservationdiv {
+            background-color: #5cdb95;
+            display: block;
+            padding: 30px;
+            border-radius: 8px;
+            width: 250px;
+            max-width: 250px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-height: 500px;
+        }
+
+        #contents {
+            display: block;
+            padding: 10px;
+            border-radius: 10px;
+            border: #8ce98f solid ;
+            height: 550px;
+            width: 500px;
+            margin-left: 20px;
+            max-height: 550px;
+        }
+
+
+        
+        #butt{
+            margin-left: 1150px;
+            margin-top: -600px;
+        }
+
+
+        
+
+
+        #rev {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #369460;
+        }
+
+
+       
+
+         #tableContainer {
+            height: 550px;
+            overflow-y: auto;
+        }
+
+        #reqTable {
+            width: 100%;
+            border-radius: 8px;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-family: Arial, sans-serif;
+            
+        }
+
+        thead {
+            background-color: #f2f2f2;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        thead th {
+            text-align: center;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+       
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+        }
+
+        
+        #ses{
+            margin-top: 280px;
+            width: 200px;
+        }
+
+        h3{
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="toolbar">
+    <label id="rev">Facility Reservation</label>
+</div>
+
+<div class="container">
+    <div id="calendar"></div>
+
+    
+
+    <div id="reservationdiv">
+
+        <h3>Reserve Now</h3>
+        <br>
+
+        <label for="contNum">Contact Number</label>
+        <input type="number" id="contNum" placeholder="Contact Number" value="09959831815" oninput="limitInputTo11Digits(this)">
+
+        <label for="facility">Select Facility:</label>
+        <input list="facilityVal" id="facility" placeholder="Choose Facility">
+        <datalist id="facilityVal">
+          <option value="facility 1">
+          <option value="facility 2">
+          <option value="facility 3">
+          <option value="facility 4">
+          <option value="facility 5">
+        </datalist>
+
+        <label for="datetime">Select Date: </label>
+        <input type="date" id="datetime"   disabled>
+
+        <label for="timeFrom">Time From:</label>
+        <input type="time" id="timeFrom" >
+      
+        <label for="timeTo">Time To:</label>
+        <input type="time" id="timeTo"  >
+        <button id="subB">Submit Reservation</button>
+    </div>
+
+    <div id="contents">
+            <label for="queryFac">Select Facility:</label>
+            
+                <input list="queryFacility" id="queryFac" placeholder="Choose Facility">
+                <datalist id="queryFacility">
+                <option value="facility 1">
+                <option value="facility 2">
+                <option value="facility 3">
+                <option value="facility 4">
+                <option value="facility 5">
+                </datalist>
+      
+    
+        <div id="tableContainer">
+            <table id="reqTable">
+                <thead>
+                    <tr>
+                        <th>Facility</th>
+                        <th>Date</th>
+                        <th>Time From</th>
+                        <th>Time To</th>
+                    </tr>
+                </thead>
+                <tbody id="bads">
+                   
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    
+</div>
+
+
+<script>
+    function limitInputTo11Digits(inputElement) {
+      // Remove non-numeric characters
+      let sanitizedValue = inputElement.value.replace(/\D/g, '');
+
+      // Limit to 11 digits
+      if (sanitizedValue.length > 11) {
+        sanitizedValue = sanitizedValue.slice(0, 11);
+      }
+
+      // Update the input value
+      inputElement.value = sanitizedValue;
+    }
+  </script>
+
+
+<script type="module"  src="../assets/js/newReserve.js"></script>
+
+</body>
+</html>
