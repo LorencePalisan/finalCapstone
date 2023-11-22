@@ -1,4 +1,4 @@
-import { doc,getDocs,collection,deleteDoc, addDoc  } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
+import { doc,getDocs,collection,deleteDoc, addDoc, getDoc, setDoc, query, where  } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
 
 import { db } from "../credentials/firebaseModule.js";
 
@@ -8,59 +8,64 @@ const eventReq = collection(db, "EventRequest");
 var button = document.getElementById('cal');
 
 const eventsTable = document.getElementById("eventsTable");
-displayEvent();
 
+document.getElementById('selecB').addEventListener("click", displayEvent);
 
 
 async function displayEvent() {
-    // Clear existing rows in the table
-    while (eventsTable.rows.length > 1) {
-      eventsTable.deleteRow(1);
-    }
-  
-    try {
-      const querySnapshot = await getDocs(eventReq);
-  
-      querySnapshot.forEach((docSnapshot) => {
-        const data = docSnapshot.data();
-        const row = eventsTable.insertRow(-1); // Add a new row to the table
-  
-        // Get the document ID
-        const docId = docSnapshot.id;
-  
-        // Populate the row with event information
-        const date = row.insertCell(0);
-        date.textContent = data.fullDate;
-  
-        const facility = row.insertCell(1);
-        facility.textContent = data.facility;
-  
-        const reservedBy = row.insertCell(2);
-        reservedBy.textContent = data.reservedBy;
-  
-        const title = row.insertCell(3);
-        title.textContent = data.title;
-  
-        const time = row.insertCell(4);
-        time.textContent = data.time;
-  
-        const acceptCell = row.insertCell(5);
-        const acceptButton = document.createElement("button");
-        acceptButton.textContent = "Confirm";
-        acceptButton.addEventListener("click", () => acceptEvent(data, docId));
-        acceptCell.appendChild(acceptButton);
-  
-        const rejectCell = row.insertCell(6);
-        const rejectButton = document.createElement("button");
-        rejectButton.textContent = "Reject";
-        rejectButton.addEventListener("click", () => confirmReject(data, docId));
-        rejectCell.appendChild(rejectButton);
-      });
-    } catch (error) {
-      console.error("Error fetching data: ", error);
-    }
+ 
+  while (eventsTable.rows.length > 1) {
+    eventsTable.deleteRow(1);
   }
-  
+  try {
+    const facilitySelect = document.getElementById("facility");
+    const selectedFacility = facilitySelect.value; // Get the selected facility value
+
+    // Modify the query to filter based on the selected facility and future dates
+    const currentDate = new Date();
+    const querySnapshot = await getDocs(query(
+      collection(db, 'EventRequest'),
+      where('facility', '==', selectedFacility),
+      where('datetime', '>=', currentDate.toISOString())
+    ));
+
+    querySnapshot.forEach((docSnapshot) => {
+      const data = docSnapshot.data();
+      const row = eventsTable.insertRow(-1); // Add a new row to the table
+
+      // Get the document ID
+      const docId = docSnapshot.id;
+
+      // Populate the row with event information
+      const date = row.insertCell(0);
+      date.textContent = data.datetime;
+
+      const facility = row.insertCell(1);
+      facility.textContent = data.facility;
+
+      const reservedBy = row.insertCell(2);
+      reservedBy.textContent = data.name;
+
+      const time = row.insertCell(3);
+      time.textContent = `${data.timeFrom} - ${data.timeTo}`;
+
+      const acceptCell = row.insertCell(4);
+      const acceptButton = document.createElement("button");
+      acceptButton.textContent = "Confirm";
+      acceptButton.addEventListener("click", () => acceptEvent(data, docId));
+      acceptCell.appendChild(acceptButton);
+
+      const rejectCell = row.insertCell(5);
+      const rejectButton = document.createElement("button");
+      rejectButton.textContent = "Reject";
+      rejectButton.addEventListener("click", () => confirmReject(data, docId));
+      rejectCell.appendChild(rejectButton);
+    });
+  } catch (error) {
+    console.error("Error fetching data: ", error);
+  }
+}
+
 
   async function acceptEvent(data, docId) {
     try {
@@ -101,5 +106,8 @@ async function confirmReject(data, docId ) {
 
 // Add a click event listener to the button
 button.addEventListener('click', function() {
-    window.open('Reservation.html', '_blank');
+    window.open('newReservation.html', '_blank');
 });
+
+
+
