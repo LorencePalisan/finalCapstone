@@ -1,16 +1,16 @@
 import { createUserWithEmailAndPassword, sendEmailVerification, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
-import { doc, getDoc,getDocs, setDoc,collection, updateDoc, query, where, orderBy, limit, startAfter, endBefore, limitToLast, } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
+import { doc, addDoc,getDocs, setDoc,collection, updateDoc, query, where, orderBy, limit, startAfter, endBefore, limitToLast, } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
 
 import { db, auth } from "../credentials/firebaseModule.js";
 
 
-
+const memberRef = collection(db, "Members");
 
 const submit = document.getElementById("submit");
 
 let emailInput = document.getElementById("email");
 let userType = document.getElementById("userType");
-let memberName = document.getElementById("memberName");
+let memberName = document.getElementById("memName");
 let contactNum = document.getElementById("contactNum");
 let passwordInput = document.getElementById("password");
 let confirmPasswordInput = document.getElementById("Cpassword");
@@ -23,14 +23,50 @@ var heading = document.getElementById("myHeading");
 let user = document.getElementById("user");
 
 
+
+
 document.addEventListener('DOMContentLoaded', (event) => {
   fetchAndPopulateTable();
   createPaginationControls();
+  names();
 });
 
 user.addEventListener('change', (event) => {
   fetchAndPopulateTable();
 });
+
+async function names() {
+  const datalist = document.getElementById("names");
+
+  // Clear existing options
+  datalist.innerHTML = "";
+
+  try {
+    // Query the Firestore database for member names
+    const querySnapshot = await getDocs(memberRef);
+
+    // Create a default option for clarity (optional)
+    const defaultOption = document.createElement("option");
+    defaultOption.value = "";
+    defaultOption.text = "Select a name";
+    datalist.appendChild(defaultOption);
+
+    querySnapshot.forEach((doc) => {
+      // Access the "memberName" field from each document
+      const memberName = doc.data().memberName;
+
+      // Create an option element for each member name
+      const option = document.createElement("option");
+      option.value = memberName;
+
+      // Append the option to the datalist
+      datalist.appendChild(option);
+    });
+  } catch (error) {
+    console.error("Error fetching member names: ", error);
+  }
+}
+
 
 document.querySelectorAll('input[type="number"]').forEach(function(input) {
   input.addEventListener('keydown', function(e) {
@@ -42,7 +78,7 @@ document.querySelectorAll('input[type="number"]').forEach(function(input) {
   });
 });
 
-memberName.addEventListener("input", async function () {
+memberName.addEventListener("change", async function () {
   if (memberName.value) { 
     const queryRef = query(collection(db, "Members"), where("memberName", "==", memberName.value));
     try { 
@@ -51,13 +87,13 @@ memberName.addEventListener("input", async function () {
         const data = querySnapshot.docs[0].data();
         document.getElementById("contactNum").value = data.contactNum;
       } else {
-        console.error("Member not found.");
+        console.log("Member not found.");
       }
     } catch (error) {
-      console.error("Error retrieving member information:", error);
+      console.log("Error retrieving member information:", error);
     }
   } else {
-    console.error("Member name is required.");
+    console.log("Member name is required.");
   }
 });
 
@@ -75,9 +111,9 @@ async function createAccount() {
     return;
   }
 
-  // Validate member name
-  if (!memberName?.value) {
-    alert("Member name is empty or undefined.");
+
+  if (!memberName?.value || !emailInput.value || !userType.value || !contactNum.value || !passwordInput.value || !confirmPasswordInput.value) {
+    alert("Fill all the empty fields.");
     return;
   }
 
@@ -85,7 +121,15 @@ async function createAccount() {
   const queryRef = query(collection(db, "Members"), where("memberName", "==", memberName?.value));
   const querySnapshot = await getDocs(queryRef);
 
-  // Handle non-existent member name
+  const accRef = query(collection(db, "Accounts"), where("memberName", "==", memberName?.value));
+  const accSanp = await getDocs(accRef);
+
+  if (!accSanp.empty) {
+    alert("This member already has and account.");
+    return;
+  }
+
+
   if (querySnapshot.empty) {
     alert("This member name does not exist in the members list.");
     return;
@@ -104,7 +148,7 @@ async function createAccount() {
 
   try {
     // Add user data to Firestore
-    await setDoc(userDocRef, userData);
+    
 
     // Create user account with email and password
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -112,7 +156,7 @@ async function createAccount() {
 
     // Send email verification
     await sendEmailVerification(user);
-
+    await setDoc(userDocRef, userData);
     // Display success message
     alert("Account has been created. Please check your email for verification.");
 
@@ -124,6 +168,7 @@ async function createAccount() {
   } catch (error) {
     // Handle errors
     console.error("Error creating account:", error);
+    alert(error);
   }
 }
 

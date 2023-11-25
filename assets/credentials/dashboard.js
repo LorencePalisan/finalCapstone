@@ -20,15 +20,6 @@ onLoad();
   });
 
 
-// Add event listeners to each module to show the corresponding iframe
-document.getElementById('member').addEventListener('click', showMemberDetails);
-document.getElementById('collectionList').addEventListener('click', showCollectionlist);
-document.getElementById('property').addEventListener('click', showProperty);
-document.getElementById('reserve').addEventListener('click', Reservation);
-document.getElementById('certificateSelect').addEventListener('change', handleCertificateSelection);
-document.getElementById('account').addEventListener('click', Account);
-document.getElementById('reportSelect').addEventListener('change', handleReports);
-document.getElementById('colCat').addEventListener('click', collectionCat);
 
 
 signOutButton.addEventListener("click", logout);
@@ -132,24 +123,75 @@ function redirectToLogin() {
   document.getElementById('reserve').addEventListener('click', Reservation); // Make sure the function name matches the case
   document.getElementById('certificateSelect').addEventListener('change', handleCertificateSelection);
   document.getElementById('account').addEventListener('click', Account);
-  document.getElementById('reportSelect').addEventListener('change', handleReports);
   document.getElementById('colCat').addEventListener('click', collectionCat);
   document.getElementById('signOut').addEventListener('click', logout);
+  document.getElementById('individual').addEventListener('click', individualRep);
+  document.getElementById('monthly').addEventListener('click', monthlyRep);
+  document.getElementById('yearly').addEventListener('click', yearlyRep);
+  document.getElementById('propertyrep').addEventListener('click', propertyRep);
+  document.getElementById('reservation').addEventListener('click',reservationRep);
 //end modules
 
-
-
-    function handleReports(event) {
-        var selectElement = event.target;
-        var selectedValue = selectElement.value;
-        if (selectedValue === "collectionList") {
-            collectionListReport();
-        } else if (selectedValue === "property") {
-            propertyReport();
-        } else if (selectedValue === "reservation") {
-            reservationReport();
-        }
+function reservationRep() {
+    if (activeIframe) {
+        activeIframe.style.display = 'none';
     }
+    var reservationRep = document.querySelector('.reservationRep-iframe-wrapper');
+    reservationRep.style.display = 'block';
+    reservationRep.style.width = '100%';
+    var propertyIframe = document.getElementById('reservationRep-iframe');
+    propertyIframe.src = 'reportReservation.html';
+    activeIframe = reservationRep;
+    }
+
+function propertyRep() {
+    if (activeIframe) {
+        activeIframe.style.display = 'none';
+    }
+    var propertyRep = document.querySelector('.propertyRep-iframe-wrapper');
+    propertyRep.style.display = 'block';
+    propertyRep.style.width = '100%';
+    var propertyIframe = document.getElementById('propertyRep-iframe');
+    propertyIframe.src = 'reportProperty.html';
+    activeIframe = propertyRep;
+    }
+
+function yearlyRep() {
+    if (activeIframe) {
+        activeIframe.style.display = 'none';
+    }
+    var yearlyRep = document.querySelector('.yearlyRep-iframe-wrapper');
+    yearlyRep.style.display = 'block';
+    yearlyRep.style.width = '100%';
+    var propertyIframe = document.getElementById('yearlyRep-iframe');
+    propertyIframe.src = 'reportYearly.html';
+    activeIframe = yearlyRep;
+    }
+
+function monthlyRep() {
+    if (activeIframe) {
+        activeIframe.style.display = 'none';
+    }
+    var monthlyRep = document.querySelector('.monthlyRep-iframe-wrapper');
+    monthlyRep.style.display = 'block';
+    monthlyRep.style.width = '100%';
+    var propertyIframe = document.getElementById('monthlyRep-iframe');
+    propertyIframe.src = 'reportMonthly.html';
+    activeIframe = monthlyRep;
+    }
+
+function individualRep() {
+    if (activeIframe) {
+        activeIframe.style.display = 'none';
+    }
+    var individualRep = document.querySelector('.individualRep-iframe-wrapper');
+    individualRep.style.display = 'block';
+    individualRep.style.width = '100%';
+    var propertyIframe = document.getElementById('individualRep-iframe');
+    propertyIframe.src = 'reportIndividual.html';
+    activeIframe = individualRep;
+    }
+
     function collectionCat() {
         if (activeIframe) {
             activeIframe.style.display = 'none';

@@ -61,14 +61,27 @@
                 <span>Collection Category</span>
             </div>
 
-            <div class="menu-item">
-                <select id="reportSelect">
-                    <option value="" disabled selected>Reports</option>
-                    <option value="collectionList">Collection Report</option>
-                    <option value="property">Property</option>
-                    <option value="reservation">Reservation</option>
-                </select>
-            </div> 
+            <div class="menu-item" id="individual">
+                <span>Individual Report</span>
+            </div>
+
+            <div class="menu-item" id="monthly">
+                <span>Monthly Report</span>
+            </div>
+
+            <div class="menu-item" id="yearly">
+                <span>Yearly Report</span>
+            </div>
+
+            <div class="menu-item" id="propertyrep">
+                <span>Property Report</span>
+            </div>
+
+            <div class="menu-item" id="reservation">
+                <span>Reservation Report</span>
+            </div>
+
+
         </div>
     </div>
 
@@ -76,6 +89,31 @@
         <div id="welcome">
             <h1>Welcome to Greenfield Homeowners Association</h1>
         </div>
+
+        <div class="reservationRep-iframe-wrapper" id="iframeWrapper_reservationRep">
+            <iframe id="reservationRep-iframe" src=""></iframe>
+        </div>
+
+        <div class="propertyRep-iframe-wrapper" id="iframeWrapper_propertyRep">
+            <iframe id="propertyRep-iframe" src=""></iframe>
+        </div>
+
+        <div class="yearlyRep-iframe-wrapper" id="iframeWrapper_yearlyRep">
+            <iframe id="yearlyRep-iframe" src=""></iframe>
+        </div>
+
+        <div class="property-iframe-wrapper" id="iframeWrapper_property">
+            <iframe id="property-iframe" src=""></iframe>
+        </div>
+
+        <div class="monthlyRep-iframe-wrapper" id="iframeWrapper_monthlyRep">
+            <iframe id="monthlyRep-iframe" src=""></iframe>
+        </div>
+
+        <div class="individualRep-iframe-wrapper" id="iframeWrapper_individualRep">
+            <iframe id="individualRep-iframe" src=""></iframe>
+        </div>
+
         <div class="colCat-iframe-wrapper" id="iframeWrapper_colCat">
             <iframe id="colCat-iframe" src=""></iframe>
         </div>
@@ -86,10 +124,6 @@
 
         <div class="collectionlist-iframe-wrapper" id="iframeWrapper_collectionlist">
             <iframe id="collectionlist-iframe" src=""></iframe>
-        </div>
-
-        <div class="property-iframe-wrapper" id="iframeWrapper_property">
-            <iframe id="property-iframe" src=""></iframe>
         </div>
 
         <div class="reservation-iframe-wrapper" id="iframeWrapper_reservation">
@@ -116,22 +150,30 @@
         <div class="category-iframe-wrapper" id="iframeWrapper_category">
             <iframe id="category-iframe" src=""></iframe>
         </div>
-        <div class="propertybin-iframe-wrapper" id="iframeWrapper_propertybin">
-            <iframe id="propertybin-iframe" src=""></iframe>
-        </div>
 
         <div class="collectionReport-iframe-wrapper" id="iframeWrapper_collectionReport">
             <iframe id="collectionReport-iframe" src=""></iframe>
         </div>
 
-        <div class="propertyReport-iframe-wrapper" id="iframeWrapper_propertyReport">
-            <iframe id="propertyReport-iframe" src=""></iframe>
-        </div>
+        
 
         <div class="reservationReport-iframe-wrapper" id="iframeWrapper_reservationReport">
             <iframe id="reservationReport-iframe" src=""></iframe>
         </div>
+
+        <div class="individual-iframe-wrapper" id="iframeWrapper_individual">
+   		 <iframe id="individual-iframe" src=""></iframe>
+	    </div>
+
+        <div class="montly-iframe-wrapper" id="iframeWrapper_monthly">
+   		 <iframe id="monthly-iframe" src=""></iframe>
+	    </div>
+
+        <div class="yearly-iframe-wrapper" id="iframeWrapper_yearly">
+   		 <iframe id="yearly-iframe" src=""></iframe>
+	    </div>
     </div>
+    
 
     <script>
         // Get all the menu items
@@ -163,7 +205,7 @@
 
         // Make the iframes interactive when dropdown items are clicked
         const certificateSelect = document.getElementById('certificateSelect');
-        const reportSelect = document.getElementById('reportSelect');
+
 
         certificateSelect.addEventListener('change', () => {
             const selectedValue = certificateSelect.value;
@@ -172,12 +214,7 @@
             iframe.src = selectedValue + '.html';
         });
 
-        reportSelect.addEventListener('change', () => {
-            const selectedValue = reportSelect.value;
-            const iframeId = selectedValue + 'Report-iframe';
-            const iframe = document.getElementById(iframeId);
-            iframe.src = selectedValue + 'Report.html';
-        });
+
     </script>
 
     <script type="module" src="../assets/credentials/dashboard.js"></script>

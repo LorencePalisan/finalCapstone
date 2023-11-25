@@ -9,6 +9,11 @@ var button = document.getElementById('cal');
 
 const eventsTable = document.getElementById("eventsTable");
 
+document.addEventListener('DOMContentLoaded', (event) => {
+  displayEvent()
+  
+});
+
 document.getElementById('selecB').addEventListener("click", displayEvent);
 
 document.querySelectorAll('input[type="number"]').forEach(function(input) {
@@ -20,12 +25,7 @@ document.querySelectorAll('input[type="number"]').forEach(function(input) {
     }
   });
 });
-
 async function displayEvent() {
- 
-  while (eventsTable.rows.length > 1) {
-    eventsTable.deleteRow(1);
-  }
   try {
     const facilitySelect = document.getElementById("facility");
     const selectedFacility = facilitySelect.value; // Get the selected facility value
@@ -38,42 +38,57 @@ async function displayEvent() {
       where('datetime', '>=', currentDate.toISOString())
     ));
 
-    querySnapshot.forEach((docSnapshot) => {
-      const data = docSnapshot.data();
-      const row = eventsTable.insertRow(-1); // Add a new row to the table
+    // Clear the table
+    while (eventsTable.rows.length > 1) {
+      eventsTable.deleteRow(1);
+    }
 
-      // Get the document ID
-      const docId = docSnapshot.id;
+    if (querySnapshot.empty) {
+      // If there are no reservation requests, display a message
+      const noRequestRow = eventsTable.insertRow(-1);
+      const noRequestCell = noRequestRow.insertCell(0);
+      noRequestCell.textContent = "No reservation Request";
+      noRequestCell.colSpan = 7;
+    } else {
+      // If there are reservation requests, populate the table
+      querySnapshot.forEach((docSnapshot) => {
+        const data = docSnapshot.data();
+        const row = eventsTable.insertRow(-1); // Add a new row to the table
 
-      // Populate the row with event information
-      const date = row.insertCell(0);
-      date.textContent = data.datetime;
+        // Get the document ID
+        const docId = docSnapshot.id;
 
-      const facility = row.insertCell(1);
-      facility.textContent = data.facility;
+        // Populate the row with event information
+        const date = row.insertCell(0);
+        date.textContent = data.datetime;
 
-      const reservedBy = row.insertCell(2);
-      reservedBy.textContent = data.name;
+        const facility = row.insertCell(1);
+        facility.textContent = data.facility;
 
-      const time = row.insertCell(3);
-      time.textContent = `${data.timeFrom} - ${data.timeTo}`;
+        const reservedBy = row.insertCell(2);
+        reservedBy.textContent = data.name;
 
-      const acceptCell = row.insertCell(4);
-      const acceptButton = document.createElement("button");
-      acceptButton.textContent = "Confirm";
-      acceptButton.addEventListener("click", () => acceptEvent(data, docId));
-      acceptCell.appendChild(acceptButton);
+        const time = row.insertCell(3);
+        time.textContent = `${data.timeFrom} - ${data.timeTo}`;
 
-      const rejectCell = row.insertCell(5);
-      const rejectButton = document.createElement("button");
-      rejectButton.textContent = "Reject";
-      rejectButton.addEventListener("click", () => confirmReject(data, docId));
-      rejectCell.appendChild(rejectButton);
-    });
+        const acceptCell = row.insertCell(4);
+        const acceptButton = document.createElement("button");
+        acceptButton.textContent = "Confirm";
+        acceptButton.addEventListener("click", () => acceptEvent(data, docId));
+        acceptCell.appendChild(acceptButton);
+
+        const rejectCell = row.insertCell(5);
+        const rejectButton = document.createElement("button");
+        rejectButton.textContent = "Reject";
+        rejectButton.addEventListener("click", () => confirmReject(data, docId));
+        rejectCell.appendChild(rejectButton);
+      });
+    }
   } catch (error) {
     console.error("Error fetching data: ", error);
   }
 }
+
 
 
   async function acceptEvent(data, docId) {

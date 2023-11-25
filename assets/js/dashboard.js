@@ -47,6 +47,3 @@ import { signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/fir
     document.addEventListener("DOMContentLoaded", function () {
         showMemberDetails(); 
     });
-            
-    
-           
