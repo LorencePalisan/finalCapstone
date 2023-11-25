@@ -1,200 +1,102 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-body {
-  font-family: Arial, Helvetica, sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f2f2f2;
-}
-
-#loginSelection {
-  text-align: center;
-  margin: 0 auto; /* Center horizontally */
-  margin-bottom: 20px;
-  display: flex;
-  width: 30%;
-  height: 100px;
-}
-
-#loginSelection button {
-  background-color: #04AA6D;
-  color: white;
-  padding: 14px 20px;
-  margin: 10px 10px;
-  border: none;
-  cursor: pointer;
-  width: 100%;
-  border-radius: 45px;
-}
-
-#loginSelection button:hover {
-  opacity: 0.8;
-}
-
-#loginContainer {
-  max-width: 400px;
-  margin: 0 auto;
-  padding: 20px;
-  text-align: center;
-}
-
-.form-container {
-  display: none;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  text-align: center;
-}
-
-.form-container h2 {
-  color: #333;
-}
-
-.imgcontainer {
-  text-align: center;
-}
-
-.avatar {
-  width: 100px;
-  height: 100px;
-  border-radius: 10px;
-}
-
-.form-group {
-  text-align: left;
-  margin-left: 50px;
-}
-
-label {
-  display: block;
-  font-weight: bold;
-}
-
-input[type="text"],
-input[type="password"] {
-  width: 80%;
-  padding: 10px;
-  margin: 5px 0;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.password-icon {
-  position: absolute;
-  right: 5px;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-}
-
-button[type="submit"] {
-  background-color: #007BFF;
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-bottom: 20px;
-  margin-top: 10px;
-  margin-left: 68%;
-}
-
-
-.password-container {
-  display: flex;
-  align-items: center; /* Vertically center the password input and icon */
-  width: 80%;
-  margin: 5px 0;
-  margin-top: -10px;
-  font-size: small;
-}
-button[type="submit"]:hover {
-  background-color: #0056b3;
-}
-</style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/assets/css/login.css">
 </head>
+
 <body>
 
-<div id="loginSelection">
-    <button onclick="showLoginForm('adminLoginForm')">Admin/Staff Login</button>
-    <button onclick="showLoginForm('memberLoginForm')">Member Login</button>
-</div>
+    <div id="loginSelection">
+        <button onclick="showLoginForm('adminLoginForm')">Admin Login</button>
+        <button onclick="showLoginForm('memberLoginForm')">Member Login</button>
+    </div>
 
-<div id="loginContainer">
-  <div id="adminLoginForm" class="form-container">
-    <h2>Admin Login</h2>
-    <div class="imgcontainer">
-      <img src="../assets/img/img_avatar2.png" alt="Avatar" class="avatar">
-    </div>
-    <div class="form-group">
-      <label for="adminEmail"><b>Email</b></label>
-      <input type="text" placeholder="Enter Email" id="adminEmail" name="adminEmail" required>
-      <br>
-      <label for="adminPassword"><b>Password</b></label>
-     
-        <input type="password" placeholder="Enter Password" id="adminPassword" name="adminPassword" required>
-        <div class="password-container">    
-            <p for="showPass">Show Password</p>    <input type="checkbox" id="showPassAdmin">
-        </div>
-      
-      <button type="submit" id="adminSubmit">Login</button>
-    </div>
-  </div>
-
-  <div id="memberLoginForm" class="form-container">
-    <h2>Member Login</h2>
-    <div class="imgcontainer">
-      <img src="../assets/img/img_avatar1.png" alt="Avatar" class="avatar">
-    </div>
-    <div class="form-group">
-      <label for="memberEmail"><b>Email</b></label>
-      <input type="text" placeholder="Enter Email" id="memberEmail" name="memberEmail" required>
-      <br>
-      <label for "memberPassword"><b>Password</b></label>
-      
-        <input type="password" placeholder="Enter Password" id="memberPassword" name="memberPassword" required>
-        <div class="password-container">    
-            <p for="showPass">Show Password</p>    <input type="checkbox" id="showPass">
+    <div id="loginContainer">
+        <!-- Admin login form -->
+        <div id="adminLoginForm" class="form-container">
+            <h2>Admin Login</h2>
+            <form id="adminForm">
+                <!-- Add 'admin' prefix to input names -->
+                <div class="form-group">
+                    <label for="adminEmail">Email</label>
+                    <input type="email" placeholder="Enter Email" id="adminEmail" name="adminEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="adminPassword">Password</label>
+                    <div class="password-container">
+                        <input type="password" placeholder="Enter Password" id="adminPassword" name="adminPassword" required>
+                        <div class="eye-icon" onclick="togglePassword('adminPassword')">
+                            &#x1F441; <!-- Unicode for eye symbol -->
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" id="adminSubmit">Login</button>
+            </form>
         </div>
 
-      
-      <button type="submit" id="memberSubmit">Login</button>
+        <!-- Member login form -->
+        <div id="memberLoginForm" class="form-container">
+            <h2>Member Login</h2>
+            <form id="memberForm">
+                <!-- Add 'member' prefix to input names -->
+                <div class="form-group">
+                    <label for="memberEmail">Email</label>
+                    <input type="text" placeholder="Enter Email" id="memberEmail" name="memberEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="memberPassword">Password</label>
+                    <div class="password-container">
+                        <input type="password" placeholder="Enter Password" id="memberPassword" name="memberPassword" required>
+                        <div class="eye-icon" onclick="togglePassword('memberPassword')">
+                            &#x1F441; <!-- Unicode for eye symbol -->
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" id="memberSubmit">Login</button>
+            </form>
+        </div>
     </div>
-  </div>
-</div>
 
-<script>
+    <script>
+        function showLoginForm(formId) {
+            var forms = document.querySelectorAll('.form-container');
+            for (var i = 0; i < forms.length; i++) {
+                forms[i].style.display = 'none';
+            }
+            document.getElementById(formId).style.display = 'block';
+        }
 
-function showLoginForm(formId) {
-  var forms = document.querySelectorAll('.form-container');
-  for (var i = 0; i < forms.length; i++) {
-    forms[i].style.display = 'none';
-  }
-  document.getElementById(formId).style.display = 'block';
-}
+        function validateLoginForm(formId) {
+            var form = document.getElementById(formId);
+            var emailInput = form.querySelector('input[name="' + formId + 'Email"]');
+            var passwordInput = form.querySelector('input[name="' + formId + 'Password"]');
 
-document.getElementById('showPass').addEventListener('change', function() {
-  var passwordField = document.getElementById('memberPassword');
-  if (this.checked) {
-    passwordField.type = 'text';    
-  } else {
-    passwordField.type = 'password';
-  }
-});
+            // Your validation logic...
 
-document.getElementById('showPassAdmin').addEventListener('change', function() {
-  var passwordField = document.getElementById('adminPassword');
-  if (this.checked) {
-    passwordField.type = 'text';    
-  } else {
-    passwordField.type = 'password';
-  }
-});
-</script>
+            return false; // Prevent the form from submitting
+        }
 
-<script type="module" src="../assets/credentials/loginForm.js"></script>
+        function togglePassword(passwordFieldId) {
+            var passwordField = document.getElementById(passwordFieldId);
+            passwordField.type = passwordField.type === 'password' ? 'text' : 'password';
+        }
+
+        // Event listener for form submission
+        document.getElementById('adminForm').addEventListener('submit', function (e) {
+            validateLoginForm('adminForm');
+            e.preventDefault();
+        });
+
+        document.getElementById('memberForm').addEventListener('submit', function (e) {
+            validateLoginForm('memberForm');
+            e.preventDefault();
+        });
+    </script>
+
+    <script type="module" src="../assets/credentials/loginForm.js"></script>
 
 </body>
+
 </html>

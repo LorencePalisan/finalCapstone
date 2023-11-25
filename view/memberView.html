@@ -3,502 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/assets/css/membersView.css">
     <title id="title">Members Profile</title>
-
-    <style>
-body ::-webkit-scrollbar {
-        width: 0;
-    }
-
-    body::-webkit-scrollbar-thumb {
-        background: transparent;
-    }
-.box {
-    margin-top: 20px;
-    margin-left: 40px;
-    border: 1px solid gainsboro;
-    padding: 20px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-    width: 80%;
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.box > div {
-    flex: 1;
-    margin-right: 20px; /* Add margin between label-input pairs */
-}
-
-.box label {
-    display: block;
-    margin-bottom: 5px; /* Add space between label and input */
-}
-
-.box input {
-    width: 100%;
-}
-
-#Edit {
-    float: right;
-    border-radius: 20px;
-    
-    cursor: pointer;
-}
-
-
-
-
-
-   
-    
-    #statusButton {
-    width: 80px; /* Set the fixed width for the button */
-    height: 30px; /* Set the fixed height for the button */
-    border-radius: 15px; /* Adjust the border-radius for a rounded rectangle */
-    border: none;
-    cursor: pointer;
-    color: #FFFFFF; /* White text color */
-    background-color: green; /* Default green background color for "active" */
-    }
-
-
-    .toolbar {
-    margin-top: 50px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
-    width: 98%;
-    background-color: #1CAC78; /* Background color for the toolbar */
-    color: #fff; /* Text color */
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    }
-
-    .left {
-    flex: 1; /* Take up available space on the left */
-    font-weight: bold; /* Bold font for the title */
-    }
-
-    .right #addCollection {
-    background-color: #007acc; /* Button background color */
-    color: #fff; /* Button text color */
-    border: none;
-    padding: 5px 10px;
-    border-radius: 5px; /* Rounded button corners */
-    cursor: pointer;
-    }
-
-    .right #addCollection:hover {
-    background-color: #005faa; /* Hover color for the button */
-    }
-    .headtoolbar {
-    background-color:  #1CAC78; /* Background color for the toolbar */
-    color: #fff; /* Text color */
-    display: flex; /* Use flexbox for positioning elements */
-    justify-content: space-between; /* Space between title and button */
-    align-items: center; /* Center vertically within the toolbar */
-    padding: 10px;
-}
-
-#logout {
-    background-color: #ce5a40; /* Background color for the button */
-    color: #fff; /* Text color for the button */
-    padding: 5px 15px; /* Adjust padding as needed */
-    border: none; /* Remove the button border if desired */
-    border-radius: 5px; /* Add rounded corners to the button */
-    cursor: pointer; /* Show a pointer cursor on hover */
-}
-
-#logout:hover {
-    background-color: #FF3D00; /* Change button background color on hover */
-}
-
-        .toolbar-title {
-        font-weight: bold; /* Bold font for the title */
-        margin: 0; /* Remove default margin */
-        }
-
-        #bleta {
-          margin-top: 10px;
-          font-size: large;
-          text-align: center;
-          width: 100%;
-          border-collapse: collapse;
-          max-height: 300px; /* Set the maximum height to limit to 10 rows */
-          overflow-y: scroll; /* Add a vertical scrollbar when content overflows */
-      }
-
-        
-
-        #alignn label {
-        text-align: left;
-        display: inline-block;
-        width: 100px; /* Adjust the width as needed */
-        margin-right: 10px; /* Add some space between label and input */
-      }
-      #alignn input[type="text"] {
-        width: auto;
-        text-align: left;
-      }
-
-     
-
-
-        .form-group {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            margin-bottom: 10px;
-            padding: 1%;
-        }
-
-        
-
-        #form-container {
-            display: flex;
-            flex-wrap: wrap;
-        }
-
-        #form-column-1, #form-column-2 {
-            margin: 10px;
-            flex: 1;
-        }
-
-        #form-column-1 {
-        flex: 1; /* Let it take up equal space */
-        /* Add your custom styling for the form column */
-        }
-
-        #form-column-2 {
-        margin-left: 20px;
-        flex: 2; /* Give it more space compared to form-column-1 */
-        /* Add your custom styling for the toolbar column */
-        }
-
-        #collections-container {
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
-        border: 2px solid gainsboro; /* Add a border with your desired color and thickness */
-        padding: 10px; /* Add some padding to create space inside the box */
-        margin-top: 20px; /* Adjust the margin as needed to separate it from other content */
-        overflow: auto; /* Add overflow property to handle scrolling if content overflows */
-        border-bottom-width: 3px;
-        height: 650px;
-    }
-    .custom-table {
-            border-collapse: collapse;
-            width: 100%;
-            border: 1px solid #ddd; /* Add a border to the table */
-        }
-
-        .custom-table th, .custom-table td {
-            border: 1px solid #ddd; /* Add a border to table cells */
-            padding: 8px; /* Add some padding to cells for better appearance */
-            text-align: center; /* Align text to the center within cells */
-            width: 25%;
-        }
-
-        .custom-table th {
-            background-color: #f2f2f2; /* Add a background color to header cells */
-        }
-        .custom-table tr {
-           height: 10px;
-          }
-
-      #addCol {
-            margin: 20px auto; /* Center horizontally and add top margin */
-            border: 1px solid #ccc;
-            width: 800px; /* Adjust the width */
-            height: auto;
-            padding: 10px 20px; /* Simplify padding */
-            text-align: center; /* Center the content horizontally */
-            display: flex;
-            position: fixed;
-            background-color: white;
-            transform: translate(-50%, -50%);
-            top: 50%;
-            left: 50%;
-        }
-
-        #addCol h3 {
-            text-align: center;
-        }
-
-        #addCol .toleft,
-        #addCol .toright {
-            flex: 1; /* Adjust the width */
-            margin: 10px;
-        }
-
-        #addCol .toleft {
-            text-align: left; /* Align text to the left */
-        }
-
-        #addCol .toright {
-            text-align: right; /* Align text to the right */
-        }
-
-        .button-container {
-    text-align: center;
-    margin: 0 auto;
-}
-
-        .custom-table {
-            border-collapse: collapse;
-            width: 100%;
-            border: 1px solid #ddd;
-        }
-
-        .custom-table th, .custom-table td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: center;
-        }
-
-        .custom-table th {
-            background-color: #f2f2f2;
-        }
-        #addCol {
-      margin: 20px auto;
-      border: 1px solid #ccc;
-      width: 80%; /* Adjust the width as needed */
-      display: none;
-      justify-content: space-between; /* Distribute space between toleft and toright */
-      background-color: white;
-      padding: 10px 20px;
-      text-align: center;
-    }
-
-    .toleft,
-    .toright {
-      flex: 1; /* Each takes up 50% of the container */
-      padding: 0 10px; /* Optional padding for spacing */
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-
-    #addCol label {
-      flex: 1;
-      text-align: right;
-      margin-right: 4%;
-    }
-
-    #addCol input {
-      flex: 2;
-      border: 1px solid #ccc;
-      margin-right: 10%;
-    }
-
-    #addCol h3 {
-      text-align: center;
-    }
-
-    #colCat {
-      text-align: center;
-    }
-
-    .custom-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-
-    .custom-table th,
-    .custom-table td {
-      border: 1px solid #ccc;
-      padding: 8px;
-    }
-
-    .button-container {
-      margin-top: 10px;
-    }
-
-    button {
-      padding: 8px 16px;
-      cursor: pointer;
-    }
-    #tranNum::-webkit-inner-spin-button,
-        #tranNum::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        appearance: none;
-        margin: 0;
-        }
-
-        #memID::-webkit-inner-spin-button,
-        #memID::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        appearance: none;
-        margin: 0;
-        }
-
-        #viewCollection {
-        margin: 20px auto; /* Center horizontally and add top margin */
-        border: 1px solid #ccc;
-        width: 500px;
-        height: auto;
-        padding: 10px 20px; /* Simplify padding */
-        text-align: center; /* Center the content horizontally */
-        flex-direction: column;
-        justify-content: center; /* Center the content vertically */
-        display: none;
-        position: fixed;
-        background-color: white;
-        transform: translate(-50%, -50%);
-        top: 50%;
-        left: 50%;
-        }
-
-        #viewCollection label {
-            flex: 1;
-            text-align: left;
-            margin-left: 10%;
-           
-        }
-
-        #viewCollection input {
-            flex: 2;
-            border: 1px solid #ccc;
-            margin-right: 10%;
-            width: 20%;
-        }
-
-        #viewCollection h3{
-            text-align: center;
-        }
-
-        .form-col {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            margin-bottom: 10px;
-            padding: 1%;
-        }
-
-        .centered-table {
-            margin: 0 auto; /* Center the table horizontally */
-            width: 80%; /* Adjust the width as needed */
-            border-collapse: collapse; /* Remove spacing between table cells */
-        }
-
-        .centered-table th, .centered-table td {
-            border: 1px solid #ccc; /* Add a border to table cells */
-            padding: 8px; /* Add padding to table cells */
-            text-align: center; /* Center-align the content in table cells */
-            width: 25%;
-        }
-
-        .button-container {
-            text-align: right;
-        }
-        #popup {
-            border: 2px solid #ccc;
-            background-color: #fff;
-            padding: 20px;
-            width: 50%; /* Adjust the width as needed */
-            margin: 20px auto;
-            display: none;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            border-radius: 15px;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-
-        #popup label {
-          margin-bottom: 5px;
-        }
-
-        #popup input,
-        #popup select {
-          width: 300;
-          padding: 8px;
-          box-sizing: border-box;
-          margin-bottom: 10px;
-        }
-
-        .button-container {
-          grid-column: span 2; /* Make these buttons span both columns */
-          text-align: center;
-        
-        }
-
-        #popup button {
-          padding: 10px;
-          background-color: #4caf50;
-          color: white;
-          border: none;
-          cursor: pointer;
-          width: 100px;
-          height: 50px;
-          border-radius: 15px;
-        }
-
-        .clear-button {
-          background-color: #f44336;
-          width: 20%;
-          border-radius: 15px;
-        }
-
-        /* Divide into two columns with 7 pairs each */
-        .label-input-pair {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 10px;
-        }
-
-        #eventB {
-          position: absolute;
-          right: 10px; /* You can adjust this value based on your layout */
-          margin-right: 20px;
-          border-radius: 15px;
-          background-color: #ff0000;
-          border: 0px;
-          width: 10%;
-          height: 5%;
-          display: block;
-        }
-        @media (max-width: 768px) {
-            #form-container {
-                flex-direction: column;
-            }
-        }
-        #lotTable {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-#lotTable th, #lotTable td {
-    padding: 8px;
-    text-align: center;
-    border-bottom: 1px solid #ddd;
-}
-
-#lotTable th {
-    background-color: #ffffff;
-    color: #000000;
-}
-
-#lotTable th, #lotTable td:first-child {
-    width: 20%;
-}
-
-#lotTable td {
-   
-  font-weight: normal;
-}
-
-
-  </style>
-    
-
-   
 
 </head>
 <body>
@@ -508,49 +14,54 @@ body ::-webkit-scrollbar {
         <button id="logout">Log Out</button>
       </div>
 <div id="collections-container">
-
-  <button id="eventB">Events</button>
+  <button id="sendBB">Facility Recervation</button>
+  
       <div id="form-container">
+        
 <div id="form-column-1">
   <div class="box">
     <div>
-        <label for="id">ID</label>
-        <input type="text" id="id" disabled>
 
         <label for="name">Fullname</label>
         <input type="text" id="name" disabled>
 
+        <label for="cont">Contact Number</label>
+        <input type="text" id="cont" disabled>
+
         <label for="category">Category</label>
         <input type="text" id="category" disabled>
 
-        <label for="lotAmort">Lot Amortization</label>
-        <input type="text" id="lotAmort" disabled>
+        <label for="balance">Lot Amortization</label>
+        <input type="number" id="balance" disabled>
+
+        <label for="currentPenalty">Current Penalty</label>
+        <input type="number" id="currentPenalty" disabled>
 
         <h3 >Property</h3>
 
-        <table id="lotTable">
-          <tr>
-          <th>Lot #</th>
-          <th>Block #</th>
-          <th>Lot Size</th>
-        </tr>
+       <table id="lotTable">
         <tr>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-         </table>
+        <th>Lot #</th>
+        <th>Block #</th>
+        <th>Lot Size</th>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+       </table>
     
 
       <div>
         <label for="statusButton">Status</label>
-        <button id="statusButton" disabled>Active</button>
-        
+        <button id="statusButton" disabled></button>
+        <!-- <button id="Edit">Edit Profile</button> -->
       </div>
     </div>
 </div>
 
-
+<div id="paginationControls"></div>
     </div> 
       
     <div id="form-column-2">
@@ -558,7 +69,6 @@ body ::-webkit-scrollbar {
         <div class="left">
           <span>Collections</span>
         </div>
-        
       </div>
       <div id="collections">
 
@@ -584,10 +94,59 @@ body ::-webkit-scrollbar {
 </div>
 </div>
       
-
+<div id="addCol">
+  <div class="toleft">
+  <h3>Add Collection</h3>
  
   
+    <!-- Your left content here -->
+    <div class="form-group">
+        <label for="tranNum">Transaction #:</label>
+        <input type="number" id="tranNum" placeholder="Transaction #">
+    </div>
+    
+    <div class="form-group">
+      <label for="memName">Member Name:</label>
+      <input type="text" id="memName" placeholder="Member Name" disabled >
+    </div>
 
+    <div class="form-group">
+      <label for="collName">Collector Name:</label>
+      <input type="text" id="collName" placeholder="Collector Name">
+    </div>
+    
+    <div class="form-group">
+      <label for="tranDate">Date:</label>
+      <input type="date" id="tranDate" onchange="validateDate(this)">
+    </div>
+  </div>
+
+  <div class="toright">
+            <!-- Your right content here -->
+            <div id="colCat" style="text-align: center;">
+                <table id="addColTable" class="custom-table">      
+                    <tr>
+                        <th>Select</th>
+                        <th>Collection ID</th>
+                        <th>Collection Name</th>
+                        <th>Fee</th>
+                    </tr>     
+                    <tr>
+                        <td></td>
+                    </tr>           
+                </table>
+            </div>
+
+            <div class="button-container">
+                <button id="add">Add</button> 
+                <button id="cancel">Cancel</button>
+            </div>
+      </div>
+
+</div>
+
+
+<div id="left">
 <div id="viewCollection">
   <h3>Collection Details</h3>
 
@@ -610,38 +169,118 @@ body ::-webkit-scrollbar {
       <label for="cdCollectorName">Collector Name:</label>
       <input type="text" id="cdCollectorName" placeholder="Collector Name" disabled>
     </div>
+
+    <div class="form-col">
+      <label for="bal">Lot Amort Balance</label>
+      <input type="number" id="bal" placeholder="Lot Amort" disabled>
+    </div>
     
     <div class="form-col">
       <label for="cdTranDate">Date:</label>
       <input type="date" id="cdTranDate" onchange="validateDate(this)" disabled>
     </div>
-      <div id="cdCollectionTable" style="text-align: center;">
-          <table id="cdTable" class="centered-table" >      
-              <tr>
-                  
-                  <th>Collection ID</th>
-                  <th>Collection Name</th>
-                  <th>Fee</th>
-              </tr>     
-              <tr>
-                 
-                  <td></td>
-                  <td></td>
-                  <td></td>
-              </tr>           
-          </table>
-      </div>
-    
 
+
+  
+  <div id="cdCollectionTable" style="text-align: center;">
+    <div id="right">
+      <table id="cdTable" class="centered-table">
+        <tr>
+          <th>Collection ID</th>
+          <th>Collection Name</th>
+          <th>Fee</th>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </table>
+    </div>
+  
     <div class="button-container">
       <button id="viewColCancel">Close</button>
-      
     </div>
-
+  </div>
 </div>
 
+<div id="popup" class="popup">
+  <div class="label-input-pair">
+ 
+  
+  <label for="memberName">Member Name:</label>
+  <input id="memberName" type="text" placeholder="Member Name">
+  
+  <label for="spouseName"> Spouse Name:</label>
+  <input id="spouseName" type="text" placeholder="Spouse Name">
+  
+  <label for="occupation">Occupation:</label>
+  <input id="occupation" type="text" placeholder="Occupation">
+
+  <label for="age">Age:</label>
+  <input id="age" type="number" placeholder="Age">
+  
+  <label for="birthday">Birthday:</label>
+  <input id="birthday" type="date" onchange="validateDate(this)" style="text-transform: uppercase;">
+
+  <label for="civilStatus">Civil Status:</label>
+  <input id="civilStatus" type="text"  placeholder="Civil Status">
+  
+</div>
+
+<div class="label-input-pair">
+  
+  <label for="citizenship">Citizenship:</label>
+  <input id="citizenship" type="text"  placeholder="Citizenship">
+
+  <label for="contactNum">Contact #:</label>
+  <input id="contactNum" type="number" placeholder="Contact #">
+  
+  <label for="memberCategory">Member Category:</label>
+  <select id="memberCategory" >
+    <option value="" disabled selected>--- Select Member Category ---</option>
+    <option value="Member">Member</option>
+    <option value="Renter">Renter</option>
+  </select>
+
+  <label for="memberStatus">Member Status:</label>
+  <select id="memberStatus" >
+    <option value="" disabled selected>--- Select Member Status ---</option>
+    <option value="Active">Active</option>
+    <option value="Inactive">Inactive</option>
+  </select>
+
+  <label for="gender">Gender:</label>
+  <select id="gender" >
+    <option value="" disabled selected>--- Select Gender ---</option>
+    <option value="male">Male</option>
+    <option value="female">Female</option>
+  </select>
+</div>
+
+  <div class="button-container">
+    <button id="updateMember">Update</button>
+    <button class="clear-button" id="close">Close</button>
+  </div>
+</div>
+
+<form id="smsForm">
+  <h2>Notice Sender</h2>
+  <label for="recipientNumber">Recipient's Phone Number:</label>
+  <input type="text" id="recipientNumber" placeholder="+63" value="+63" disabled>
+  <br>
+
+  <label for="messageBody">Message Body:</label>
+  <textarea id="messageBody" required></textarea>
+  <br>
+
+  <button type="button" id="send">Send SMS</button>
+  <button type="button" id="closeForm">Close</button>
+</form>
 
       <script type="module" src="../assets/js/memberView.js"></script>
+     <script type="module" src="../assets/credentials/twilioCredentials.js"></script>
+     
       <script>
         function validateDate(input) {
         const selectedDate = new Date(input.value);
@@ -660,7 +299,9 @@ body ::-webkit-scrollbar {
         }
         }
 
-
+  document.getElementById('closeForm').addEventListener('click', function () {
+    document.getElementById('smsForm').style.display = 'none';
+  });
        
       </script>
 </body>

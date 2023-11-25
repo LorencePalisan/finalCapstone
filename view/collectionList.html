@@ -3,283 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/assets/css/collectionlist.css">
     <title>Collection List</title>
-    <style>
-
-        .headtoolbar {
-        background-color:  #1CAC78; /* Background color for the toolbar */
-        color: #fff; /* Text color */
-        text-align: center; /* Center the text horizontally */
-        padding: 10px;
-        }
-
-        .toolbar-title {
-        font-weight: bold; /* Bold font for the title */
-        margin: 0; /* Remove default margin */
-        }
-
-        #box {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .sectoolbar {
-            margin-top: 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            background-color: #f0f0f0;
-            border: 1px solid #ccc;
-        }
-
-        .sectoolbar h3 {
-            margin: 0;
-        }
-
-        .sectoolbar button {
-            margin-left: auto;
-            width: 300%;
-        }
-
-        #trans {
-            text-align: center;
-            align-items: center;
-            border-collapse: collapse;
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        #trans th, #trans td{
-            width: 5%;
-            border: 1px solid #ccc;
-            padding: 8px;
-            text-align: center;
-        }
-
-        #trans th {
-            background-color: #f0f0f0;
-        }
-
-        #addCol {
-    margin: 20px auto; /* Center horizontally and add top margin */
-    border: 1px solid #ccc;
-    width: 800px; /* Adjust the width to accommodate two columns */
-    padding: 10px 20px; /* Simplify padding */
-    text-align: center; /* Center the content horizontally */
-    display: none;
-    position: fixed;
-    background-color: white;
-    transform: translate(-50%, -50%);
-    top: 50%;
-    left: 50%;
-}
-
-.form-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* Create two columns */
-    grid-gap: 10px; /* Add some spacing between columns */
-}
-
-.left-column {
-    padding: 1%;
-}
-
-.right-column {
-    text-align: center;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-bottom: 10px;
-    padding: 1%;
-}
-
-#addCol label {
-    flex: 1;
-    text-align: right;
-    margin-right: 4%;
-}
-
-#addCol input {
-    flex: 2;
-    border: 1px solid #ccc;
-    margin-right: 10%;
-}
-
-#addCol h3 {
-    text-align: center;
-}
-
-.button-container {
-    text-align: center;
-}
-
-/* Add any other CSS styles you need */
 
 
-        .centered-table {
-            margin: 0 auto; /* Center the table horizontally */
-            width: 80%; /* Adjust the width as needed */
-            border-collapse: collapse; /* Remove spacing between table cells */
-        }
-
-        .centered-table th, .centered-table td {
-            border: 1px solid #ccc; /* Add a border to table cells */
-            padding: 8px; /* Add padding to table cells */
-            text-align: center; /* Center-align the content in table cells */
-            width: 25%;
-        }
-
-                /* Style the buttons */
-            #popupMenu {
-            background-color: #007bff; /* Change the background color */
-            color: white; /* Change the text color */
-            padding: 10px 20px; /* Add padding to the buttons */
-            border: none;
-            cursor: pointer;
-            border-radius: 10px;
-            width: auto;
-            margin-top: 10px;
-            margin-right: 10px; /* Add margin to separate the buttons */
-        }
-
-        /* Align buttons to the right */
-        .button-container {
-            text-align: right;
-        }
-        
-                /* Style the buttons */
-        button#add {
-            background-color: #28a745; /* Green color for the "Add" button */
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
-            margin-right: 10px;
-            margin-top: 10px;
-        }
-
-        button#cancel {
-            background-color: #dc3545; /* Red color for the "Cancel" button */
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
-            margin-right: 20px;
-        }
-
-
-        #tranNum::-webkit-inner-spin-button,
-        #tranNum::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        appearance: none;
-        margin: 0;
-        }
-
-        #memID::-webkit-inner-spin-button,
-        #memID::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        appearance: none;
-        margin: 0;
-        }
-
-        #search{
-            margin-top: 10px;
-            height: 5%; 
-        }
-
-        #search label {
-            font-size: large;
-            width: 150px; /* Set the width you want for the label */
-        }
-
-        #search input {
-            font-size: medium;
-            width: 200px; /* Set the same width as the label */
-        }
-
-        #viewCollection {
-        margin: 20px auto; /* Center horizontally and add top margin */
-        border: 1px solid #ccc;
-        width: 500px;
-        height: auto;
-        padding: 10px 20px; /* Simplify padding */
-        text-align: center; /* Center the content horizontally */
-        flex-direction: column;
-        justify-content: center; /* Center the content vertically */
-        display: none;
-        position: fixed;
-        background-color: white;
-        transform: translate(-50%, -50%);
-        top: 50%;
-        left: 50%;
-        }
-
-        #viewCollection label {
-            flex: 1;
-            text-align: left;
-            margin-left: 10%;
-           
-        }
-
-        #viewCollection input {
-            flex: 2;
-            border: 1px solid #ccc;
-            margin-right: 10%;
-            width: 20%;
-        }
-
-        #viewCollection h3{
-            text-align: center;
-        }
-
-        #moveBin {
-            float: left;
-            font-size: medium;
-            margin-top: 10px;
-            margin-left: 50px;
-        }
-
-        #viewColCancel {
-            font-size: medium;
-            border-radius: 5px;
-            margin-right: 50px;
-            margin-top: 10px;
-            float: right;
-        }
-
-
-        .form-col {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            margin-bottom: 10px;
-            padding: 1%;
-        }
-
-
-    </style>
 </head>
 <body>
-    <div class="headtoolbar">
+    <div class="toolbar">
         <h1 class="toolbar-title">Collection List</h1>
-      </div>
+    </div>
 
     
       <div id="box">
 
         <div class="sectoolbar">
-            <h3>Collection List</h3>
-            <button id="popupMenu">Add Payment</button>
+            <h3>        <div id="search">
+                <label for="searchBar">Search:</label>
+                <input type="text"  id="searchBar" placeholder="Search By Name">
+                
+              </div></h3>
+            <button id="popupMenu">Add Collection</button>
         </div>
 
-        <div id="search">
-            <label for="searchBar">Search Here:</label>
-            <input type="text"  id="searchBar" placeholder="Search By Name">
-          </div>
+
 
         <table id="trans">
             <tr>
@@ -290,18 +36,18 @@
                 <th>Action</th>
             </tr>
             <tr>
-                <td>123</td>
-                <td>123</td>
-                <td>123</td>
-                <td>123</td>
-                <td>123</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
             </tr>
         </table>
       </div>
       <div id="paginationControls"></div>
 
       <div id="addCol">
-        <h3>Add Payment</h3>
+        <h3>ADD PAYMENT</h3>
         <div class="form-container">
             <div class="left-column">
                 <div class="form-group">
@@ -414,9 +160,6 @@
             input.value = ''; // Reset the input field
         }
         }
-
-
-       
       </script>
 </body>
 </html>

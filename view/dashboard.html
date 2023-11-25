@@ -5,407 +5,76 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <style>
-body {
-    font-family: Arial, sans-serif;
-    background-color: #ffffff;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    overflow: hidden; /* Prevent body from scrolling */
-}
-
-
-.content {
-  flex-grow: 1;
-  display: flex;
-}
-
-        header {
-            background-color: #44e1a8;
-            color: #fff;
-            padding: 5px;
-            text-align: right;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: right;
-            z-index: 2;
-        }
-        #signOut {
-        
-        margin-right: 11%;
-        border-radius: 45px;
-        border: 2px solid #fff; /* Changed border thickness to 2px and specified color */
-        height: 30px;
-        background-color: #4CAF50; /* Background color in green */
-        width: 100px;
-        transition: background-color 0.3s, color 0.3s; /* Add transition for smooth color change */
-        }
-
-        #signOut:hover {
-        background-color: #FF5733; /* New background color on hover */
-        color: #4CAF50; /* New text color on hover */
-        }
-
-        #userType {
-            margin-left: -90%;
-        }
-
-        .container {
-            display: flex;
-            height: 100vh;
-        }
-
-        .sidebar {
-            background-color: #e8efe1;
-            color: #fff;
-            width: 10%;
-            padding: 2%;
-            font-size: 15px;
-        }
-        .sidebar #toolbar {
-           
-            padding: 10px;
-            color: #fff;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 220px;
-            margin-left: -50px;
-            padding: 5%;
-            text-align: center;
-            justify-content: center;
-        }
-        .content {
-            flex: 1;
-            padding: 20px;
-            max-height: calc(100vh - 40px);
-            overflow-y: auto;
-        }
-
-        .menu-item {
-            margin-top: 5px;
-            padding: 10px;
-            margin-bottom: 10px;
-            background-color: #007BFF; /* Updated background color */
-            color: #fff;
-            text-align: center;
-            cursor: pointer;
-            border-radius: 5px; /* Rounded corners */
-            transition: background-color 0.3s ease; /* Smooth hover effect */
-            display: flex; /* Center content vertically */
-            justify-content: center;
-            align-items: center;
-            margin-right: 5px;
-        }
-
-        .menu-item:hover .dropdown-content {
-    display: block;
-}
-
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #8ddd7a;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    z-index: 1;
-}
-
-.dropdown-content div {
-    padding: 10px;
-    text-align: center;
-    cursor: pointer;
-}
-
-.dropdown-content div:hover {
-    background-color: #ccc;
-}
-
-
-      
-
-        .dashboard-content {
-            background-color: #aa9a9a;
-            padding: 20px;
-            border: 1px solid #ddd;
-        }
-
-            iframe {
-        width: 100%;
-        height: 100%;
-        border: none;
-        overflow-y: auto; /* Allow scrolling within iframes */
-    }
-
-        .memberdetails-iframe-wrapper {
-            position: fixed;
-            top: 50px;
-            left: 200px;
-            width: calc(100% - 200px);
-            height: calc(100% - 50px);
-            background-color: #F5F5F5;
-            display: none;
-            z-index: 1;
-        }
-
-        .collectionlist-iframe-wrapper {
-  position: fixed;
-  top: 50px; 
-  left: 200px;
-  width: calc(100% - 200px); 
-  height: calc(100% - 50px); 
-  background-color: #F5F5F5;
-  display: none;
-  z-index: 1;
-}
-
-.property-iframe-wrapper {
-  position: fixed;
-  top: 50px; 
-  left: 200px;
-  width: calc(100% - 200px); 
-  height: calc(100% - 50px); 
-  background-color: #F5F5F5;
-  display: none;
-  z-index: 1;
-}
-label{
-    margin: 30px;
-    color: black;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 20px;
-    font-weight: bold;
-    align-self: center;
+    <link rel="stylesheet" href="/assets/css/dashboard.css">
     
-}
-
-.reservation-iframe-wrapper {
-  position: fixed;
-  top: 50px; 
-  left: 14%;
-  width: calc(100% - 200px); 
-  height: calc(100% - 50px); 
-  background-color: #F5F5F5;
-  display: none;
-  z-index: 0;
-  margin-right: 0%;
-}
-.container .sidebar i {
-    margin-left: 0;
-    
-}
-.owner-iframe-wrapper {
-  position: fixed;
-  top: 50px; 
-  left: 200px;
-  width: calc(100% - 200px); 
-  height: calc(100% - 50px); 
-  background-color: #F5F5F5;
-  display: none;
-  z-index: 1;
-
-}
-.membership-iframe-wrapper {
-  position: fixed;
-  top: 50px; 
-  left: 200px;
-  width: calc(100% - 200px); 
-  height: calc(100% - 50px); 
-  background-color: #F5F5F5;
-  display: none;
-  z-index: 1;
-  
-}
-
-.building-iframe-wrapper {
-  position: fixed;
-  top: 50px; 
-  left: 200px;
-  width: calc(100% - 200px); 
-  height: calc(100% - 50px); 
-  background-color: #F5F5F5;
-  display: none;
-  z-index: 1;
-}
-
-.collection-iframe-wrapper {
-  position: fixed;
-  top: 50px; 
-  left: 200px;
-  width: calc(100% - 200px); 
-  height: calc(100% - 50px); 
-  background-color: #F5F5F5;
-  display: none;
-  z-index: 1;
-}
-.category-iframe-wrapper {
-  position: fixed;
-  top: 50px; 
-  left: 200px;
-  width: calc(100% - 200px); 
-  height: calc(100% - 50px); 
-  background-color: #F5F5F5;
-  display: none;
-  z-index: 1;
-}
-.propertybin-iframe-wrapper {
-  position: fixed;
-  top: 50px; 
-  left: 200px;
-  width: calc(100% - 200px); 
-  height: calc(100% - 50px); 
-  background-color: #F5F5F5;
-  display: none;
-  z-index: 1;
-}
-/* nice scroll bar */
-::-webkit-scrollbar {
-  width: 5px;
-}
-::-webkit-scrollbar-track {
-  background: #f5f5f5;
-  border-radius: 50px;
-}
-::-webkit-scrollbar-thumb {
-  background: #1CAC78;
-  border-radius: 50px;
-}
-
-select {
-        padding: 5px;
-        font-size: 14px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        width: 120%;
-    }
-
-    /* Style the options within the select */
-    option {
-        font-size: 16px;
-    }
-
-    #headd label{
-
-        color: #fff;
-
-    }
-
-    
-
-.propertyReport-iframe-wrapper{
-  position: fixed;
-  top: 50px; 
-  left: 200px;
-  width: calc(100% - 200px); 
-  height: calc(100% - 50px); 
-  background-color: #F5F5F5;
-  display: none;
-  z-index: 1;
-}
-
-.collectionReport-iframe-wrapper{
-  position: fixed;
-  top: 50px; 
-  left: 200px;
-  width: calc(100% - 200px); 
-  height: calc(100% - 50px); 
-  background-color: #F5F5F5;
-  display: none;
-  z-index: 1;
-}
-.reservationReport-iframe-wrapper{
-  position: fixed;
-  top: 50px; 
-  left: 200px;
-  width: calc(100% - 200px); 
-  height: calc(100% - 50px); 
-  background-color: #F5F5F5;
-  display: none;
-  z-index: 1;
-}
-
-.colCat-iframe-wrapper{
-  position: fixed;
-  top: 50px; 
-  left: 200px;
-  width: calc(100% - 200px); 
-  height: calc(100% - 50px); 
-  background-color: #F5F5F5;
-  display: none;
-  z-index: 1;
-}
-    </style>
 </head>
 <body>
-    <header>
-        <div id="headd">
-            <label id="userType"></label>
-            <label id="Email"></label>
-            <br>
-            <button id="signOut">Log Out</button>
+<header>
+    <div>
+        <label>Hi, </label>
+        <label id="userType"></label>
+        <br>
+        <label id="Email"></label>
+    </div>
+    <button id="signOut">Log Out</button>
+</header>
+
+<div class="container">
+    <div class="sidebar">
+        <div id="toolbar">
+            <span><label>MODULES</label></span>
         </div>
-    </header>
-    <div class="container">
-        <div class="sidebar">
-            <div id="toolbar">
-                <span><label>MODULES</label></span>
-            </div>
-            
-            <div class="menu-item" id="member">
-                
-                <span>Members Details</span>
-            </div>
-            <div class="menu-item" id="collectionList" >
-               
-                <span>Collection List</span>
-            </div>
-            <div class="menu-item" id="property">
-                
-                <span>Property List</span>
-            </div>
-            <div class="menu-item" id="reserve" >
-                
-                <span>Event Handler</span>
-            </div>
-            <div class="menu-item">
-                <select id="certificateSelect" >
-                    <option value="" disabled selected>Certificate</option>
-                    <option value="building">Building Clearance</option>
-                    <option value="membership">Certificate of Membership</option>
-                    <option value="owner">Title Certificate</option>
-                </select>
-            </div>
+        
+        <div class="menu-item" id="member">
+            <span>Members Details</span>
+        </div>
+        
+        <div class="menu-item" id="collectionList">
+            <span>Collection List</span>
+        </div>
 
-            <div id="adminModule">
+        <div class="menu-item" id="property">
+            <span>Property List</span>
+        </div>
+        <div class="menu-item" id="reserve">
+            <span>Event Handler</span>
+        </div>
+        <div class="menu-item">
+            <select id="certificateSelect">
+                <option value="" disabled selected>Certificate</option>
+                <option value="building">Building Clearance</option>
+                <option value="membership">Membership</option>
+                <option value="owner">Title</option>
+            </select>
+        </div>
 
+        <div id="adminModule">
             <div id="toolbar">
                 <span><label>Admin Modules</label></span>
             </div>
 
-            <div class="menu-item" id="account" >
-                
+            <div class="menu-item" id="account">
                 <span>Accounts</span>
             </div>
 
-            <div class="menu-item" id="colCat" >
-               
+            <div class="menu-item" id="colCat">
                 <span>Collection Category</span>
             </div>
 
             <div class="menu-item">
-            <select id="reportSelect">
-                <option value="" disabled selected>Reports</option>
-                <option value="collectionList">Collection List</option>
-                <option value="property">Property</option>
-                <option value="reservation">Reservation</option>
-            </select>
-
+                <select id="reportSelect">
+                    <option value="" disabled selected>Reports</option>
+                    <option value="collectionList">Collection Report</option>
+                    <option value="property">Property</option>
+                    <option value="reservation">Reservation</option>
+                </select>
             </div> 
-        </div>    
+        </div>
+    </div>
+
+    <div class="iframe-container">
+        <div id="welcome">
+            <h1>Welcome to Greenfield Homeowners Association</h1>
         </div>
         <div class="colCat-iframe-wrapper" id="iframeWrapper_colCat">
             <iframe id="colCat-iframe" src=""></iframe>
@@ -416,13 +85,13 @@ select {
         </div>
 
         <div class="collectionlist-iframe-wrapper" id="iframeWrapper_collectionlist">
-          <iframe id="collectionlist-iframe" src=""></iframe>
+            <iframe id="collectionlist-iframe" src=""></iframe>
         </div>
 
         <div class="property-iframe-wrapper" id="iframeWrapper_property">
             <iframe id="property-iframe" src=""></iframe>
-          </div>
-    
+        </div>
+
         <div class="reservation-iframe-wrapper" id="iframeWrapper_reservation">
             <iframe id="reservation-iframe" src=""></iframe>
         </div>
@@ -451,12 +120,12 @@ select {
             <iframe id="propertybin-iframe" src=""></iframe>
         </div>
 
-        <div class="propertyReport-iframe-wrapper" id="iframeWrapper_propertyReport">
-            <iframe id="propertyReport-iframe" src=""></iframe>
-        </div>
-    
         <div class="collectionReport-iframe-wrapper" id="iframeWrapper_collectionReport">
             <iframe id="collectionReport-iframe" src=""></iframe>
+        </div>
+
+        <div class="propertyReport-iframe-wrapper" id="iframeWrapper_propertyReport">
+            <iframe id="propertyReport-iframe" src=""></iframe>
         </div>
 
         <div class="reservationReport-iframe-wrapper" id="iframeWrapper_reservationReport">
@@ -464,7 +133,54 @@ select {
         </div>
     </div>
 
+    <script>
+        // Get all the menu items
+        const menuItems = document.querySelectorAll('.menu-item');
+        
+
+        // Add click event listener to each menu item
+        menuItems.forEach(item => {
+            item.addEventListener('click', () => {
+                // Get the corresponding iframe wrapper based on the menu item's id
+                const iframeWrapperId = 'iframeWrapper_' + item.id;
+                const iframeWrapper = document.getElementById(iframeWrapperId);
+
+                // Show the iframe wrapper and hide others
+                document.querySelectorAll('.iframe-container > div').forEach(wrapper => {
+                    wrapper.style.display = 'none';
+                });
+                iframeWrapper.style.display = 'block';
+            });
+        });
+
+        // Prevent the dropdown menus from closing when clicked inside
+        const dropdowns = document.querySelectorAll('.menu-item select');
+        dropdowns.forEach(dropdown => {
+            dropdown.addEventListener('click', (event) => {
+                event.stopPropagation();
+            });
+        });
+
+        // Make the iframes interactive when dropdown items are clicked
+        const certificateSelect = document.getElementById('certificateSelect');
+        const reportSelect = document.getElementById('reportSelect');
+
+        certificateSelect.addEventListener('change', () => {
+            const selectedValue = certificateSelect.value;
+            const iframeId = selectedValue + '-iframe';
+            const iframe = document.getElementById(iframeId);
+            iframe.src = selectedValue + '.html';
+        });
+
+        reportSelect.addEventListener('change', () => {
+            const selectedValue = reportSelect.value;
+            const iframeId = selectedValue + 'Report-iframe';
+            const iframe = document.getElementById(iframeId);
+            iframe.src = selectedValue + 'Report.html';
+        });
+    </script>
 
     <script type="module" src="../assets/credentials/dashboard.js"></script>
 </body>
 </html>
+

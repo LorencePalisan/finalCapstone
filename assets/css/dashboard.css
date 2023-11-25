@@ -1,0 +1,161 @@
+        /* Reset some basic elements */
+        body, h1, h2, h3, h4, h5, h6, p, ul, li {
+            margin: 0;
+            padding: 0;
+        }
+       
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            overflow: hidden;
+        }
+       
+        header {
+            background-color: #5F7A61; 
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        #signOut {
+            padding: 5px 15px;
+            background-color: transparent;
+            color: white;
+            border: 2px solid white;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        #signOut:hover {
+            background-color: white;
+            color: #0056b3;
+        }
+
+        .container {
+            display: flex;
+            height: calc(100vh - 50px); /* Subtract the header height */
+        }
+
+        .sidebar {
+            background-color: #fff;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            width: fixed;
+            height: 100vh;
+            padding: 20px;
+            position: sticky;
+            top: 0;
+            
+            border-right: 1px solid #5F7A61; /* Set the border color to black */
+        }
+
+        /* Sidebar items with more modern styling */
+        .menu-item {
+            background-color: transparent;
+            color: #333;
+            padding: 10px;
+            margin-bottom: 10px;
+            transition: background-color 0.3s ease; 
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            border: 1px solid #ddd; 
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu-item:hover {
+            background-color: #e8e8e8;
+        }
+
+        /* Subtle hover effect for dropdown */
+        .dropdown-content div:hover {
+            background-color: #e8e8e8;
+        }
+
+        .iframe-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .iframe-wrapper {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: calc(100vh - 50px);
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        iframe {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: none;
+            overflow-y: auto;
+        }
+        /* Scrollbars styled to be less intrusive */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f0f0f0;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 10px;
+        }
+        /* Style the select dropdown */
+        select {
+            padding: 5px 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: white;
+            cursor: pointer;
+        }
+        /* Labels within header for better visibility */
+        #headd label {
+            color: white;
+            margin-right: 10px;
+        }
+
+        /* Make the iframe responsive */
+        @media screen and (max-width: 768px) {
+            .iframe-wrapper {
+                padding: 10px;
+            }
+            iframe {
+                width: 100%;
+                height: 100%;
+            }
+        }
+
+        #welcome {
+            padding: 20px;
+            display: flex;
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            height: 100vh; /* Full height of the viewport */
+            margin: 0; /* Reset any default margins */
+            background-color: #fff; /* Set background color to white or any desired color */
+            color: #5F7A61; /* Set the text color as requested */
+            font-size: 2em; /* Increase font size for better visibility */
+            font-family: 'Poppins', sans-serif; /* Set font-family to Poppins */
+            text-align: center;
+        }
+        
+        #welcome h1 {
+            margin: 0; /* Remove default margin */
+            font-size: 55px;
+            margin-bottom: 10%;
+        }
+        
+          

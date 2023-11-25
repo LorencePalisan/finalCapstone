@@ -3,7 +3,7 @@ import {doc,getDocs, setDoc,collection, query, where ,orderBy, limit, startAfter
 
 import { db } from "../credentials/firebaseModule.js";
 //Elements
-// import { admin, db, auth } from './firebase.js';
+
 // Create a reference to the collection where members are stored
 
 
@@ -35,6 +35,16 @@ const clear = document.getElementById("clear");
 document.addEventListener('DOMContentLoaded', (event) => {
   createPaginationControls();
   fetchAndPopulateTable();
+});
+
+document.querySelectorAll('input[type="number"]').forEach(function(input) {
+  input.addEventListener('keydown', function(e) {
+    // Check if the pressed key is an arrow key (left, up, right, down)
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      // Prevent the default behavior of arrow keys
+      e.preventDefault();
+    }
+  });
 });
 
 //========================add Member==============================================
@@ -256,7 +266,7 @@ if (next && lastVisible && currentPage < maxPages) {
       const data = docSnapshot.data();
       const row = memberTable.insertRow(-1); // Add a new row to the table
 
-      if( categSelect === data.memberCategory &&  statSelect === data.memberStatus ){ 
+      if ((categSelect === "All" || categSelect === data.memberCategory) && statSelect === data.memberStatus) { 
         
          // Populate the row with member information
         const nameCell = row.insertCell(0);
@@ -380,3 +390,47 @@ addData.addEventListener("click", addMember);
 clear.addEventListener("click", clearFields);
 // update.addEventListener("click", updateMember);
 
+document.addEventListener('DOMContentLoaded', () => {
+  const menuItems = document.querySelectorAll('.menu-item');
+
+  function hideAllIframeWrappers() {
+      document.querySelectorAll('.iframe-wrapper').forEach(wrapper => {
+          wrapper.style.display = 'none';
+          wrapper.style.zIndex = '-1'; // Ensure it's behind other content
+      });
+  }
+
+  function showIframe(wrapperId) {
+      hideAllIframeWrappers();
+      const iframeWrapper = document.getElementById(wrapperId);
+      if (iframeWrapper) {
+          iframeWrapper.style.display = 'block';
+          // Make sure the iframe is above other content
+          iframeWrapper.style.zIndex = '1000';
+      }
+  }
+
+  menuItems.forEach(item => {
+      item.addEventListener('click', () => {
+          const iframeId = 'iframeWrapper_' + item.id;
+          showIframe(iframeId);
+      });
+  });
+
+  // Additional code for the "Members Details" item
+  const memberDetailsMenuItem = document.getElementById('member');
+  memberDetailsMenuItem.addEventListener('click', () => {
+      hideAllIframeWrappers();
+      showIframe('iframeWrapper_memberdetails');
+  });
+
+  // Additional code for the "Collection List" item
+  const collectionListItem = document.getElementById('collectionList');
+  collectionListItem.addEventListener('click', () => {
+      hideAllIframeWrappers();
+      showIframe('iframeWrapper_collectionlist');
+  });
+
+  // Set "Members Details" as the default iframe to display
+  showIframe('iframeWrapper_memberdetails');
+});

@@ -21,6 +21,9 @@ const updateB = document.getElementById("updateMember");
 const sendBbb = document.getElementById("sendBB");
 const sendB =  document.getElementById("send");
 const memName =  document.getElementById("memName");
+const messageBody = document.getElementById('messageBody').value;
+const recipientPhoneNumber = document.getElementById('recipientNumber').value;
+
 
 let totalFee = 0; 
 let lotAmortVal; 
@@ -37,8 +40,17 @@ document.addEventListener('DOMContentLoaded', (event) => {
   displayCollection(); 
   createPaginationControls();
   collectionMenu();
+  
 });
-
+document.querySelectorAll('input[type="number"]').forEach(function(input) {
+  input.addEventListener('keydown', function(e) {
+    // Check if the pressed key is an arrow key (left, up, right, down)
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      // Prevent the default behavior of arrow keys
+      e.preventDefault();
+    }
+  });
+});
 
 // Get the memberID query parameter from the URL
 const urlParams = new URLSearchParams(window.location.search);
@@ -159,10 +171,13 @@ async function updateHTMLElements() {
       document.getElementById('civilStatus').value = data.civilStatus || '';
       document.getElementById('citizenship').value = data.citizenship || '';
       document.getElementById('contactNum').value = data.contactNum || '';
-      document.getElementById('sourceOfIncome').value = data.sourceOfIncome || '';
       document.getElementById('memberCategory').value = data.memberCategory || '';
       document.getElementById('memberStatus').value = data.memberStatus || '';
       document.getElementById('gender').value = data.gender || '';
+
+      console.log('memberCategory:', data.memberCategory);
+      console.log('memberStatus:', data.memberStatus);
+      console.log('gender:', data.gender);
 
     } else {
       console.log("No such document with the provided name!");
@@ -370,7 +385,6 @@ function togglePopup() {
   } else {
       addCol.style.display = 'none';
       document.getElementById("tranNum").value = "";
-      document.getElementById("memID").value = "";
       document.getElementById("memName").value = "";
       document.getElementById("tranDate").value = "";
     collectionMenu();
@@ -735,8 +749,8 @@ function toggleButton() {
 
 function sendSMS() {
  
-  const recipientPhoneNumber = document.getElementById('recipientNumber').value;
-  const messageBody = document.getElementById('messageBody').value;
+  
+  
   const apiUrl = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
   try {
   
@@ -764,13 +778,59 @@ function sendSMS() {
   
 }
 
+
+
+async function sendNoticeSMS() {
+  // Format the contact number to "+639959831815" format
+  // const formattedPhoneNumber = `+63${contactNumber.substring(1)}`;
+
+
+  // Replace with your Twilio Account SID, Auth Token, and Twilio phone number
+  const accountSid = 'ACe50e033216d90c3030623d808fbcdc48';
+  const authToken = '422c0436abd710008976da59fcca53cb';
+  const twilioNumber = '+15097132957';
+
+  // Twilio API endpoint
+  const url = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
+
+  // Create the Authorization header
+  const headers = new Headers();
+  headers.set('Authorization', 'Basic ' + btoa(`${accountSid}:${authToken}`));
+  headers.set('Content-Type', 'application/x-www-form-urlencoded');
+
+  // Create the request body
+  const params = new URLSearchParams();
+  params.append('To', recipientPhoneNumber);
+  params.append('From', twilioNumber);
+  params.append('Body', messageBody);
+
+  try {
+    // Make the API request
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: headers,
+      body: params,
+    });
+
+    if (response.ok) {
+      const responseData = await response.json();
+      console.log('SMS sent successfully:', responseData);
+    } else {
+      const errorData = await response.json();
+      console.error('Error sending SMS:', errorData);
+    }
+  } catch (error) {
+    console.error('Error sending SMS:', error);
+  }
+}
+
 collectionAdd.addEventListener("click", addCollection);
 addB.addEventListener("click", togglePopup);
 cancelB.addEventListener("click", togglePopup);
 closeB.addEventListener("click", poppop);
 updateB.addEventListener("click", updateMember);
 sendBbb.addEventListener("click", toggleButton);
-sendB.addEventListener("click", sendSMS);
+sendB.addEventListener("click", sendNoticeSMS);
 editB.addEventListener("click", () => {
   updateHTMLElements();
   poppop();

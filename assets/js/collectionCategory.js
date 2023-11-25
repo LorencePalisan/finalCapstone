@@ -5,7 +5,7 @@ import { db } from "../credentials/firebaseModule.js";
 
 let CollectionID = document.getElementById("CollectionID");
 let collectionName = document.getElementById("collectionName");
-let Description = document.getElementById("Description");
+let Due = document.getElementById("due");
 let Fee = document.getElementById("Fee");
 let Status = document.getElementById("Status");
 
@@ -23,12 +23,22 @@ const remove = document.getElementById("remove");
 const memberTable = document.getElementById("bleta");
 //=======================add===========================================
 
+document.querySelectorAll('input[type="number"]').forEach(function(input) {
+  input.addEventListener('keydown', function(e) {
+    // Check if the pressed key is an arrow key (left, up, right, down)
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      // Prevent the default behavior of arrow keys
+      e.preventDefault();
+    }
+  });
+});
+
 async function addCategory() {
     const enteredColID = CollectionID?.value;
     
     // Check if enterID is empty or undefined
-    if (!enteredColID) {
-      console.error("enterID is empty or undefined.");
+    if (!enteredColID || !collectionName.value || !Due.value || !Fee.value || !Status.value) {
+      alert("Fill all the data before adding new Category.");
       return;
     }
   
@@ -37,7 +47,6 @@ async function addCategory() {
     const docSnap = await getDoc(docRef);
   
     if (docSnap.exists()) {
-      // Handle duplicate enterID
       alert("This ID already existed");
       return;
     }
@@ -45,7 +54,7 @@ async function addCategory() {
     const data = {
         CollectionID: CollectionID?.value,
         collectionName: collectionName?.value,
-        Description: Description?.value,
+        Due: Due?.value,
         Fee: Fee?.value,
         Status: Status?.value
     };
@@ -58,6 +67,8 @@ async function addCategory() {
     }
     fetchAndPopulateTable();
   }
+
+
 //==============================================Table======================
 // Function to fetch data from Firestore and populate the table
 async function fetchAndPopulateTable() {
@@ -111,7 +122,7 @@ async function fetchAndPopulateTable() {
   function fillPopupWithData(data) {
     document.getElementById("popCollectionID").value = data.CollectionID;
     document.getElementById("popcollectionName").value = data.collectionName;
-    document.getElementById("popDescription").value = data.Description;
+    document.getElementById("popDue").value = data.Due;
     document.getElementById("popFee").value = data.Fee;
     document.getElementById("popStatus").value = data.Status;
     
@@ -143,33 +154,38 @@ function togglePopup() {
   //================ edit collection======================
 
   function enableEdit() {
-    // Select all input elements within the popup
-    var inputElements = document.querySelectorAll(".popup input");
-
-    // Loop through the input elements and remove the "disabled" attribute
-    inputElements.forEach(function(inputElement) {
-        inputElement.removeAttribute("disabled");
-    });
-    var saveButton = document.getElementById("save");
-    saveButton.removeAttribute("disabled");
     // Disable the "Edit" button to prevent further edits
     document.getElementById("edit").setAttribute("disabled", "disabled");
 
+    // Call the disableFields function to disable specific input fields
+    disableFields(["popCollectionID", "popcollectionName", "popFee"]);
 
+    document.getElementById("popDue").removeAttribute("disabled");
+    document.getElementById("popStatus").removeAttribute("disabled");
+
+    var saveButton = document.getElementById("save");
+    saveButton.removeAttribute("disabled");
 }
 
-function disableFields() {
-  // Select all input elements within the popup
-  var inputElements = document.querySelectorAll(".popup input");
+function disableFields(idsToDisable) {
+    // Loop through the provided IDs and set the "disabled" attribute
+    idsToDisable.forEach(function(id) {
+        var inputElement = document.getElementById(id);
+        if (inputElement) {
+            inputElement.setAttribute("disabled", "disabled");
+        }
+    });
 
-  // Loop through the input elements and set the "disabled" attribute
-  inputElements.forEach(function(inputElement) {
-      inputElement.setAttribute("disabled", "disabled");
-  });
-
-  // Enable the "Edit" button
-  document.getElementById("edit").removeAttribute("disabled");
+    // Enable the "Edit" button
+    document.getElementById("edit").removeAttribute("disabled");
 }
+
+// Call the disableFields function initially to ensure fields are disabled on page load
+disableFields(["popCollectionID", "popcollectionName", "popFee"]);
+
+// Optionally, you can enable the "Description" and "Status" fields on page load if needed
+
+
 
 async function updateCAtegory() {
 

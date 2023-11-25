@@ -32,6 +32,16 @@ user.addEventListener('change', (event) => {
   fetchAndPopulateTable();
 });
 
+document.querySelectorAll('input[type="number"]').forEach(function(input) {
+  input.addEventListener('keydown', function(e) {
+    // Check if the pressed key is an arrow key (left, up, right, down)
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      // Prevent the default behavior of arrow keys
+      e.preventDefault();
+    }
+  });
+});
+
 memberName.addEventListener("input", async function () {
   if (memberName.value) { 
     const queryRef = query(collection(db, "Members"), where("memberName", "==", memberName.value));
@@ -113,7 +123,7 @@ async function createAccount() {
     clear();
   } catch (error) {
     // Handle errors
-    alert.error("Error creating account:", error);
+    console.error("Error creating account:", error);
   }
 }
 
@@ -365,3 +375,6 @@ var formContainer = document.querySelector('.form-container');
 //===================================================================================
 
 submit.addEventListener("click", createAccount);
+
+    
+    

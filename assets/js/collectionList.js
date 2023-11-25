@@ -286,6 +286,7 @@ async function displayCollection(next = true) {
   } catch (error) {
     console.error("Error fetching data: ", error);
   }
+  filterTable();
 }
 
 function updatePageDisplay(currentPage, maxPages) {

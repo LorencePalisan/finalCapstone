@@ -4,295 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Property</title>
-
-    <style>
-
-        .form-container {
-            margin: 20px auto; /* Center horizontally */
-            display: none;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            max-width: 400px;
-            padding: 25px;
-            border: 1px solid gainsboro;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
-            align-items: center; /* Center vertically */
-        }
-
-        .form-container label {
-            flex-basis: 45%; /* Adjust the width as needed */
-            text-align: left;
-            margin-right: 10px;
-            color: #1CAC78;
-            
-            
-            
-        }
-
-        .form-container input, .form-container select {
-            flex-basis: 50%;
-            margin-bottom: 10px;
-            
-        }
-        #propertyStatus {
-            flex-basis: 52%;
-        }
-        
-        .headtoolbar {
-        background-color:  #1CAC78; /* Background color for the toolbar */
-        color: #fff; /* Text color */
-        text-align: center; /* Center the text horizontally */
-        padding: 10px;
-        }
-
-        .toolbar-title {
-        font-weight: bold; /* Bold font for the title */
-        margin: 0; /* Remove default margin */
-        }
-
-        /* Style for the buttons */
-        .button {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: green; /* Button background color */
-            color: #fff; /* Text color */
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 16px;
-            margin: 5px;
-            width: 100px;
-        }
-
-        /* Center the buttons horizontally */
-        .button-container {
-            text-align: center;
-        }
-
-
-        .title {
-            margin: 0; /* Remove default margin for the title */
-        }
-
-        table {
-        border-collapse: collapse;
-        width: 100%;
-        max-width: 80%;
-        margin: 20px auto;
-        background-color: white;
-        border: 1px solid green; /* Add border to the table */
-        border-radius: 5px;
-        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-        }
-
-        th {
-        background-color: green;
-        color: white;
-        padding: 10px;
-        text-align: center;
-        }
-
-        /* Style for table data (td) */
-        td {
-        padding: 10px;
-        border-bottom: 1px solid #ccc;
-        text-align: center;
-
-        }
-
-        /* Style for alternating row colors */
-        tr:nth-child(even) {
-        background-color: #f2f2f2;
-        }
-
-            /* Container for centering */
-    .center-container {
-        margin-top: 20px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    /* Search bar styles */
-    #searchBar {
-        color: #1CAC78;
-        text-align: center;
-     
-    }
-
-    #searchInput{
-        height: 30px;
-        width: 200px;
-    }
-
-    p {
-        margin: 5%;
-        display: block;
-        font-weight: bold;
-        font-size: 25px;
-
-    }
-
-        #ownerID::-webkit-inner-spin-button,
-        #ownerID::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        appearance: none;
-        margin: 0;
-        }
-
-        #lotNumber::-webkit-inner-spin-button,
-        #lotNumber::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        appearance: none;
-        margin: 0;
-        }
-        #blockNum::-webkit-inner-spin-button,
-        #blockNum::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        appearance: none;
-        margin: 0;
-        }
-        #lotSize::-webkit-inner-spin-button,
-        #lotSize::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        appearance: none;
-        margin: 0;
-        }
-
-        
-        #searchInput::-webkit-inner-spin-button,
-        #searchInput::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        appearance: none;
-        margin: 0;
-        }
-       
-
-        .popup {
-        display: none;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background-color: white;
-        padding: 20px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-        width: 300px; /* Adjust the width as needed */
-        }
-
-        .form-group {
-        margin-bottom: 15px;
-        }
-
-        label {
-        display: block;
-        margin-bottom: 5px;
-        font-weight: bold;
-        }
-
-        .popup input[type="number"] {
-        width: 100%;
-        padding: 5px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        }
-        .popup input[type="text"] {
-        width: 100%;
-        padding: 5px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        }
-        .popup select {
-        width: 100%;
-        padding: 5px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        }
-        
-
-        .close-btn {
-        background-color: #ff3333;
-        color: white;
-        border: none;
-        padding: 8px 16px;
-        border-radius: 40px;
-        cursor: pointer;
-        margin-bottom: 10px;
-        float:right;
-        width: 70px;
-        
-        }
-
-        .update-btn {
-        background-color: #3fae45;
-        color: white;
-        border: none;
-        padding: 8px 16px;
-        border-radius: 40px;
-        cursor: pointer;
-        margin-bottom: 10px;
-        float:left;
-        width: 70px;
-        
-        }
-       
-        .save-btn {
-            background-color: grey;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 40px;
-            cursor: pointer;
-            margin: 10px auto; 
-            width: 150px;
-            display: none; 
-            margin-top: 50px;
-            }
-
-
-            .save-btn:hover {
-            background-color: #3fae45;
-            }
-
-
-    
-
-        #popupownerID::-webkit-inner-spin-button,
-        #popupownerID::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        appearance: none;
-        margin: 0;
-        }
-        #popuplotNum::-webkit-inner-spin-button,
-        #popuplotNum::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        appearance: none;
-        margin: 0;
-        }
-        #popupblockNum::-webkit-inner-spin-button,
-        #popupblockNum::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        appearance: none;
-        margin: 0;
-        }
-        #popuplotSize::-webkit-inner-spin-button,
-        #popuplotSize::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        appearance: none;
-        margin: 0;
-        }
-        
-    </style>
-
+    <link rel="stylesheet" href="/assets/css/property.css">
 </head>
+
 <body>
-
-
-    <div class="headtoolbar">
+    <div class="toolbar">
         <h1 class="toolbar-title">Property Module</h1>
-        <button id="addProp">Add Property</button>
     </div>
-
+<button id="addProp"onclick="showPopup()">Add Property</button>
     <div class="form-container">
 
         <label for="ownerName">Owner Name</label>
@@ -328,7 +47,7 @@
 
     <div class="center-container">
         <div id="searchBar">
-            <p for="searchInput">Search Bar</p>
+            <p for="searchInput">Search:</p>
             <input type="number" id="searchInput" placeholder="Search by lot number">
             <button id="find">Find</button>
         </div>
@@ -354,8 +73,6 @@
       <option value="16">16</option>
       <option value="17">17</option>
     </select>
-
-    
 </div>
     <table id="table">
         <tr>
@@ -429,11 +146,26 @@ function togglePopup() {
   }
 }
 
+        // Function to show the popup
+        function showPopup() {
+            var popup = document.getElementById("popup");
+            popup.style.display = "block";
+        }
 
+        // Function to hide the popup
+        function hidePopup() {
+            var popup = document.getElementById("popup");
+            popup.style.display = 'none';
+        }
+
+        // Add an event listener to open the popup when the button is clicked
+        var addPropButton = document.getElementById("addPropButton");
+        addPropButton.addEventListener('click', showPopup);
+
+        // Add an event listener to close the popup when the close button is clicked
+        var closePopupButton = document.getElementById("closePopup");
+        closePopupButton.addEventListener('click', hidePopup);
 </script>
-
-
-
     <script type="module" src="../assets/js/property.js"></script>
 </body>
 </html>

@@ -36,7 +36,15 @@ const updateB = document.getElementById("updateB");
     fetchAndPopulateTable();
   });
   
-
+  document.querySelectorAll('input[type="number"]').forEach(function(input) {
+    input.addEventListener('keydown', function(e) {
+      // Check if the pressed key is an arrow key (left, up, right, down)
+      if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        // Prevent the default behavior of arrow keys
+        e.preventDefault();
+      }
+    });
+  });
 
 //==========================AddProperty============================================================
 

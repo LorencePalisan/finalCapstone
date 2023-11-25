@@ -1,5 +1,6 @@
-import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
-import { auth } from "./firebaseModule.js";
+        import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
+        import { auth } from "./firebaseModule.js";
+
 
 const urlParams = new URLSearchParams(window.location.search);
 const signInEmail = urlParams.get("email");
@@ -13,82 +14,112 @@ const userTypeElement = document.getElementById("userType");
 const adminModuleWrapper = document.getElementById("adminModule");
 const signOutButton = document.getElementById("signOut");
 
- // Call the function to show member details
-
+document.addEventListener('DOMContentLoaded', (event) => {
 onLoad();
-window.onload = function() {
-  showMemberDetails();
-};
-function onLoad() {
- 
-  emailElement.textContent = signInEmail;
-  userTypeElement.textContent = signInUserType;
 
-  if (userType === 'staff') {
-    adminModuleWrapper.style.display = 'none';
-  } else if (userType === 'admin') {
-    adminModuleWrapper.style.display = 'block';
-  }
-
-  if (!email || !userType) {
-    // Disable or hide modules when signInEmail or signInUserType is not available
-    disableModules();
-  }
-}
-
-function disableModules() {
-  // Disable or hide all modules here
-  const modules = [
-    'member', 'collectionList', 'property', 'reserve', 'certificateSelect', 'account', 'reportSelect', 'colCat'
-  ];
-
-  modules.forEach(moduleId => {
-    const moduleElement = document.getElementById(moduleId);
-    moduleElement.style.display = 'none'; // or disable the module in another way
   });
-}
 
-const logout = async () => {
-  const url = `http://127.0.0.1:5500/index.html`;
-  await signOut(auth);
-  window.location.href = url;
-  window.location.replace(url);
-}
+
+// Add event listeners to each module to show the corresponding iframe
+document.getElementById('member').addEventListener('click', showMemberDetails);
+document.getElementById('collectionList').addEventListener('click', showCollectionlist);
+document.getElementById('property').addEventListener('click', showProperty);
+document.getElementById('reserve').addEventListener('click', Reservation);
+document.getElementById('certificateSelect').addEventListener('change', handleCertificateSelection);
+document.getElementById('account').addEventListener('click', Account);
+document.getElementById('reportSelect').addEventListener('change', handleReports);
+document.getElementById('colCat').addEventListener('click', collectionCat);
+
 
 signOutButton.addEventListener("click", logout);
 
 // Check if the user is authenticated
 onAuthStateChanged(auth, (user) => {
-  if (user) {
-    // User is authenticated
-    if (!signInEmail || !signInUserType) {
-      // Redirect to the login page if session information is missing
-      redirectToLogin();
-      return;
-    }
+    if (user) {
+        // User is authenticated
+        if (!signInEmail || !signInUserType) {
+            // Redirect to the login page if session information is missing
+            redirectToLogin();
+            return;
+        }
 
+        emailElement.textContent = signInEmail;
+        userTypeElement.textContent = signInUserType;
+
+        if (signInUserType === 'staff') {
+            adminModuleWrapper.style.display = 'none';
+            // Handle staff-specific modules here
+        } else if (signInUserType === 'admin') {
+            adminModuleWrapper.style.display = 'block';
+            // Handle admin-specific modules here
+        }
+
+        signOutButton.addEventListener('click', logout);
+    } else {
+        // User is not authenticated, redirect to the login page
+        redirectToLogin();
+    }
+});
+// Function to display a module
+function displayModule(iframeWrapperSelector, iframeSrc) {
+    const iframeWrapper = document.querySelector(iframeWrapperSelector);
+    const iframe = iframeWrapper.querySelector('iframe');
+    iframeWrapper.style.display = 'block';
+    iframe.src = iframeSrc;
+
+    // Hide all other iframe wrappers
+    document.querySelectorAll('.iframe-wrapper').forEach(wrapper => {
+        if (wrapper !== iframeWrapper) {
+            wrapper.style.display = 'none';
+        }
+    });
+}
+
+
+function onLoad() {
     emailElement.textContent = signInEmail;
     userTypeElement.textContent = signInUserType;
 
-    if (signInUserType === 'staff') {
-      adminModuleWrapper.style.display = 'none';
-      // Handle staff-specific modules here
-    } else if (signInUserType === 'admin') {
-      adminModuleWrapper.style.display = 'block';
-      // Handle admin-specific modules here
+    if (userType === 'staff') {
+        adminModuleWrapper.style.display = 'none';
+    } else if (userType === 'admin') {
+        adminModuleWrapper.style.display = 'block';
     }
 
-    signOutButton.addEventListener('click', logout);
-  } else {
-    // User is not authenticated, redirect to the login page
-    redirectToLogin();
-  }
-});
+    if (!email || !userType) {
+        // Disable or hide modules when signInEmail or signInUserType is not available
+        disableModules();
+    }
+}
+
+function disableModules() {
+    // Disable or hide all modules here
+    const modules = [
+        'member', 'collectionList', 'property', 'reserve', 'certificateSelect', 'account', 'reportSelect', 'colCat'
+    ];
+
+    modules.forEach(moduleId => {
+        const moduleElement = document.getElementById(moduleId);
+        moduleElement.style.display = 'none'; // or disable the module in another way
+    });
+}
+
+async function logout() {
+    try {
+        await signOut(auth);
+        const url = 'http://127.0.0.1:5500/index.html';
+        window.location.replace(url);
+    } catch (error) {
+        console.error("Error logging out:", error.message);
+    }
+}
+
+// ... Include the rest of your functions (handleCertificateSelection, collectionCat, etc.) here ...
 
 function redirectToLogin() {
-  const url = 'http://127.0.0.1:5500/index.html';
-  signOut(auth); // Sign out the user
-  window.location.href = url;
+    const url = 'http://127.0.0.1:5500/index.html';
+    signOut(auth); // Sign out the user
+    window.location.href = url;
 }
 
 
@@ -103,6 +134,7 @@ function redirectToLogin() {
   document.getElementById('account').addEventListener('click', Account);
   document.getElementById('reportSelect').addEventListener('change', handleReports);
   document.getElementById('colCat').addEventListener('click', collectionCat);
+  document.getElementById('signOut').addEventListener('click', logout);
 //end modules
 
 
@@ -181,16 +213,22 @@ function redirectToLogin() {
     
         var activeIframe = null;
         
-            function showMemberDetails() {
-                if (activeIframe) {
-                    activeIframe.style.display = 'none';
-                }
-                var memberlistIframeWrapper = document.querySelector('.memberdetails-iframe-wrapper');
-                memberlistIframeWrapper.style.display = 'block';
-                var memberlistIframe = document.getElementById('memberdetails-iframe');
-                memberlistIframe.src = 'members.html';
-                activeIframe = memberlistIframeWrapper;
+        function showMemberDetails() {
+            if (activeIframe) {
+                activeIframe.style.display = 'none';
             }
+        
+            var memberlistIframeWrapper = document.querySelector('.memberdetails-iframe-wrapper');
+            memberlistIframeWrapper.style.display = 'block';
+            
+            var memberlistIframe = document.getElementById('memberdetails-iframe');
+            memberlistIframe.src = 'members.html'; // Assuming 'members.html' is the correct path
+            
+            // Optionally, you may reset the height of the iframe
+            memberlistIframe.style.height = '89%';
+        
+            activeIframe = memberlistIframeWrapper;
+        }
     
                 function showCollectionlist() {
             if (activeIframe) {

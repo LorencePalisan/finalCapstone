@@ -20,9 +20,9 @@ function handleDashboard(email, userType) {
   window.location.replace(url);
 }
 
-function handleMemberView(memID) {
+function handleMemberView(memberName) {
   // Create a URL with memID as a query parameter
-  const url = `http://127.0.0.1:5500/view/memberView.html?&memID=${encodeURIComponent(memID)}`;
+  const url = `http://127.0.0.1:5500/view/memberView.html?&memberName=${encodeURIComponent(memberName)}`;
   // Use window.location.replace() to prevent going back to the login form
   window.location.replace(url);
 }
@@ -85,12 +85,12 @@ async function memberSignIn() {
 
   const userDoc = querySnapshot.docs[0];
   const userType = userDoc.data().userType;
-  const memID = userDoc.data().memberID;
+  const memberName = userDoc.data().memberName;
 
   try {
     await signInWithEmailAndPassword(auth, email, password);
     console.log("Login Success");
-    handleMemberView(memID);
+    handleMemberView(memberName);
   } catch (error) {
     alert("Login Failed");
     console.log(`There was an error: ${error}`);
@@ -100,4 +100,3 @@ async function memberSignIn() {
 
 adminSubmitB.addEventListener('click', adminSignIn);
 memberSubmitB.addEventListener('click', memberSignIn);
-

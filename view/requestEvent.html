@@ -4,228 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/assets/css/requestEvent.css">
     <title>Event Handler</title>
+    <link rel="stylesheet" href="/assets/css/requestEvent.css">
     
-    <style>
-       body {
-            margin: 0;
-            font-family: 'Arial', sans-serif;
-            width: 100%;
-            overflow-y: hidden;
-        }
 
-
-
-        .toolbar {
-            background-color: #1CAC78;
-            padding: 10px;
-            color: #fff;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .toolbar label{
-            font-size: 30px;
-            font-style: normal;
-            font-weight: 200;
-            margin-left: 50px;
-
-        }
-
-        #addAC {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            cursor: pointer;
-            border-radius: 4px;
-        }
-
-        #addAC:hover {
-            background-color: #08d835;
-            color: beige;
-        }
-
-        .form-container {
-            font-family: 'Arial', sans-serif;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            margin-top: 10px;
-            transform: translate(-50%, -50%);
-            position: absolute;
-            top: 50%;
-            left: 50%;
-          
-        }
-
-        .form-container h2{
-          text-align: center;
-
-        }  
-            
-.form-box {
-    background-color: #fff;
-    padding: 10px; /* Reduced padding */
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 300px;
-}
-
-.form-box label {
-    display: block;
-    margin-bottom: 4px; /* Reduced margin */
-    font-weight: bold;
-    font-size: 14px; /* Smaller font size */
-}
-
-.form-box input {
-    width: 100%;
-    padding: 4px; /* Reduced padding */
-    margin-bottom: 8px; /* Reduced margin */
-    box-sizing: border-box;
-    font-size: 14px; /* Smaller font size */
-}
-
-.form-box button {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 8px 16px; /* Reduced padding */
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 14px; /* Smaller font size */
-    cursor: pointer;
-    border-radius: 4px;
-}
-
-.form-box button:hover {
-    background-color: #45a049;
-}
-
-.form-box select {
-    height: 36px; /* Reduced height */
-    width: 300px;
-    padding: 4px; /* Reduced padding */
-    margin-bottom: 8px;
-    box-sizing: border-box;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 14px; /* Smaller font size */
-    background-color: #fff;
-}
-
-.form-box select:hover,
-.form-box select:focus {
-    border-color: #4CAF50;
-}
-
-.form-box select option {
-    font-size: 14px; /* Smaller font size */
-    background-color: #f4f4f4;
-}
-
-        
-        #memberID::-webkit-inner-spin-button,
-        #memberID::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        appearance: none;
-        margin: 0;
-        }
-        
-        #contactNum::-webkit-inner-spin-button,
-        #contactNum::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        appearance: none;
-        margin: 0;
-        }
-        #table-container {
-    overflow-y: auto;
-    max-height: 460px;
-    max-width: auto;
-    text-align: center;
-    margin: 0 auto; /* Center the container */
-}
-
-table {
-    width: 80%; /* Set the table width to 80% of the web page */
-    margin: 0 auto; /* Center the table within the container */
-}
-
-/* Table header styles */
-th {
-    background-color: #f2f2f2;
-    text-align: center;
-    padding: 10px;
-    border: 1px solid #ccc;
-    font-weight: bold;
-    width: 150px; /* Adjust as needed */
-}
-
-/* Table cell styles */
-td {
-    text-align: left;
-    padding: 8px;
-    border: 1px solid #ccc;
-}
-
-
-
-/* Hover effect on rows */
-tr:hover {
-    background-color: #4CAF50;
-}
-
-    .password-container {
-      position: relative;
-      display: inline-block;
-      width: 300px;
-    }
-
-
-    .password-icon {
-      position: absolute;
-      top: 35%;
-      right: 10px;
-      transform: translateY(-50%);
-      cursor: pointer;
-    }
-    .match {
-      border: 2px solid rgb(13, 245, 13);
-    }
-    #searchBar input
-    {
-      text-align: center;
-      margin-left: 23%;
-      width: 50%;
-      padding: 5px;
-      border: 1px solid #ccc;
-      border-radius: 3px;
-    }
-   
-    #cal {
-    background-color: #4CAF50; 
-    color: white; 
-    border: none;
-    padding: 10px 20px;
-    margin-top: 15px;
-    margin-left: 20px;
-    height: 40px;
-    cursor: pointer;
-    border-radius: 30px;
-    }
-
-    #cal:hover {
-        background-color: #45A049;
-    }
- 
-    </style>
 </head>
 <body >
     <div class="toolbar">
@@ -234,9 +17,14 @@ tr:hover {
     <div >
         <button id="cal">Event Calendar</button>
     </div>
-  <div id="searchBar" style="width: 100%; max-width: 600px; margin: 20px auto; border: #ccc;">
-    <label for="facility" style="display: block; font-size: 25px; text-align: center; font-weight: bold;">Select Facility</label>
-    <input list="facilityVal" id="facility" placeholder="Choose Facility" value="facility 1">
+    <div id="searchBar">
+        <label for="facility">Select Facility</label>
+        <div id="container">
+        <input list="facilityVal" id="facility" placeholder="Choose Facility" value="facility 1">
+        <button id="selecB">Select</button>
+    </div>
+ </div>
+    
         <datalist id="facilityVal">
           <option value="facility 1">
           <option value="facility 2">
@@ -244,7 +32,6 @@ tr:hover {
           <option value="facility 4">
           <option value="facility 5">
         </datalist>
-<button id="selecB">Select</button>
 </div>
 
 
@@ -266,7 +53,6 @@ tr:hover {
 </tbody>
  </table>
 </div>
-
 
 <script type="module" src="../assets/js/requestEvent.js"></script>
 

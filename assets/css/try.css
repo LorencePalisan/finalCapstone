@@ -1,0 +1,485 @@
+body ::-webkit-scrollbar {
+    width: 0;
+}
+
+body::-webkit-scrollbar-thumb {
+    background: transparent;
+    overflow: hidden;
+}
+.box {
+margin-top: 20px;
+margin-left: 40px;
+border: 1px solid gainsboro;
+padding: 20px;
+box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+width: 80%;
+display: flex;
+flex-wrap: wrap;
+}
+
+.box > div {
+flex: 1;
+margin-right: 20px; /* Add margin between label-input pairs */
+}
+
+.box label {
+display: block;
+margin-bottom: 5px; /* Add space between label and input */
+}
+
+.box input {
+width: 100%;
+}
+
+#Edit {
+float: right;
+border-radius: 20px;
+
+cursor: pointer;
+}
+
+#statusButton {
+width: 100px; /* Increase the width for better visibility */
+height: 40px; /* Increase the height for better touch interactions */
+border-radius: 20px; /* Round the corners for a softer look */
+border: none;
+cursor: pointer;
+color: #fff; /* White text color for better contrast */
+background-color: #4CAF50; /* Use a slightly darker green color */
+transition: background-color 0.3s ease; /* Smooth transition on background color */
+}
+
+#statusButton:hover {
+background-color: #45a049; /* Darker background color on hover for contrast */
+}
+
+
+.toolbar {
+margin-top: 50px;
+box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+width: 98%;
+background-color: #5F7A61; /* Background color for the toolbar */
+color: #fff; /* Text color */
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 10px;
+}
+
+.left {
+flex: 1; /* Take up available space on the left */
+font-weight: bold; /* Bold font for the title */
+}
+
+.right #addCollection {
+background-color: #007acc;
+color: #fff;
+border: none;
+padding: 8px 15px;
+border-radius: 5px;
+cursor: pointer;
+transition: background-color 0.3s, color 0.3s;
+}
+
+.right #addCollection:hover {
+background-color: #005faa;
+color: #eee; /* Lighten text color on hover */
+}
+
+.headtoolbar {
+background-color:  #5F7A61; /* Background color for the toolbar */
+color: #fff; /* Text color */
+display: flex; /* Use flexbox for positioning elements */
+justify-content: space-between; /* Space between title and button */
+align-items: center; /* Center vertically within the toolbar */
+padding: 10px;
+}
+
+.toolbar-title {
+  float: left;
+  color: #5F7A61;
+  font-size: 40px;
+  font-style: bold;
+  margin: 0;
+}
+
+#logout {
+        padding: 5px 15px;
+        background-color: transparent;
+        color: white;
+        border: 2px solid white;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+}
+
+#logout:hover {
+background-color: white;
+        color: #0056b3;
+}
+
+    #bleta {
+      margin-top: 10px;
+      font-size: large;
+      text-align: center;
+      width: 100%;
+      border-collapse: collapse;
+      max-height: 300px; /* Set the maximum height to limit to 10 rows */
+      overflow-y: scroll; /* Add a vertical scrollbar when content overflows */
+  }
+
+    #alignn label {
+    text-align: left;
+    display: inline-block;
+    width: 100px; /* Adjust the width as needed */
+    margin-right: 10px; /* Add some space between label and input */
+  }
+  #alignn input[type="text"] {
+    width: auto;
+    text-align: left;
+  }
+
+    .form-group {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-bottom: 10px;
+        padding: 1%;
+    }
+
+    #form-container {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    #form-column-1, #form-column-2 {
+        margin: 10px;
+        flex: 1;
+    }
+
+    #form-column-1 {
+    flex: 1; /* Let it take up equal space */
+    /* Add your custom styling for the form column */
+    }
+
+    #form-column-2 {
+    margin-left: 20px;
+    flex: 2; /* Give it more space compared to form-column-1 */
+    /* Add your custom styling for the toolbar column */
+    }
+
+    #collections-container {
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    border: 2px solid gainsboro; /* Add a border with your desired color and thickness */
+    padding: 10px; /* Add some padding to create space inside the box */
+    margin-top: 20px; /* Adjust the margin as needed to separate it from other content */
+    overflow: auto; /* Add overflow property to handle scrolling if content overflows */
+    border-bottom-width: 3px;
+    height: 650px;
+}
+.custom-table {
+        border-collapse: collapse;
+        width: 100%;
+        border: 1px solid #ddd; /* Add a border to the table */
+    }
+
+    .custom-table th, .custom-table td {
+        border: 1px solid #ddd; /* Add a border to table cells */
+        padding: 8px; /* Add some padding to cells for better appearance */
+        text-align: center; /* Align text to the center within cells */
+        width: 25%;
+    }
+
+    .custom-table th {
+        background-color: #f2f2f2; /* Add a background color to header cells */
+    }
+    .custom-table tr {
+       height: 10px;
+      }
+
+  #addCol {
+        margin: 20px auto; /* Center horizontally and add top margin */
+        border: 1px solid #ccc;
+        width: 800px; /* Adjust the width */
+        height: auto;
+        padding: 10px 20px; /* Simplify padding */
+        text-align: center; /* Center the content horizontally */
+        display: flex;
+        position: fixed;
+        background-color: white;
+        transform: translate(-50%, -50%);
+        top: 50%;
+        left: 50%;
+    }
+
+    #addCol h3 {
+        text-align: center;
+    }
+
+    #addCol .toleft,
+    #addCol .toright {
+        flex: 1; /* Adjust the width */
+        margin: 10px;
+    }
+
+    #addCol .toleft {
+        text-align: left; /* Align text to the left */
+    }
+
+    #addCol .toright {
+        text-align: right; /* Align text to the right */
+    }
+
+    .button-container {
+text-align: center;
+margin: 0 auto;
+}
+
+    .custom-table {
+        border-collapse: collapse;
+        width: 100%;
+        border: 1px solid #ddd;
+    }
+
+    .custom-table th, .custom-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+    }
+
+    .custom-table th {
+        background-color: #f2f2f2;
+    }
+    #addCol {
+  margin: 20px auto;
+  border: 1px solid #ccc;
+  width: 80%; /* Adjust the width as needed */
+  display: none;
+  justify-content: space-between; /* Distribute space between toleft and toright */
+  background-color: white;
+  padding: 10px 20px;
+  text-align: center;
+}
+
+.toleft,
+.toright {
+  flex: 1; /* Each takes up 50% of the container */
+  padding: 0 10px; /* Optional padding for spacing */
+}
+
+.form-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+#addCol label {
+  flex: 1;
+  text-align: right;
+  margin-right: 4%;
+}
+
+#addCol input {
+  flex: 2;
+  border: 1px solid #ccc;
+  margin-right: 10%;
+}
+
+#addCol h3 {
+  text-align: center;
+}
+
+#colCat {
+  text-align: center;
+}
+
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.custom-table th,
+.custom-table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+}
+
+.button-container {
+  margin-top: 10px;
+}
+
+
+#tranNum::-webkit-inner-spin-button,
+    #tranNum::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 0;
+    }
+
+    #memID::-webkit-inner-spin-button,
+    #memID::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 0;
+    }
+
+    #viewCollection {
+margin: 20px auto;
+border: 2px solid black; /* Blue border color */
+background-color: #ecf0f1; /* Light grey background color */
+width: 500px;
+max-width: 80%;
+padding: 20px;
+text-align: center;
+display: none;
+position: fixed;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+border-radius: 10px;
+box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* Subtle box shadow for depth */
+}
+
+/* Improve form layout */
+#viewCollection label {
+flex: 1;
+text-align: left;
+margin-left: 10%;
+}
+
+#viewCollection input {
+flex: 2;
+border: 1px solid #ccc;
+width: 70%; /* Adjusted width for better responsiveness */
+}
+
+#viewCollection h3 {
+text-align: center;
+}
+
+.form-col {
+display: flex;
+flex-direction: row;
+align-items: center;
+margin-bottom: 10px;
+}
+
+/* Center the table horizontally and add styling to table cells */
+.centered-table {
+margin: 0 auto;
+width: 80%;
+border-collapse: collapse;
+}
+
+.centered-table th,
+.centered-table td {
+border: 1px solid black;
+padding: 12px; /* Increased padding for better spacing */
+text-align: center;
+}
+
+/* Style the button container */
+.button-container {
+text-align: center;
+}
+
+/* Style popup form */
+#popup {
+border: 2px solid #ccc;
+background-color: #fff;
+padding: 20px;
+width: 50%;
+margin: 20px auto;
+border-radius: 15px;
+position: fixed;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+}
+
+#popup label {
+margin-bottom: 10px; /* Increased margin for better separation */
+}
+
+#popup input,
+#popup select {
+width: 100%; /* Adjusted width for full width */
+padding: 10px; /* Adjusted padding for better spacing */
+box-sizing: border-box;
+margin-bottom: 15px; /* Increased margin for better separation */
+}
+
+#popup button {
+padding: 12px; /* Increased padding for better button size */
+background-color: #4caf50;
+color: white;
+border: none;
+cursor: pointer;
+width: 100%;
+border-radius: 15px;
+}
+
+.clear-button {
+background-color: #f44336;
+width: 100%;
+border-radius: 15px;
+}
+
+/* Style label-input pairs in the popup form */
+.label-input-pair {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 10px;
+margin-bottom: 15px; /* Increased margin for better separation */
+}
+
+
+    #eventB {
+position: relative; /* Change from absolute to relative positioning */
+margin-right: 20px;
+border-radius: 15px;
+background-color: #ff0000;
+border: 0px;
+width: 10%;
+height: 5%;
+display: block;
+float: right; /* Align to the right within the parent container */
+top: auto; /* Remove the 'top' property for relative positioning */
+}
+
+    @media (max-width: 768px) {
+        #form-container {
+            flex-direction: column;
+        }
+    }
+    #lotTable {
+width: 100%;
+border-collapse: collapse;
+}
+
+#lotTable th, #lotTable td {
+padding: 8px;
+text-align: center;
+border-bottom: 1px solid #ddd;
+}
+
+#lotTable th {
+background-color: #ffffff;
+color: #000000;
+}
+
+#lotTable th, #lotTable td:first-child {
+width: 20%;
+}
+
+#lotTable td {
+
+font-weight: normal;
+}
+
+#sendBB{
+  position: sticky;
+  margin: auto;
+}
