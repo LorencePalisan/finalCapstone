@@ -19,20 +19,38 @@ body {
 }
 
 button {
-padding: 12px 24px;
-margin: 0 10px;
-background-color: #5F7A61;
-color: white;
-border: none;
-border-radius: 5px;
-cursor: pointer;
-font-size: 18px;
-transition: background-color 0.3s;
-}
-
-button:hover {
-background-color: #6E897C;
-}
+    padding: 0.75em 1.5em; /* Using em makes the padding scale with the font-size */
+    margin: 0 0.625em; /* Margin scaled down for small screens */
+    background-color: #5F7A61;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.125rem; /* rem units are relative to the root font-size, good for responsive typography */
+    transition: background-color 0.3s;
+  }
+  
+  button:hover {
+    background-color: #6E897C;
+  }
+  
+  /* Smaller devices (phones, less than 768px) */
+  @media only screen and (max-width: 768px) {
+    button {
+      font-size: 1rem; /* Smaller font size on small devices */
+      padding: 0.75em 1em; /* Adjust padding to ensure buttons are not too large */
+    }
+  }
+  
+  /* Larger devices (desktops, 992px and up) */
+  @media only screen and (min-width: 992px) {
+    button {
+      /* Optionally, increase padding and font size for larger screens */
+      font-size: 1.25rem;
+      padding: 0.75em 2em;
+    }
+  }
+  
 
 
 .form-container {
@@ -59,8 +77,11 @@ font-size: 24px;
 }
 
 
+
+
 .avatar {
-    width: 100px;
+    max-width: 100%;
+    height: auto;
     border-radius: 50%;
     margin: 0 auto 20px;
     display: block;
@@ -109,9 +130,6 @@ vertical-align: middle; /* Align the label vertically with the checkbox */
 }
 
 
-/* Adjusted button styles for wider width */
-/* Adjusted button styles for wider width */
-/* Adjusted button styles to match password container size */
 button[type="submit"] {
 width: calc(100% - 30px); /* Set the width to match the password container */
 margin-top: 20px; /* Put it at the top */

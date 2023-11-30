@@ -64,36 +64,46 @@ body {
             margin: 0; /* Remove default margin for the title */
         }
 
-        table {
-        border-collapse: collapse;
-        width: 100%;
-        max-width: 80%;
-        margin: 20px auto;
-        border: 1px solid black; /* Add border to the table */
-        border-radius: 5px;
-        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-        }
- 
-        th {
-        background-color: #1CAC78;
-        color: whitesmoke;
-        border: 1px solid black;
-        padding: 10px;
-        text-align: center;
-        }
+        /* Container for the table to enable horizontal scrolling on small screens */
+.table-container {
+  width: 100%;
+  overflow-x: auto; /* Enables horizontal scrolling */
+  margin: 20px 0; /* Adjusted to provide margin only on top and bottom */
+}
 
-        /* Style for table data (td) */
-        td {
-        padding: 10px;
-        border: 1px solid black;
-        text-align: center;
-        background-color: white;
-        }
+table {
+  border-collapse: collapse;
+  width: 100%; /* Full width to fit the container */
+  max-width: 80%; /* Maximum width allowed */
+  margin: 0 auto; /* Centers the table */
+  border: 1px solid black; /* Add border to the table */
+  border-radius: 5px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+}
 
-        /* Style for alternating row colors */
-        tr:nth-child(even) {
-        background-color: #f2f2f2;
-        }
+th, td {
+  padding: 10px;
+  border: 1px solid black;
+  text-align: center;
+}
+
+th {
+  background-color: #1CAC78;
+  color: whitesmoke;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* Responsive table styling for smaller devices */
+@media screen and (max-width: 600px) {
+  th, td {
+    padding: 5px; 
+    font-size: 12px; 
+  }
+}
+
 
             /* Container for centering */
 .center-container {

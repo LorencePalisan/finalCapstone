@@ -1,485 +1,220 @@
-body ::-webkit-scrollbar {
-    width: 0;
-}
 
-body::-webkit-scrollbar-thumb {
-    background: transparent;
-    overflow: hidden;
-}
-.box {
-margin-top: 20px;
-margin-left: 40px;
-border: 1px solid gainsboro;
-padding: 20px;
-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-width: 80%;
-display: flex;
-flex-wrap: wrap;
-}
-
-.box > div {
-flex: 1;
-margin-right: 20px; /* Add margin between label-input pairs */
-}
-
-.box label {
-display: block;
-margin-bottom: 5px; /* Add space between label and input */
-}
-
-.box input {
-width: 100%;
-}
-
-#Edit {
-float: right;
-border-radius: 20px;
-
-cursor: pointer;
-}
-
-#statusButton {
-width: 100px; /* Increase the width for better visibility */
-height: 40px; /* Increase the height for better touch interactions */
-border-radius: 20px; /* Round the corners for a softer look */
-border: none;
-cursor: pointer;
-color: #fff; /* White text color for better contrast */
-background-color: #4CAF50; /* Use a slightly darker green color */
-transition: background-color 0.3s ease; /* Smooth transition on background color */
-}
-
-#statusButton:hover {
-background-color: #45a049; /* Darker background color on hover for contrast */
-}
-
-
-.toolbar {
-margin-top: 50px;
-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
-width: 98%;
-background-color: #5F7A61; /* Background color for the toolbar */
-color: #fff; /* Text color */
-display: flex;
-justify-content: space-between;
-align-items: center;
-padding: 10px;
-}
-
-.left {
-flex: 1; /* Take up available space on the left */
-font-weight: bold; /* Bold font for the title */
-}
-
-.right #addCollection {
-background-color: #007acc;
-color: #fff;
-border: none;
-padding: 8px 15px;
-border-radius: 5px;
-cursor: pointer;
-transition: background-color 0.3s, color 0.3s;
-}
-
-.right #addCollection:hover {
-background-color: #005faa;
-color: #eee; /* Lighten text color on hover */
-}
-
-.headtoolbar {
-background-color:  #5F7A61; /* Background color for the toolbar */
-color: #fff; /* Text color */
-display: flex; /* Use flexbox for positioning elements */
-justify-content: space-between; /* Space between title and button */
-align-items: center; /* Center vertically within the toolbar */
-padding: 10px;
-}
-
-.toolbar-title {
-  float: left;
-  color: #5F7A61;
-  font-size: 40px;
-  font-style: bold;
+body, h1, h2, h3, h4, h5, h6, p, ul, li {
   margin: 0;
+  padding: 0;
 }
 
-#logout {
-        padding: 5px 15px;
-        background-color: transparent;
-        color: white;
-        border: 2px solid white;
-        border-radius: 20px;
-        cursor: pointer;
-        transition: all 0.3s ease;
+html{
+  height: 100%;
+}
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f4f4f4;
+  overflow: hidden;
 }
 
-#logout:hover {
-background-color: white;
-        color: #0056b3;
-}
-
-    #bleta {
-      margin-top: 10px;
-      font-size: large;
-      text-align: center;
-      width: 100%;
-      border-collapse: collapse;
-      max-height: 300px; /* Set the maximum height to limit to 10 rows */
-      overflow-y: scroll; /* Add a vertical scrollbar when content overflows */
-  }
-
-    #alignn label {
-    text-align: left;
-    display: inline-block;
-    width: 100px; /* Adjust the width as needed */
-    margin-right: 10px; /* Add some space between label and input */
-  }
-  #alignn input[type="text"] {
-    width: auto;
-    text-align: left;
-  }
-
-    .form-group {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        margin-bottom: 10px;
-        padding: 1%;
-    }
-
-    #form-container {
-        display: flex;
-        flex-wrap: wrap;
-    }
-
-    #form-column-1, #form-column-2 {
-        margin: 10px;
-        flex: 1;
-    }
-
-    #form-column-1 {
-    flex: 1; /* Let it take up equal space */
-    /* Add your custom styling for the form column */
-    }
-
-    #form-column-2 {
-    margin-left: 20px;
-    flex: 2; /* Give it more space compared to form-column-1 */
-    /* Add your custom styling for the toolbar column */
-    }
-
-    #collections-container {
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
-    border: 2px solid gainsboro; /* Add a border with your desired color and thickness */
-    padding: 10px; /* Add some padding to create space inside the box */
-    margin-top: 20px; /* Adjust the margin as needed to separate it from other content */
-    overflow: auto; /* Add overflow property to handle scrolling if content overflows */
-    border-bottom-width: 3px;
-    height: 650px;
-}
-.custom-table {
-        border-collapse: collapse;
-        width: 100%;
-        border: 1px solid #ddd; /* Add a border to the table */
-    }
-
-    .custom-table th, .custom-table td {
-        border: 1px solid #ddd; /* Add a border to table cells */
-        padding: 8px; /* Add some padding to cells for better appearance */
-        text-align: center; /* Align text to the center within cells */
-        width: 25%;
-    }
-
-    .custom-table th {
-        background-color: #f2f2f2; /* Add a background color to header cells */
-    }
-    .custom-table tr {
-       height: 10px;
-      }
-
-  #addCol {
-        margin: 20px auto; /* Center horizontally and add top margin */
-        border: 1px solid #ccc;
-        width: 800px; /* Adjust the width */
-        height: auto;
-        padding: 10px 20px; /* Simplify padding */
-        text-align: center; /* Center the content horizontally */
-        display: flex;
-        position: fixed;
-        background-color: white;
-        transform: translate(-50%, -50%);
-        top: 50%;
-        left: 50%;
-    }
-
-    #addCol h3 {
-        text-align: center;
-    }
-
-    #addCol .toleft,
-    #addCol .toright {
-        flex: 1; /* Adjust the width */
-        margin: 10px;
-    }
-
-    #addCol .toleft {
-        text-align: left; /* Align text to the left */
-    }
-
-    #addCol .toright {
-        text-align: right; /* Align text to the right */
-    }
-
-    .button-container {
-text-align: center;
-margin: 0 auto;
-}
-
-    .custom-table {
-        border-collapse: collapse;
-        width: 100%;
-        border: 1px solid #ddd;
-    }
-
-    .custom-table th, .custom-table td {
-        border: 1px solid #ddd;
-        padding: 8px;
-        text-align: center;
-    }
-
-    .custom-table th {
-        background-color: #f2f2f2;
-    }
-    #addCol {
-  margin: 20px auto;
-  border: 1px solid #ccc;
-  width: 80%; /* Adjust the width as needed */
-  display: none;
-  justify-content: space-between; /* Distribute space between toleft and toright */
-  background-color: white;
+header {
+  background-color: #5F7A61; 
+  color: white;
   padding: 10px 20px;
-  text-align: center;
-}
-
-.toleft,
-.toright {
-  flex: 1; /* Each takes up 50% of the container */
-  padding: 0 10px; /* Optional padding for spacing */
-}
-
-.form-group {
   display: flex;
-  flex-direction: row;
+  justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
 }
 
-#addCol label {
-  flex: 1;
-  text-align: right;
-  margin-right: 4%;
+#signOut {
+  padding: 5px 15px;
+  background-color: transparent;
+  color: white;
+  border: 2px solid white;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+#signOut:hover {
+  background-color: white;
+  color: #0056b3;
 }
 
-#addCol input {
-  flex: 2;
-  border: 1px solid #ccc;
-  margin-right: 10%;
+.container {
+  display: flex;
+  height: 100%; /* Updated to 100% */
 }
 
-#addCol h3 {
-  text-align: center;
+.sidebar {
+  background-color: #fff;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  width: fixed; /* Note: 'width: fixed;' is not a valid CSS property */
+  height: 100%; /* Updated to 100% */
+  padding: 20px;
+  position: sticky;
+  top: 0;
+  flex-shrink: 1;
+  border-right: 1px solid #5F7A61;
 }
 
-#colCat {
-  text-align: center;
-}
-
-.custom-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-}
-
-.custom-table th,
-.custom-table td {
-  border: 1px solid #ccc;
+/* Sidebar items with more modern styling */
+.menu-item {
+  background-color: transparent;
+  color: #333;
   padding: 8px;
+  margin-bottom: 5px;
+  transition: background-color 0.3s ease; 
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  border: 1px solid #ddd; 
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.button-container {
-  margin-top: 10px;
+.menu-item:hover {
+  background-color: #e8e8e8;
 }
 
+@media screen and (max-width: 480px) {
+  .sidebar {
+      width: 100%; /* Full width for better use of space on small screens */
+      padding: 10px; /* Reduced padding to maximize space */
+      /* Other adjustments like reducing the font size, if necessary */
+  }
 
-#tranNum::-webkit-inner-spin-button,
-    #tranNum::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    appearance: none;
-    margin: 0;
-    }
-
-    #memID::-webkit-inner-spin-button,
-    #memID::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    appearance: none;
-    margin: 0;
-    }
-
-    #viewCollection {
-margin: 20px auto;
-border: 2px solid black; /* Blue border color */
-background-color: #ecf0f1; /* Light grey background color */
-width: 500px;
-max-width: 80%;
-padding: 20px;
-text-align: center;
-display: none;
-position: fixed;
-top: 50%;
-left: 50%;
-transform: translate(-50%, -50%);
-border-radius: 10px;
-box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* Subtle box shadow for depth */
+  .menu-item {
+      font-size: 16px; /* Larger font size for readability on small screens */
+      padding: 12px; /* Larger padding for easier touch interaction */
+      margin-bottom: 10px; /* Increase margin for better separation */
+      /* Simplify styling if needed - like reducing box-shadow for a cleaner look */
+  }
 }
 
-/* Improve form layout */
-#viewCollection label {
-flex: 1;
-text-align: left;
-margin-left: 10%;
+/* Subtle hover effect for dropdown */
+.dropdown-content div:hover {
+  background-color: #e8e8e8;
 }
 
-#viewCollection input {
-flex: 2;
-border: 1px solid #ccc;
-width: 70%; /* Adjusted width for better responsiveness */
+.iframe-container {
+  flex-grow: 1;
+  overflow: auto; 
+  position: relative; 
 }
 
-#viewCollection h3 {
-text-align: center;
+.iframe-wrapper {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
-.form-col {
-display: flex;
-flex-direction: row;
-align-items: center;
-margin-bottom: 10px;
+iframe {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: none;
+  overflow-y: auto;
+}
+/* Scrollbars styled to be less intrusive */
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #f0f0f0;
+}
+::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 10px;
+}
+/* Style the select dropdown */
+select {
+  padding: 5px 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+}
+/* Labels within header for better visibility */
+#headd label {
+  color: white;
+  margin-right: 10px;
 }
 
-/* Center the table horizontally and add styling to table cells */
-.centered-table {
-margin: 0 auto;
-width: 80%;
-border-collapse: collapse;
-}
-
-.centered-table th,
-.centered-table td {
-border: 1px solid black;
-padding: 12px; /* Increased padding for better spacing */
-text-align: center;
-}
-
-/* Style the button container */
-.button-container {
-text-align: center;
-}
-
-/* Style popup form */
-#popup {
-border: 2px solid #ccc;
-background-color: #fff;
-padding: 20px;
-width: 50%;
-margin: 20px auto;
-border-radius: 15px;
-position: fixed;
-top: 50%;
-left: 50%;
-transform: translate(-50%, -50%);
-}
-
-#popup label {
-margin-bottom: 10px; /* Increased margin for better separation */
-}
-
-#popup input,
-#popup select {
-width: 100%; /* Adjusted width for full width */
-padding: 10px; /* Adjusted padding for better spacing */
-box-sizing: border-box;
-margin-bottom: 15px; /* Increased margin for better separation */
-}
-
-#popup button {
-padding: 12px; /* Increased padding for better button size */
-background-color: #4caf50;
+/* Styles for the toggle button */
+.sidebar-toggle {
+display: none; /* Initially hidden */
+background: #5F7A61;
 color: white;
 border: none;
+padding: 10px;
 cursor: pointer;
-width: 100%;
-border-radius: 15px;
 }
 
-.clear-button {
-background-color: #f44336;
-width: 100%;
-border-radius: 15px;
+/* When on small screens, display the toggle button */
+@media screen and (max-width: 768px) {
+.sidebar-toggle {
+display: block; /* Show the toggle button */
 }
 
-/* Style label-input pairs in the popup form */
-.label-input-pair {
-display: grid;
-grid-template-columns: 1fr 1fr;
-gap: 10px;
-margin-bottom: 15px; /* Increased margin for better separation */
+.sidebar {
+width: 0;
+overflow: hidden;
+transition: width 0.3s ease;
+}
+
+.sidebar.active {
+width: 250px; /* Adjust width as per your design */
+}
 }
 
 
-    #eventB {
-position: relative; /* Change from absolute to relative positioning */
-margin-right: 20px;
-border-radius: 15px;
-background-color: #ff0000;
-border: 0px;
-width: 10%;
-height: 5%;
-display: block;
-float: right; /* Align to the right within the parent container */
-top: auto; /* Remove the 'top' property for relative positioning */
-}
-
-    @media (max-width: 768px) {
-        #form-container {
-            flex-direction: column;
-        }
-    }
-    #lotTable {
-width: 100%;
-border-collapse: collapse;
-}
-
-#lotTable th, #lotTable td {
-padding: 8px;
+#welcome {
+padding: 20px;
+display: flex;
+justify-content: center; /* Center horizontally */
+align-items: center; /* Center vertically */
+height: 100vh; /* Full height of the viewport */
+margin: 0; /* Reset any default margins */
+background-color: #fff; /* Set background color to white or any desired color */
+color: #5F7A61; /* Set the text color as requested */
+font-size: 2em; /* Increase font size for better visibility */
+font-family: 'Poppins', sans-serif; /* Set font-family to Poppins */
 text-align: center;
-border-bottom: 1px solid #ddd;
 }
 
-#lotTable th {
-background-color: #ffffff;
-color: #000000;
+#welcome h1 {
+margin: 0; /* Remove default margin */
+font-size: 55px;
+margin-bottom: 10%;
 }
 
-#lotTable th, #lotTable td:first-child {
-width: 20%;
+/* Responsive adjustments for tablets */
+@media screen and (max-width: 768px) {
+#welcome {
+font-size: 1.5em; /* Slightly smaller font size */
 }
 
-#lotTable td {
-
-font-weight: normal;
+#welcome h1 {
+font-size: 40px; /* Adjust h1 font size for tablet screens */
+}
 }
 
-#sendBB{
-  position: sticky;
-  margin: auto;
+/* Responsive adjustments for mobile devices */
+@media screen and (max-width: 480px) {
+#welcome {
+font-size: 1em; /* Smaller font size for mobile */
+padding: 10px; /* Less padding on smaller screens */
 }
+
+#welcome h1 {
+font-size: 30px; /* Adjust h1 font size for mobile screens */
+margin-bottom: 5%; /* Less margin on the bottom */
+}
+}
+
+

@@ -15,6 +15,7 @@
         <label id="userType"></label>
         <br>
         <label id="Email"></label>
+        <button id="sidebarToggle" class="sidebar-toggle">☰</button>
     </div>
     <button id="signOut">Log Out</button>
 </header>
@@ -81,12 +82,11 @@
                 <span>Reservation Report</span>
             </div>
 
-
         </div>
     </div>
 
     <div class="iframe-container">
-        <div id="welcome">
+        <div class="welcome" id="welcome">
             <h1>Welcome to Greenfield Homeowners Association</h1>
         </div>
 
@@ -176,48 +176,87 @@
     
 
     <script>
-        // Get all the menu items
-        const menuItems = document.querySelectorAll('.menu-item');
-        
+  // Get all the menu items
+// Get all the menu items
+const menuItems = document.querySelectorAll('.menu-item');
 
-        // Add click event listener to each menu item
-        menuItems.forEach(item => {
-            item.addEventListener('click', () => {
-                // Get the corresponding iframe wrapper based on the menu item's id
-                const iframeWrapperId = 'iframeWrapper_' + item.id;
-                const iframeWrapper = document.getElementById(iframeWrapperId);
+// Add click event listener to each menu item
+menuItems.forEach(item => {
+    item.addEventListener('click', () => {
+        // Construct the corresponding iframe wrapper ID based on the menu item's id
+        let iframeWrapperId;
+        if (item.id) {
+            // Special handling for the report menu items
+            switch (item.id) {
+                case "individual":
+                    iframeWrapperId = "iframeWrapper_individualRep";
+                    break;
+                case "monthly":
+                    iframeWrapperId = "iframeWrapper_monthlyRep";
+                    break;
+                case "yearly":
+                    iframeWrapperId = "iframeWrapper_yearlyRep";
+                    break;
+                case "reservation":
+                    iframeWrapperId = "iframeWrapper_reservationRep";
+                    break;
+                default:
+                    iframeWrapperId = 'iframeWrapper_' + item.id;
+            }
+        } else {
+            // Handle the case for menu items without an id, like the dropdown
+            const selectElement = item.querySelector('select');
+            if (selectElement) {
+                const selectedValue = selectElement.value;
+                iframeWrapperId = 'iframeWrapper_' + selectedValue;
+            }
+        }
 
-                // Show the iframe wrapper and hide others
-                document.querySelectorAll('.iframe-container > div').forEach(wrapper => {
-                    wrapper.style.display = 'none';
-                });
-                iframeWrapper.style.display = 'block';
+        // Only proceed if an iframeWrapperId is found
+        if (iframeWrapperId) {
+            const iframeWrapper = document.getElementById(iframeWrapperId);
+
+            // Show the iframe wrapper and hide others
+            document.querySelectorAll('.iframe-container > div').forEach(wrapper => {
+                wrapper.style.display = 'none';
             });
+            iframeWrapper.style.display = 'block';
+        }
+    });
+});
+
+// Prevent the dropdown menus from closing when clicked inside
+const dropdowns = document.querySelectorAll('.menu-item select');
+dropdowns.forEach(dropdown => {
+    dropdown.addEventListener('click', (event) => {
+        event.stopPropagation();
+    });
+
+    // Update the iframe display when a dropdown item is selected
+    dropdown.addEventListener('change', (event) => {
+        const selectedValue = event.target.value;
+        const iframeWrapperId = 'iframeWrapper_' + selectedValue;
+        const iframeWrapper = document.getElementById(iframeWrapperId);
+
+        // Show the selected iframe and hide others
+        document.querySelectorAll('.iframe-container > div').forEach(wrapper => {
+            wrapper.style.display = 'none';
         });
+        iframeWrapper.style.display = 'block';
+    });
+});
 
-        // Prevent the dropdown menus from closing when clicked inside
-        const dropdowns = document.querySelectorAll('.menu-item select');
-        dropdowns.forEach(dropdown => {
-            dropdown.addEventListener('click', (event) => {
-                event.stopPropagation();
-            });
-        });
+document.addEventListener('DOMContentLoaded', function() {
+    var sidebar = document.querySelector('.sidebar');
+    var toggleButton = document.getElementById('sidebarToggle');
 
-        // Make the iframes interactive when dropdown items are clicked
-        const certificateSelect = document.getElementById('certificateSelect');
-
-
-        certificateSelect.addEventListener('change', () => {
-            const selectedValue = certificateSelect.value;
-            const iframeId = selectedValue + '-iframe';
-            const iframe = document.getElementById(iframeId);
-            iframe.src = selectedValue + '.html';
-        });
-
+    toggleButton.addEventListener('click', function() {
+        sidebar.classList.toggle('active');
+    });
+});
 
     </script>
 
     <script type="module" src="../assets/credentials/dashboard.js"></script>
 </body>
 </html>
-

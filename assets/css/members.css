@@ -276,6 +276,7 @@ transform: scale(1.05);
     display: flex; 
     justify-content: flex-end;
     margin-left: auto;
+    height: 100%;
 }
 
 #add,
