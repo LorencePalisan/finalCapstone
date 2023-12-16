@@ -30,8 +30,12 @@
         <option value="admin">Admin</option>
       </select>
 
+      <label for="accountID">Account IDS:</label>
+      <input type="number" id="accountID" list="ids">
+      <datalist id="ids"></datalist>
+
       <label for="memName">Member Name:</label>
-      <input type="text" id="memName" list="name">
+      <input type="text" id="memName" disabled>
 
       <datalist id="names">
       </datalist>
@@ -58,7 +62,10 @@
 
   <div id="searchBar">
     <label for="searchInput">Search: </label>
-    <input type="text" id="searchInput" placeholder="Search by Name">
+    <input type="text" id="searchInput" placeholder="Search by Name" list="names">
+    <datalist id="names">
+    </datalist>
+    <button id="find">Find</button>
   </div>
 
   <div id="sortType">

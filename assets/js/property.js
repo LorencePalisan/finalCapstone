@@ -1,6 +1,7 @@
 import {doc,getDocs, updateDoc,collection, query, where ,orderBy, limit, startAfter, endBefore, limitToLast, addDoc } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
 import { db } from "../credentials/firebaseModule.js";
 //Elements
+let accountID = document.getElementById("accountID");
 let ownerName = document.getElementById("ownerName");
 let lotNumber = document.getElementById("lotNumber");
 let blockNum = document.getElementById("blockNum");
@@ -20,12 +21,14 @@ const memberRef = collection(db, "Members");
 const insert = document.getElementById("insert");
 const editB = document.getElementById("Edit");
 const updateB = document.getElementById("updateB");
-  const Property = collection(db, "Property");
-
+const Property = collection(db, "Property");
+const accountIDInput = document.getElementById("accountID");
+const popupAccountID = document.getElementById("popupAccountID");
   document.addEventListener('DOMContentLoaded', (event) => {
     createPaginationControls();
     fetchAndPopulateTable();
     names();
+    accountIDs();
   });
   document.querySelectorAll('input[type="number"]').forEach(function(input) {
     input.addEventListener('keydown', function(e) {
@@ -34,6 +37,7 @@ const updateB = document.getElementById("updateB");
       }
     });
   });
+  
 //==========================AddProperty============================================================
 async function names(){
   const datalist = document.getElementById("names");
@@ -46,6 +50,60 @@ async function names(){
     });
   });
   }
+  async function accountIDs(){
+    const datalist = document.getElementById("ids");
+    getDocs(memberRef).then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        const accountID = doc.data().accountID;
+        const option = document.createElement("option");
+        option.value = accountID;
+        datalist.appendChild(option);
+      });
+    });
+    }
+      accountIDInput.addEventListener("change", async function () {
+        const selectedAccountID = accountIDInput.value;
+      
+        if (selectedAccountID) {
+          const q = query(memberRef, where("accountID", "==", selectedAccountID));
+          const querySnapshot = await getDocs(q);
+      
+          if (!querySnapshot.empty) {
+            // Assuming you want to retrieve the memberName property from the first document
+            const data = querySnapshot.docs[0].data();
+            const ownerNameInput = document.getElementById("ownerName");
+      
+            // Assuming your document structure has a property 'memberName'
+            ownerNameInput.value = data.memberName;
+          } else {
+            // Handle the case where no matching document is found
+            console.log("No matching document found for the given accountID");
+          }
+        }
+      });
+    
+    popupAccountID.addEventListener("change", async function () {
+      const selectedAccountID = popupAccountID.value;
+    
+      if (selectedAccountID) {
+        const q = query(memberRef, where("accountID", "==", selectedAccountID));
+        const querySnapshot = await getDocs(q);
+    
+        if (!querySnapshot.empty) {
+          // Assuming you want to retrieve the memberName property from the first document
+          const data = querySnapshot.docs[0].data();
+          const ownerNameInput = document.getElementById("popupownerName");
+    
+          // Assuming your document structure has a property 'memberName'
+          ownerNameInput.value = data.memberName;
+        } else {
+          // Handle the case where no matching document is found
+          console.log("No matching document found for the given accountID");
+        }
+      }
+    });
+
+
   async function queryName() {
     const q = query(memberRef, where("memberName", "==", ownerName.value));
     try {
@@ -63,50 +121,155 @@ async function names(){
     }
   }
 //=============================================================================================================================
+// async function addProperty() {
+//   let lotNumberVal = lotNumber.value;
+//   let blockNumVal = blockNum?.value;
+//   let lotSizeVal = lotSize?.value;
+//   let propertyStatusVal = propertyStatus?.value;
+//   let Name = ownerName?.value;
+//   const lotNumberQuery = query(Property, where('lotNumber', '==', lotNumberVal));
+//   const existingLotNumberSnapshot = await getDocs(lotNumberQuery);
+// if (!existingLotNumberSnapshot.empty) {
+//   alert("Lot number already exists. Please choose a different lot number.");
+//   return;
+// }
+// if(!lotNumberVal || !blockNumVal || !lotSizeVal || !propertyStatusVal){
+//   alert("Please fill all the information needed.");
+//   return
+// }
+//   if (!Name) {
+//     let data = {
+//       ownerName: " ",
+//       lotNumber: lotNumberVal,
+//       blockNum: blockNumVal,
+//       lotSize: lotSizeVal,
+//       propertyStatus: propertyStatusVal,
+//     };
+//     try {
+//       if(propertyStatusVal != "Vacant"){
+//         alert("The property should be Vacant");
+//         return
+//       }
+//       const docRef = await addDoc(Property, data);
+//       alert("Property added successfully.");
+//       fetchAndPopulateTable();
+//     } catch (e) {
+//       alert.error("Error adding property: ", e);
+//     }
+//   } else {
+//     const ownerIdRef = await queryName();
+//     if (!ownerIdRef) {
+//       console.log("Owner ID not found. Cannot add property.");
+//       return;
+//     }
+//     console.log(ownerIdRef);
+//     try {
+//       const data = {
+//         ownerRef: ownerIdRef,
+//         lotNumber: lotNumberVal,
+//         ownerName: Name,
+//         blockNum: blockNumVal,
+//         lotSize: lotSizeVal,
+//         propertyStatus: propertyStatusVal,
+//       };
+//       try {
+//         const docRef = await addDoc(Property, data); 
+//         alert("Property added successfully.");
+//         fetchAndPopulateTable();
+//       } catch (e) {
+//         console.error("Error adding document: ", e);
+//       }
+//     } catch (error) {
+//       console.error("Error checking owner ID in Members: ", error);
+//     }
+//   }
+// }
 async function addProperty() {
+  
+  let accountIDVal = accountID.value;
   let lotNumberVal = lotNumber.value;
   let blockNumVal = blockNum?.value;
   let lotSizeVal = lotSize?.value;
   let propertyStatusVal = propertyStatus?.value;
   let Name = ownerName?.value;
-  const lotNumberQuery = query(Property, where('lotNumber', '==', lotNumberVal));
-  const existingLotNumberSnapshot = await getDocs(lotNumberQuery);
-if (!existingLotNumberSnapshot.empty) {
-  alert("Lot number already exists. Please choose a different lot number.");
-  return;
-}
-if(!lotNumberVal || !blockNumVal || !lotSizeVal || !propertyStatusVal){
-  alert("Please fill all the information needed.");
-  return
-}
+
+  const existingOwnerNameQuery = query(Property, where('lotNumber', '==', lotNumberVal), where('ownerName', '==', Name));
+  const existingOwnerNameSnapshot = await getDocs(existingOwnerNameQuery);
+  
+  // Query to check if the lot number exists
+  const existingLotNumberQuery = query(Property, where('lotNumber', '==', lotNumberVal));
+  const existingLotNumberSnapshot = await getDocs(existingLotNumberQuery);
+  
+  // Check if required information is filled
+  if (!lotNumberVal || !blockNumVal || !lotSizeVal || !propertyStatusVal) {
+    alert("Please fill in all the required information.");
+    return;
+  }
+
+  // If the lot number exists
+  if (!existingLotNumberSnapshot.empty) {
+    if (propertyStatusVal !== "Rented") {
+      alert("The property status should be 'Rented' somebody owned this lot number.");
+      return;
+    }
+  
+    // Get the data from the main property document
+    const data = existingLotNumberSnapshot.docs[0].data();
+  
+    // Check if the owner name already exists for the same lot number
+    if (!existingOwnerNameSnapshot.empty) {
+      alert("Renter name already exists for the same lot number. Please choose a different renter name.");
+      return;
+    }
+  
+    // Check if the property already has an owner with the same name
+    if (data.ownerName === Name && data.propertyStatus === "Owned") {
+      alert("The property cannot have two owners with the same name.");
+      return;
+    }
+
+    if (!Name) {
+      alert("Please provide the renter's name for an existing lot number.");
+      return;
+    }
+  }
+    // Check if the renter's name is provided
+  if (!Name && propertyStatusVal == "Owned") {
+    alert("Please provide the owners's name for an owned lot number.");
+    return;
+  }
+
   if (!Name) {
+    // Adding a property without a renter's name
     let data = {
+      accountID: " ",
       ownerName: " ",
       lotNumber: lotNumberVal,
       blockNum: blockNumVal,
       lotSize: lotSizeVal,
       propertyStatus: propertyStatusVal,
     };
+
     try {
-      if(propertyStatusVal != "Vacant"){
-        alert("The property should be Vacant");
-        return
-      }
       const docRef = await addDoc(Property, data);
       alert("Property added successfully.");
       fetchAndPopulateTable();
     } catch (e) {
-      alert.error("Error adding property: ", e);
+      console.error("Error adding property: ", e);
     }
   } else {
+    // Adding a property with a renter's name
     const ownerIdRef = await queryName();
     if (!ownerIdRef) {
       console.log("Owner ID not found. Cannot add property.");
       return;
     }
+
     console.log(ownerIdRef);
+
     try {
       const data = {
+        accountID: accountIDVal,
         ownerRef: ownerIdRef,
         lotNumber: lotNumberVal,
         ownerName: Name,
@@ -114,8 +277,9 @@ if(!lotNumberVal || !blockNumVal || !lotSizeVal || !propertyStatusVal){
         lotSize: lotSizeVal,
         propertyStatus: propertyStatusVal,
       };
+
       try {
-        const docRef = await addDoc(Property, data); 
+        const docRef = await addDoc(Property, data);
         alert("Property added successfully.");
         fetchAndPopulateTable();
       } catch (e) {
@@ -126,8 +290,11 @@ if(!lotNumberVal || !blockNumVal || !lotSizeVal || !propertyStatusVal){
     }
   }
 }
+
+
 //==========================Update============================================================
 async function updateProperty() {
+  const accointID = accountIDInput.value;
   const lotNum = popuplotNum?.value;
   const owner = popupownerName?.value;
   const stat = popuppropertyStatus?.value;
@@ -137,12 +304,21 @@ async function updateProperty() {
     alert('Cannot set property as Vacant if there is an owner');
     return;
   }
+  if (!owner && stat === "Owned") {
+    alert('Cannot set property as Owned if there is no owner');
+    return;
+  }
+  if (!owner && stat === "Rented") {
+    alert('Cannot set property as Rented if there is no renter');
+    return;
+  }
   try {
     if (querySnapshot.empty) {
       throw new Error('No document found with the provided lot number');
     }
     const docRef = querySnapshot.docs[0].ref;
     const data = {
+      accountID: accointID,
       ownerName: popupownerName?.value,
       lotNumber: popuplotNum?.value,
       blockNum: popupblockNum?.value,
@@ -257,6 +433,7 @@ async function queryPropertyByLotNumber() {
 }
 //====================================popup==================================================
 function findPopup(data) {
+  document.getElementById("popupAccountID").value = data.accountID,
   document.getElementById("popupownerName").value = data.ownerName;
   document.getElementById("popuplotNum").value = data.lotNumber;
   document.getElementById("popupblockNum").value = data.blockNum;
@@ -265,6 +442,7 @@ function findPopup(data) {
   togglePopup();
 }
 function fillPopupWithData(data) {
+  document.getElementById("popupAccountID").value = data.accountID;
   document.getElementById("popupownerName").value = data.ownerName;
   document.getElementById("popuplotNum").value = data.lotNumber;
   document.getElementById("popupblockNum").value = data.blockNum;
@@ -274,7 +452,7 @@ function fillPopupWithData(data) {
 }
 //===========================================================================
 function enableInputFields() {
-  var editableFields = document.querySelectorAll('#popupownerName, #popuppropertyStatus');
+  var editableFields = document.querySelectorAll('#popupownerName, #popuppropertyStatus, #popupAccountID');
   for (var i = 0; i < editableFields.length; i++) {
     editableFields[i].removeAttribute('disabled');
   }

@@ -46,19 +46,21 @@ async function displayQueryNameCollection() {
             searchNameFound = true;
             const row = trans.insertRow(-1);
             const transactionNumCell = row.insertCell(0);
-            transactionNumCell.textContent = data.TransactionNum;
-            const memberNameCell = row.insertCell(1);
-            memberNameCell.textContent = data.Member;
-            const collectorCell = row.insertCell(2);
+            transactionNumCell.textContent = data.accountID;
+            const idCell = row.insertCell(1);
+            idCell.textContent = data.Member;
+            const memberNameCell = row.insertCell(2);
+            memberNameCell.textContent = data.TransactionNum;
+            const collectorCell = row.insertCell(3);
             collectorCell.textContent = data.Collector;
-            const dateCell = row.insertCell(3);
+            const dateCell = row.insertCell(4);
             dateCell.textContent = data.Date;
-            const totalFeeCell = row.insertCell(4);
+            const totalFeeCell = row.insertCell(5);
             totalFeeCell.textContent = data.TotalFee;
-            const balLotAmort = row.insertCell(5);
+            const balLotAmort = row.insertCell(6);
             balLotAmort.textContent = data.lotAmortBal;
             categoryNames.forEach((categoryName, index) => {
-                const categoryCell = row.insertCell(6 + index);
+                const categoryCell = row.insertCell(7 + index);
                 const matchingCategory = data.Categories.find(category => category.collectionName === categoryName);
                 if (matchingCategory) {
                     categoryCell.textContent = matchingCategory.collectionFee;

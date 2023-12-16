@@ -215,7 +215,7 @@ white-space: nowrap;
 margin-left: 500px;
 }
 
-    #find {
+    #reset,#find {
         background-image: linear-gradient(#f7f8fa ,#e7e9ec);
 border-color: #adb1b8 #a2a6ac #8d9096;
 border-style: solid;
@@ -240,6 +240,12 @@ user-select: none;
 -webkit-user-select: none;
 touch-action: manipulation;
 white-space: nowrap;
+}
+
+#accountID::-webkit-inner-spin-button,
+#accountID::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
     #popupMenu:hover {
@@ -313,6 +319,26 @@ touch-action: manipulation;
 white-space: nowrap;
     }
 
+    #genn {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: bold;
+        text-align: center;
+        text-decoration: none;
+        cursor: pointer;
+        border: 2px solid #3498db; /* Border color */
+        color: #3498db; /* Text color */
+        background-color: #fff; /* Background color */
+        border-radius: 5px; /* Rounded corners */
+        transition: background-color 0.3s, color 0.3s; /* Smooth transition effect */
+      }
+  
+      /* Hover effect */
+      #genn:hover {
+        background-color: #3498db;
+        color: #fff;
+      }
 
     #tranNum::-webkit-inner-spin-button,
     #tranNum::-webkit-outer-spin-button {
@@ -577,7 +603,10 @@ transform: scale(1.05);
     color: #555;
   }
   
-  #smsForm input,
+  #smsForm input{
+    border: 0px;
+    width: 100%;
+  }
   #smsForm textarea {
     width: 100%;
     padding: 10px;

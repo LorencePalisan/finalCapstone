@@ -44,6 +44,8 @@ try {
   if (!querySnapshot.empty) {
     const docSnap = querySnapshot.docs[0];
     const data = docSnap.data();
+    document.getElementById("accountIDVal").value = data.accountID;
+    document.getElementById("accountID").value = data.accountID;
     document.getElementById("name").value = data.memberName;
     document.getElementById("cont").value = data.contactNum;
     document.getElementById("category").value = data.memberCategory;
@@ -134,6 +136,13 @@ async function updateMember() {
     console.error("No document ID is set. Please fetch the member details first.");
     return;
   }
+  if(!memberCategory?.value || ! memberStatus?.value || !gender?.value || ! memberName?.value ||
+     !spouseName?.value || !occupation?.value || !age?.value || ! civilStatus?.value || !citizenship?.value ||
+     !contactNum?.value
+     ){
+      alert("Please check if there is an empty field.");
+      return
+    }
   const docRef = doc(db, "Members", globalDocId);
   const docSnap = await getDoc(docRef);
   if (!docSnap.exists()) {
@@ -174,6 +183,7 @@ function updateTotalFee(totalFee) {
 }
 async function collectionMenu() {
   document.getElementById("memName").value = Name;
+
   while (addColTable.rows.length > 1) {
     addColTable.deleteRow(1);
   }
@@ -259,6 +269,16 @@ function togglePopup() {
     updateTotalFee();
 }
 async function addCollection() {
+
+  if (
+    !document.getElementById('tranNum').value ||
+    !document.getElementById('tranDate').value ||
+    !document.getElementById('collName').value ||
+    !document.getElementById('memName').value
+      ){
+          alert("Fields are empty. Please fill in all required fields.");
+          return;
+        }
   const buttonText = statusButton.textContent.toLowerCase();
   let currentBal = lotAmortVal;
   if (buttonText != "active") {
@@ -268,6 +288,7 @@ async function addCollection() {
   const checkedRows = Array.from(document.querySelectorAll('#colCat table input[type="checkbox"]:checked'));
   const dataToAdd = {
       TransactionNum: document.getElementById('tranNum').value, 
+      accountID: document.getElementById("accountID").value,
       Date: document.getElementById('tranDate').value,
       Collector: document.getElementById('collName').value, 
       Member: document.getElementById('memName').value,  
@@ -435,7 +456,7 @@ function viewCollection(data) {
   if (addCol.style.display === 'none' || addCol.style.display === '') {
     addCol.style.display = 'block';
     document.getElementById('cdTransactionNumber').value = data.TransactionNum;
-    document.getElementById('cdMemberID').value = data.MemberID;
+    document.getElementById('cdMemberID').value = data.accountID;
     document.getElementById('cdMemberName').value = data.Member;
     document.getElementById('cdCollectorName').value = data.Collector;
     document.getElementById('cdTranDate').value = data.Date;

@@ -148,6 +148,11 @@ async function addReq () {
         alert('Please fill in all fields.');
         return;
     }
+
+    if (timeFrom == timeTo) {
+        alert('Invalid time range. Please make sure the "From" time is before the "To" time.');
+        return;
+    }
     if (dateFrom > dateTo) {
         alert('Invalid time range. Please make sure the "From" time is before the "To" time.');
         return false;
@@ -196,7 +201,7 @@ async function checkDuplicateTime(facility, datetime, timeFrom, timeTo) {
 
     const isTimeUnavailable = querySnapshot.docs.some(doc => {
         const { timeFrom: docTimeFrom, timeTo: docTimeTo } = doc.data();
-        return (timeFrom < docTimeTo && timeTo > docTimeFrom);
+        return (timeFrom <= docTimeTo && timeTo >= docTimeFrom);
     });
 
     return isTimeUnavailable;

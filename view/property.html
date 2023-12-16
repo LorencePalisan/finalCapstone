@@ -12,10 +12,14 @@
   <div class="toolbar">
     <h1 class="toolbar-title">Property Module</h1>
   </div>
-  <button id="addProp" onclick="showPopup()">Add Property</button>
+  <button id="addProp">Add Property</button>
 
   <div class="form-container">
 
+    <label for="accountID">Account ID:</label>
+    <input id="accountID" type="number" list="ids">
+    <datalist id="ids">
+    </datalist>
     <label for="ownerName">Owner Name:</label>
     <input id="ownerName" type="text" list="names">
     <datalist id="names">
@@ -26,7 +30,27 @@
 
 
     <label for="blockNum">Block Number:</label>
-    <input id="blockNum" type="number">
+    <input id="blockNum" type="number" list="listBlock">
+    <datalist id="listBlock">
+      <option value="1">
+      <option value="2">
+      <option value="3">
+      <option value="4">
+      <option value="5">
+      <option value="6">
+      <option value="7">
+      <option value="8">
+      <option value="9">
+      <option value="10">
+      <option value="11">
+      <option value="12">
+      <option value="13">
+      <option value="14">
+      <option value="15">
+      <option value="16">
+      <option value="17">
+
+    </datalist>
 
     <label for="lotSize">Lot Size: (sqm)</label>
     <input id="lotSize" type="number">
@@ -40,8 +64,9 @@
     </select>
 
     <div class="button-container">
-      <button id="insert" class="button">Insert Property</button>
       <button id="clB" class="button">Close</button>
+      <button id="insert" class="button">Insert Property</button>
+
 
 
     </div>
@@ -102,8 +127,16 @@
   <div class="popup">
 
     <div class="form-group">
+      <label for="popupAccountID">Account ID:</label>
+      <input type="number" id="popupAccountID" list="ids" placeholder="ID" disabled>
+      <datalist id="ids">
+      </datalist>
+    </div>
+
+    <div class="form-group">
       <label for="popupownerName">Owner Name:</label>
-      <input type="text" id="popupownerName" placeholder="Owner Name" disabled>
+      <input type="text" id="popupownerName" placeholder="Owner Name" list="names" disabled>
+      <datagrid id="names"></datagrid>
     </div>
 
     <div class="form-group">
@@ -150,25 +183,6 @@
       }
     }
 
-    // Function to show the popup
-    function showPopup() {
-      var popup = document.getElementById("popup");
-      popup.style.display = "block";
-    }
-
-    // Function to hide the popup
-    function hidePopup() {
-      var popup = document.getElementById("popup");
-      popup.style.display = 'none';
-    }
-
-    // Add an event listener to open the popup when the button is clicked
-    var addPropButton = document.getElementById("addPropButton");
-    addPropButton.addEventListener('click', showPopup);
-
-    // Add an event listener to close the popup when the close button is clicked
-    var closePopupButton = document.getElementById("closePopup");
-    closePopupButton.addEventListener('click', hidePopup);
 
 
   </script>

@@ -5,6 +5,7 @@ const add = document.getElementById("add");
 const cancel = document.getElementById("cancel");
 const popupMenu = document.getElementById("popupMenu");
 const viewColCancel = document.getElementById("viewColCancel");
+const accountIDInput = document.getElementById("accountID");
 let totalFee = 0; 
 let inputFee = 0;
 let allContactNumbers = [];
@@ -21,6 +22,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
   collectionMenu();
   createPaginationControls();
   names();
+  accountIDs();
 });
 async function names(){
   const datalist = document.getElementById("names");
@@ -33,6 +35,37 @@ async function names(){
     });
   });
   }
+  async function accountIDs(){
+    const datalist = document.getElementById("ids");
+    getDocs(memberRef).then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        const accountID = doc.data().accountID;
+        const option = document.createElement("option");
+        option.value = accountID;
+        datalist.appendChild(option);
+      });
+    });
+    }
+    accountIDInput.addEventListener("change", async function () {
+      const selectedAccountID = accountIDInput.value;
+    
+      if (selectedAccountID) {
+        const q = query(memberRef, where("accountID", "==", selectedAccountID));
+        const querySnapshot = await getDocs(q);
+    
+        if (!querySnapshot.empty) {
+          // Assuming you want to retrieve the memberName property from the first document
+          const data = querySnapshot.docs[0].data();
+          const ownerNameInput = document.getElementById("memName");
+    
+          // Assuming your document structure has a property 'memberName'
+          ownerNameInput.value = data.memberName;
+        } else {
+          // Handle the case where no matching document is found
+          console.log("No matching document found for the given accountID");
+        }
+      }
+    });
 function togglePopup() {
   var addCol = document.querySelector('#addCol');
   if (addCol.style.display === 'none' || addCol.style.display === '') {
@@ -191,7 +224,6 @@ async function displayCollection(next = true) {
   } catch (error) {
     console.error("Error fetching data: ", error);
   }
-  filterTable();
 }
 function updatePageDisplay(currentPage, maxPages) {
   const pageInfo = document.getElementById('pageInfo');
@@ -239,7 +271,8 @@ async function addCollection() {
     !document.getElementById('tranNum').value ||
     !document.getElementById('tranDate').value ||
     !document.getElementById('collName').value ||
-    !document.getElementById('memName').value
+    !document.getElementById('memName').value ||
+    !document.getElementById('accountID').value
       ){
           alert("Fields are empty. Please fill in all required fields.");
           return;
@@ -262,7 +295,8 @@ async function addCollection() {
       TransactionNum: document.getElementById('tranNum').value, 
       Date: document.getElementById('tranDate').value,
       Collector: document.getElementById('collName').value, 
-      Member: document.getElementById('memName').value,  
+      Member: document.getElementById('memName').value,
+      accountID: document.getElementById('accountID').value,
       TotalFee: totalFee,
       lotAmortBal: lotAmortVal,
       Categories: []
@@ -302,32 +336,14 @@ async function addCollection() {
 }
 
   //===============================Search Bar======================================================
-function filterTable() {
-    const searchInput = document.getElementById("searchBar").value.trim().toLowerCase();
-    const memberTable = document.getElementById("trans");
-    const rows = memberTable.getElementsByTagName("tr");
-    for (let i = 1; i < rows.length; i++) {
-      const nameCell = rows[i].getElementsByTagName("td")[1];
-      if (nameCell) {
-        const name = nameCell.textContent.toLowerCase();
-        if (name.includes(searchInput)) {
-          rows[i].style.display = ""; 
-        } else {
-          rows[i].style.display = "none";
-        }
-      }
-    }
-  }
-  const searchInput = document.getElementById("searchBar");
-  searchInput.addEventListener("input", filterTable);
-  document.addEventListener("DOMContentLoaded", filterTable);
+
 //================================View Collection==================================================================
 function viewCollection(data) {
     const addCol = document.querySelector('#viewCollection');
     if (addCol.style.display === 'none' || addCol.style.display === '') {
         addCol.style.display = 'block';
         document.getElementById('cdTransactionNumber').value = data.TransactionNum;
-        document.getElementById('cdMemberID').value = data.MemberID;
+        document.getElementById('accountIDView').value = data.accountID;
         document.getElementById('cdMemberName').value = data.Member;
         document.getElementById('cdCollectorName').value = data.Collector;
         document.getElementById('cdTranDate').value = data.Date;
@@ -393,7 +409,12 @@ async function getAllContactNumbers() {
 
 async function sendSMS() {
   await getAllContactNumbers();
-
+  if (confirm("Send the notice manually?")) {
+    console.log("send");
+  } else {
+    alert("Canceled.");
+    return;
+  }
   const messageBody = document.getElementById('messageBody').value;
   const accountSid = 'AC9822d43e56372f236f136adf4230d182';
   const authToken = '58cccb1bb1bee61842e2af5fd68487d8';
@@ -443,6 +464,141 @@ function poppop() {
   }
   } 
 
+  async function automaticSMS() {
+    await getAllContactNumbers();
+    const messageBody = document.getElementById('messageBody').value;
+    const accountSid = 'AC9822d43e56372f236f136adf4230d182';
+    const authToken = '58cccb1bb1bee61842e2af5fd68487d8';
+    const twilioNumber = '+12679152818';
+    const url = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
+  
+    const headers = new Headers();
+    headers.set('Authorization', 'Basic ' + btoa(`${accountSid}:${authToken}`));
+    headers.set('Content-Type', 'application/x-www-form-urlencoded');
+  
+    const sanitizedNumbers = allContactNumbers.map(number => number.replace(/\D/g, '')); // Remove non-numeric characters
+  console.log(sanitizedNumbers);
+    const params = new URLSearchParams();
+    params.append('To', sanitizedNumbers.join(',')); // Pass a comma-separated string of sanitized numbers
+    params.append('From', twilioNumber);
+    params.append('Body', messageBody);
+  
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: headers,
+        body: params,
+      });
+  
+      if (response.ok) {
+        const responseData = await response.json();
+        alert("Notice Sent.");
+        console.log('SMS sent successfully:', responseData);
+      } else {
+        const errorData = await response.json();
+        console.error('Error sending SMS:', errorData);
+        alert("Notice Not Sent.");
+      }
+    } catch (error) {
+      console.error('Error sending SMS:', error);
+    }
+    poppop();
+  }
+  function updateCountdown() {
+    let now = new Date();
+    let targetDate;
+  
+    if (now.getDate() >= 20) {
+      // If the current date is on or after the 20th, set the target date to the 20th of the next month
+      targetDate = new Date(now.getFullYear(), now.getMonth() + 1, 20);
+    } else {
+      // If the current date is before the 20th, set the target date to the 20th of the current month
+      targetDate = new Date(now.getFullYear(), now.getMonth(), 20);
+    }
+  
+    let timeRemaining = targetDate.getTime() - now.getTime();
+    const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+    // Display remaining days and hours
+    document.getElementById("countD").value = `${days} Days ${hours} Hours  ${minutes} Minutes`;
+
+    if (now.getDate() === 20) {
+      automaticSMS();
+    }
+  }
+  
+  // Initial call to set the initial countdown
+  updateCountdown();
+  
+  // Set up an interval to update the countdown every minute
+  setInterval(updateCountdown, 60000);
+
+  async function displayName(next = true) {
+    const bleta = document.getElementById('trans');
+    const collectionRef = collection(db, "CollectionList");
+    let queryCol;
+    const totalDocumentsSnapshot = await getDocs(collectionRef);
+    const totalDocuments = totalDocumentsSnapshot.size;
+    let maxPages = Math.ceil(totalDocuments / pageSize);
+    const searchBarValue = document.getElementById('searchBar').value.trim().toLowerCase();
+  
+    if (next && lastVisible && currentPage < maxPages) {
+      queryCol = query(collectionRef, orderBy("TransactionNum", "desc"), startAfter(lastVisible), limit(pageSize));
+      currentPage++;
+    } else if (!next && firstVisible && currentPage > 1) {
+      queryCol = query(collectionRef, orderBy("TransactionNum", "desc"), endBefore(firstVisible), limitToLast(pageSize));
+      currentPage--;
+    } else {
+      queryCol = query(collectionRef, orderBy("TransactionNum", "desc"), limit(pageSize));
+      currentPage = 1;
+      firstVisible = null;
+      lastVisible = null;
+    }
+  
+    while (bleta.rows.length > 1) {
+      bleta.deleteRow(1);
+    }
+  
+    try {
+      const querySnapshot = await getDocs(queryCol);
+      const documentSnapshots = querySnapshot.docs;
+  
+      if (documentSnapshots.length > 0) {
+        firstVisible = documentSnapshots[0];
+        lastVisible = documentSnapshots[documentSnapshots.length - 1];
+      }
+  
+      documentSnapshots.forEach((docSnapshot) => {
+        const data = docSnapshot.data();
+        // Filter based on the searchBar value
+        const memberNameLowercase = data.Member.toLowerCase();
+        if (memberNameLowercase.includes(searchBarValue)) {
+          const row = bleta.insertRow(-1);
+          const transactionID = row.insertCell(0);
+          transactionID.textContent = data.TransactionNum;
+          const memberName = row.insertCell(1);
+          memberName.textContent = data.Member;
+          const date = row.insertCell(2);
+          date.textContent = data.Date;
+          const amount = row.insertCell(3);
+          amount.textContent = data.TotalFee;
+          const viewCell = row.insertCell(4);
+          const viewButton = document.createElement("button");
+          viewButton.textContent = "View";
+          viewButton.addEventListener("click", () => viewCollection(data));
+          viewCell.appendChild(viewButton);
+        }
+      });
+  
+      updatePageDisplay(currentPage, maxPages);
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+    }
+  }
+
+document.getElementById("reset").addEventListener('click', displayCollection);
+document.getElementById("find").addEventListener('click', displayName);
 document.getElementById("send").addEventListener('click', sendSMS);
 document.getElementById("sendNotice").addEventListener('click', poppop);
 document.getElementById("closeForm").addEventListener('click', poppop);

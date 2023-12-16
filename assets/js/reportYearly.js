@@ -17,7 +17,7 @@ document.querySelectorAll('input[type="number"]').forEach(function(input) {
     }
   });
 });
-document.getElementById('selectYear').addEventListener("change", function () {
+document.getElementById('genn').addEventListener("click", function () {
     displayCollection();
 });
 //========================================================================================================================
@@ -59,28 +59,32 @@ async function displayCollection() {
         );
         if (querySnapshot.size === 0) {
           const row = trans.insertRow(-1);
-          const memberNameCell = row.insertCell(0);
+          const idCell = row.insertCell(0);
+          idCell.textContent = memberData.accountID;
+          const memberNameCell = row.insertCell(1);
           memberNameCell.textContent = memberName;
-          const noCollectionCell = row.insertCell(1);
-          noCollectionCell.textContent = "No Collection Yet";
+          const noCollectionCell = row.insertCell(2);
+          noCollectionCell.textContent = "No Collection This Month";
         } else {
           querySnapshot.forEach((docSnapshot) => {
             const data = docSnapshot.data();
             const row = trans.insertRow(-1);
-            const memberNameCell = row.insertCell(0);
+            const idCell = row.insertCell(0);
+            idCell.textContent = data.accountID;
+            const memberNameCell = row.insertCell(1);
             memberNameCell.textContent = memberName;
-            const transactionNumCell = row.insertCell(1);
+            const transactionNumCell = row.insertCell(2);
             transactionNumCell.textContent = data.TransactionNum;
-            const collectorCell = row.insertCell(2);
+            const collectorCell = row.insertCell(3);
             collectorCell.textContent = data.Collector;
-            const dateCell = row.insertCell(3);
+            const dateCell = row.insertCell(4);
             dateCell.textContent = data.Date;
-            const totalFeeCell = row.insertCell(4);
+            const totalFeeCell = row.insertCell(5);
             totalFeeCell.textContent = data.TotalFee;
-            const balLotAmort = row.insertCell(5);
+            const balLotAmort = row.insertCell(6);
             balLotAmort.textContent = data.lotAmortBal;
             categoryNames.forEach((categoryName, index) => {
-              const categoryCell = row.insertCell(6 + index);
+              const categoryCell = row.insertCell(7 + index);
               const matchingCategory = data.Categories.find(
                 (category) => category.collectionName === categoryName
               );

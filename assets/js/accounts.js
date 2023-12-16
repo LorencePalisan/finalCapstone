@@ -9,6 +9,7 @@ let memberName = document.getElementById("memName");
 let contactNum = document.getElementById("contactNum");
 let passwordInput = document.getElementById("password");
 let confirmPasswordInput = document.getElementById("Cpassword");
+let search = document.getElementById("searchInput");
 const bleta = document.getElementById("accountsTable");
 let currentPage = 1; 
 const pageSize = 20; 
@@ -16,33 +17,28 @@ let lastVisible = null;
 let firstVisible = null; 
 var heading = document.getElementById("myHeading");
 let user = document.getElementById("user");
+const collectionRef = collection(db, "Accounts");
+const accountIDInput = document.getElementById("accountID");
 document.addEventListener('DOMContentLoaded', (event) => {
   fetchAndPopulateTable();
   createPaginationControls();
   names();
+  accountIDs();
 });
 user.addEventListener('change', (event) => {
   fetchAndPopulateTable();
 });
-async function names() {
+async function names(){
   const datalist = document.getElementById("names");
-  datalist.innerHTML = "";
-  try {
-    const querySnapshot = await getDocs(memberRef);
-    const defaultOption = document.createElement("option");
-    defaultOption.value = "";
-    defaultOption.text = "Select a name";
-    datalist.appendChild(defaultOption);
+  getDocs(memberRef).then((querySnapshot) => {
     querySnapshot.forEach((doc) => {
       const memberName = doc.data().memberName;
       const option = document.createElement("option");
       option.value = memberName;
       datalist.appendChild(option);
     });
-  } catch (error) {
-    console.error("Error fetching member names: ", error);
+  });
   }
-}
 document.querySelectorAll('input[type="number"]').forEach(function(input) {
   input.addEventListener('keydown', function(e) {
     if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
@@ -50,24 +46,29 @@ document.querySelectorAll('input[type="number"]').forEach(function(input) {
     }
   });
 });
-memberName.addEventListener("change", async function () {
-  if (memberName.value) { 
-    const queryRef = query(collection(db, "Members"), where("memberName", "==", memberName.value));
-    try { 
-      const querySnapshot = await getDocs(queryRef);
-      if (!querySnapshot.empty) {
-        const data = querySnapshot.docs[0].data();
-        document.getElementById("contactNum").value = data.contactNum;
-      } else {
-        console.log("Member not found.");
-      }
-    } catch (error) {
-      console.log("Error retrieving member information:", error);
+
+accountIDInput.addEventListener("change", async function () {
+  const selectedAccountID = accountIDInput.value;
+
+  if (selectedAccountID) {
+    const q = query(memberRef, where("accountID", "==", selectedAccountID));
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot.empty) {
+      // Assuming you want to retrieve the memberName property from the first document
+      const data = querySnapshot.docs[0].data();
+      const ownerNameInput = document.getElementById("memName");
+
+      // Assuming your document structure has a property 'memberName'
+      ownerNameInput.value = data.memberName;
+      document.getElementById("contactNum").value = data.contactNum;
+    } else {
+      // Handle the case where no matching document is found
+      console.log("No matching document found for the given accountID");
     }
-  } else {
-    console.log("Member name is required.");
   }
 });
+
 async function createAccount() {
   const email = emailInput?.value;
   const password = passwordInput?.value;
@@ -84,6 +85,12 @@ async function createAccount() {
   const querySnapshot = await getDocs(queryRef);
   const accRef = query(collection(db, "Accounts"), where("memberName", "==", memberName?.value));
   const accSanp = await getDocs(accRef);
+  const emailRef = query(collection(db, "Accounts"), where("email", "==", emailInput?.value));
+  const checkEmail = await getDocs(emailRef);
+  if (!checkEmail.empty) {
+    alert("This email is already used.");
+    return;
+  }
   if (!accSanp.empty) {
     alert("This member already has and account.");
     return;
@@ -94,6 +101,7 @@ async function createAccount() {
   }
   const userDocRef = doc(collection(db, "Accounts"));
   const userData = {
+    accountID: accountIDInput.value,
     email: email,
     userType: userType?.value,
     memberName: memberName?.value,
@@ -112,6 +120,18 @@ async function createAccount() {
     alert(error);
   }
 }
+async function accountIDs(){
+  const datalist = document.getElementById("ids");
+  getDocs(memberRef).then((querySnapshot) => {
+    querySnapshot.forEach((doc) => {
+      const accountID = doc.data().accountID;
+      const option = document.createElement("option");
+      option.value = accountID;
+      datalist.appendChild(option);
+    });
+  });
+  }
+
 //===================================================================================
 function clear(){
  email .value = "";
@@ -122,28 +142,27 @@ function clear(){
  confirmPasswordInput .value = "";
 }
 //===================================================================================
-function filterTable() {
-  const searchInput = document.getElementById("searchInput").value.trim().toLowerCase();
-  const accountsTable = document.getElementById("accountsTable");
-  const rows = accountsTable.getElementsByTagName("tr");
-  for (let i = 1; i < rows.length; i++) {
-    const nameCell = rows[i].getElementsByTagName("td")[2];
-    if (nameCell) {
-      const name = nameCell.textContent.toLowerCase();
-      if (name.includes(searchInput)) {
-        rows[i].style.display = "";
-      } else {
-        rows[i].style.display = "none";
-      }
-    }
-  }
-}
-const searchInput = document.getElementById("searchInput");
-searchInput.addEventListener("input", filterTable);
-document.addEventListener("DOMContentLoaded", filterTable);
+// function filterTable() {
+//   const searchInput = document.getElementById("searchInput").value.trim().toLowerCase();
+//   const accountsTable = document.getElementById("accountsTable");
+//   const rows = accountsTable.getElementsByTagName("tr");
+//   for (let i = 1; i < rows.length; i++) {
+//     const nameCell = rows[i].getElementsByTagName("td")[2];
+//     if (nameCell) {
+//       const name = nameCell.textContent.toLowerCase();
+//       if (name.includes(searchInput)) {
+//         rows[i].style.display = "";
+//       } else {
+//         rows[i].style.display = "none";
+//       }
+//     }
+//   }
+// }
+
+// searchInput.addEventListener("input", filterTable);
+
 //===================================================================================
 async function fetchAndPopulateTable(next = true) {
-  const collectionRef = collection(db, "Accounts");
   let queryCol;
 const totalDocumentsQuery = query(collectionRef);
 const totalDocumentsSnapshot = await getDocs(totalDocumentsQuery);
@@ -230,7 +249,7 @@ function createPaginationControls() {
 async function requestPasswordReset(email) {
   try {
     await sendPasswordResetEmail(auth, email);
-    alert(`Password reset email sent to ${email}. Check your inbox for further instructions.`);
+    alert(`For resetting password an email has sent to ${email}. Check your inbox for further instructions.`);
   } catch (error) {
     const errorCode = error.code;
     const errorMessage = error.message;
@@ -248,5 +267,51 @@ var formContainer = document.querySelector('.form-container');
             clear();
         }
 }
+
+document.getElementById('find').addEventListener("click", fetchAccount);
+async function fetchAccount() {
+  const queryCol = query(collectionRef, where("memberName", "==", search.value));
+console.log(search.value);
+  while (bleta.rows.length > 1) {
+    bleta.deleteRow(1);
+  }
+
+  try {
+    const querySnapshot = await getDocs(queryCol);
+    const documentSnapshots = querySnapshot.docs;
+
+    if (documentSnapshots.length === 0) {
+      // Display a message when there are no matching accounts
+      const row = bleta.insertRow(-1);
+      const noAccountsCell = row.insertCell(0);
+      noAccountsCell.colSpan = 5; // Set the colspan to cover all columns
+      noAccountsCell.textContent = "No matching accounts found.";
+    } else {
+      // Process document snapshots when there are matching accounts
+      documentSnapshots.forEach((docSnapshot) => {
+        const data = docSnapshot.data();
+        const row = bleta.insertRow(-1);
+        const transactionID = row.insertCell(0);
+        transactionID.textContent = data.userType;
+        const memberName = row.insertCell(1);
+        memberName.textContent = data.email;
+        const date = row.insertCell(2);
+        date.textContent = data.memberName;
+        const amount = row.insertCell(3);
+        amount.textContent = data.contactNum;
+        const resetCell = row.insertCell(4);
+        const resetButton = document.createElement("button");
+        resetButton.textContent = "Reset Password";
+        resetButton.addEventListener("click", () => {
+          requestPasswordReset(data.email);
+        });
+        resetCell.appendChild(resetButton);
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching data: ", error);
+  }
+}
+
 //===================================================================================
 submit.addEventListener("click", createAccount);

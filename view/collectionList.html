@@ -22,8 +22,10 @@
             <h3>
                 <div id="search">
                     <label for="searchBar">Search:</label>
-                    <input type="text" id="searchBar" placeholder="Search By Name">
-
+                    <input type="text" id="searchBar" placeholder="Search By Name" list="names">
+                    <datalist id="names"></datalist>
+                    <button id="find">Find</button>
+                    <button id="reset">Reset</button>
                 </div>
             </h3>
             <button id="sendNotice">Send Notice</button>
@@ -52,14 +54,18 @@
     <div id="paginationControls"></div>
 
     <div id="addCol">
-        <h3>ADD PAYMENT</h3>
+        <h3>ADD COLLECTION</h3>
         <div class="form-container">
             <div class="left-column">
                 <div class="form-group">
                     <label for="tranNum">Transaction #:</label>
                     <input type="number" id="tranNum" placeholder="Transaction #">
                 </div>
-
+                <div class="form-group">
+                    <label for="accountID">Account ID:</label>
+                    <input type="number" id="accountID" placeholder="Account ID" list="ids">
+                    <datalist id="ids"></datalist>
+                </div>
                 <div class="form-group">
                     <label for="memName">Member Name:</label>
                     <input type="text" id="memName" placeholder="Member Name" list="names">
@@ -105,8 +111,8 @@
         </div>
 
         <div class="form-col">
-            <label for="cdMemberID">Member ID:</label>
-            <input type="number" id="cdMemberID" placeholder="Member ID" disabled>
+            <label for="accountIDView">Account ID:</label>
+            <input type="number" id="accountIDView" placeholder="Member ID" disabled>
         </div>
 
         <div class="form-col">
@@ -152,6 +158,8 @@
         <form id="smsForm">
             <h2>Notice Sender</h2>
             <label for="messageBody">Recipient's: All the members</label>
+            <label for="countD">Remaining days to automatically send notice:</label>
+            <input type="text" id="countD" disabled>
             <br>
 
             <label for="messageBody">Message Body:</label>

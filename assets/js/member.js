@@ -1,9 +1,7 @@
 import {doc,getDocs, setDoc,collection, query, where ,orderBy, limit, startAfter, endBefore, limitToLast, addDoc  } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
 import { db } from "../credentials/firebaseModule.js";
-
-
-
 //Elements
+let accountID = document.getElementById("accountID");
 let memberName = document.getElementById("memberName");
 let spouseName = document.getElementById("spouseName");
 let occupation = document.getElementById("occupation");
@@ -16,10 +14,48 @@ let memberCategory = document.getElementById("memberCategory");
 let memberStatus = document.getElementById("memberStatus");
 let gender = document.getElementById("gender");
 let balance = document.getElementById("bal"); 
+let searchInput = document.getElementById("searchInput");
 let lastVisible; 
 let firstVisible;
-let currentPage = 1;
+let currentPage;
 let totalDocuments;
+const membersRef = collection(db, "Members");
+//Buttons
+const addData = document.getElementById("addMember");
+const update = document.getElementById("updateMember");
+const clear = document.getElementById("clear");
+document.addEventListener('DOMContentLoaded', (event) => {
+  createPaginationControls();
+  fetchAndPopulateTable();
+  names();
+  generateAndSetAccountID();
+
+});
+document.querySelectorAll('input[type="number"]').forEach(function(input) {
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      e.preventDefault();
+    }
+  });
+});
+// Function to generate a unique account ID and set the value of the input element
+async function generateAndSetAccountID() {
+  const currentYear = new Date().getFullYear();
+
+  // Query to get the count of existing members for the current year
+  const countQuery = query(membersRef, where("accountID", ">=", `${currentYear}000`), where("accountID", "<", `${currentYear + 1}000`));
+  const countSnapshot = await getDocs(countQuery);
+  const memberCount = countSnapshot.size;
+
+  // Generate the next account ID
+  const nextAccountID = `${currentYear}${(memberCount + 1).toString().padStart(3, '0')}`;
+
+  // Set the value of the accountID input element
+  accountID.value = nextAccountID;
+}
+//========================add Member==============================================
+async function addMember() {
+const enteredaccountID = accountID?.value;
 const enteredmemberName = memberName?.value;
 const enteredspouseName = spouseName?.value;
 const enteredoccupation = occupation?.value;
@@ -32,30 +68,8 @@ const enteredmemberCategory = memberCategory?.value;
 const enteredmemberStatus = memberStatus?.value;
 const enteredgender = gender?.value;
 const enteredbalance = balance?.value; 
-//Buttons
-const addData = document.getElementById("addMember");
-const update = document.getElementById("updateMember");
-const clear = document.getElementById("clear");
-
-
-document.addEventListener('DOMContentLoaded', (event) => {
-  createPaginationControls();
-  fetchAndPopulateTable();
-});
-document.querySelectorAll('input[type="number"]').forEach(function(input) {
-  input.addEventListener('keydown', function(e) {
-    if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-      e.preventDefault();
-    }
-  });
-});
-
-
-//========================add Member==============================================
-async function addMember() {
-  const membersRef = collection(db, "Members");
-    
-    if (!enteredmemberName || !enteredspouseName  || !enteredoccupation||
+  
+    if (!enteredaccountID || !enteredmemberName || !enteredspouseName  || !enteredoccupation||
         !enteredage       || !enteredbirthday   || !enteredcivilStatus || !enteredcitizenship
         || !enteredcontactNum || !enteredmemberCategory || !enteredmemberStatus || !enteredgender 
         || !enteredbalance) {
@@ -69,6 +83,7 @@ if (!querySnapshot.empty) {
   return;
 }
   const data = {
+    accountID: enteredaccountID,
     memberName: enteredmemberName,
     spouseName: enteredspouseName,
     occupation: enteredoccupation,
@@ -97,10 +112,12 @@ if (!querySnapshot.empty) {
   } else {
     alert("Canceled by the user.");
   }
+  generateAndSetAccountID();
 }
 //====================================upadte Member===================================================
 //=========================clear==============================================================
 function clearFields() {
+  accountID.value = "";
   memberName.value = "";
   spouseName.value = "";
   occupation.value = "";
@@ -116,13 +133,11 @@ function clearFields() {
 }
 //======================Table=================================================
 async function fetchAndPopulateTable(next = true) {
-  firstVisible = null;
-  lastVisible = null;
   let categSelect = document.getElementById("categ")?.value; 
   let statSelect = document.getElementById("stat")?.value; 
   const memberTable = document.getElementById("memberTable");
   const membersCollection = collection(db, "Members");
-  const pageSize = 10;
+  const pageSize = 12;
   const totalDocumentsQuery = query(membersCollection);
   const totalDocumentsSnapshot = await getDocs(totalDocumentsQuery);
   const totalDocuments = totalDocumentsSnapshot.size;
@@ -150,13 +165,15 @@ if (next && lastVisible && currentPage < maxPages) {
       const data = docSnapshot.data();
       const row = memberTable.insertRow(-1);
       if ((categSelect === "All" || categSelect === data.memberCategory) && statSelect === data.memberStatus) {
-        const nameCell = row.insertCell(0);
+        const idCell = row.insertCell(0);
+        idCell.textContent = data.accountID;
+        const nameCell = row.insertCell(1);
         nameCell.textContent = data.memberName;
-        const categoryCell = row.insertCell(1);
+        const categoryCell = row.insertCell(2);
         categoryCell.textContent = data.memberCategory;
-        const statusCell = row.insertCell(2);
+        const statusCell = row.insertCell(3);
         statusCell.textContent = data.memberStatus;
-        const viewCell = row.insertCell(3);
+        const viewCell = row.insertCell(4);
         const viewButton = document.createElement("button");
         viewButton.textContent = "View Profile";
         viewButton.addEventListener("click", () => {
@@ -171,7 +188,6 @@ if (next && lastVisible && currentPage < maxPages) {
   }
   updatePageDisplay(currentPage, maxPages);
 }
-
 function updatePageDisplay(currentPage, maxPages) {
   const pageInfo = document.getElementById('pageInfo');
   if (!pageInfo) {
@@ -180,7 +196,6 @@ function updatePageDisplay(currentPage, maxPages) {
   }
   pageInfo.textContent = `Page ${currentPage} / ${maxPages}`;
 }
-
 function createPaginationControls() {
   const nextButton = document.createElement("button");
   nextButton.textContent = "Next";
@@ -197,40 +212,23 @@ function createPaginationControls() {
   controlsContainer.appendChild(pageInfo);
 }
 //===================================Search Bar==============================================
-function filterTable() {
-  const searchInput = document.getElementById("searchInput").value.trim().toLowerCase();
-  const memberTable = document.getElementById("memberTable");
-  const rows = memberTable.getElementsByTagName("tr");
-  for (let i = 1; i < rows.length; i++) {
-    const nameCell = rows[i].getElementsByTagName("td")[0];
-    if (nameCell) {
-      const name = nameCell.textContent.toLowerCase();
-      if (name.includes(searchInput)) {
-        rows[i].style.display = "";
-      } else {
-        rows[i].style.display = "none";
-      }
-    }
-  }
-}
-const searchInput = document.getElementById("searchInput");
-searchInput.addEventListener("input", filterTable);
-document.addEventListener("DOMContentLoaded", filterTable);
+
+
+
 //=============================open profile=============================
 function openProfileTab(memberName) {
   const url = `profile.html?memberName=${encodeURIComponent(memberName)}`;
   window.open(url, '_blank');
 }
 //==================================popup========================================
+
 document.getElementById('categ').addEventListener('change', function() {
   fetchAndPopulateTable();
 });
 document.getElementById('stat').addEventListener('change', function() {
   fetchAndPopulateTable();
 });
-document.getElementById('Gen').addEventListener('click', function() {
-  window.open('memberRenterReport.html');
-});
+
 addData.addEventListener("click", addMember);
 clear.addEventListener("click", clearFields);
 document.addEventListener('DOMContentLoaded', () => {
@@ -266,4 +264,66 @@ document.addEventListener('DOMContentLoaded', () => {
       showIframe('iframeWrapper_collectionlist');
   });
   showIframe('iframeWrapper_memberdetails');
+});
+async function names(){
+  const datalist = document.getElementById("names");
+  getDocs(membersRef).then((querySnapshot) => {
+    querySnapshot.forEach((doc) => {
+      const memberName = doc.data().memberName;
+      const option = document.createElement("option");
+      option.value = memberName;
+      datalist.appendChild(option);
+    });
+  });
+  }
+async function searchMem() {
+  const memberTable = document.getElementById("memberTable");
+  if(!searchInput.value){
+    alert("Input a name.");
+    return
+  }
+  const queryCol = query(membersRef, where("memberName", "==", searchInput.value));
+console.log(searchInput.value);
+  while (memberTable.rows.length > 1) {
+    memberTable.deleteRow(1);
+  }
+
+  try {
+    const querySnapshot = await getDocs(queryCol);
+    const documentSnapshots = querySnapshot.docs;
+
+    if (documentSnapshots.length === 0) {
+      // Display a message when there are no matching accounts
+      const row = memberTable.insertRow(-1);
+      const noAccountsCell = row.insertCell(0);
+      noAccountsCell.colSpan = 5; // Set the colspan to cover all columns
+      noAccountsCell.textContent = "No matching member found.";
+    } else {
+      // Process document snapshots when there are matching accounts
+      documentSnapshots.forEach((docSnapshot) => {
+        const data = docSnapshot.data();
+        const row = memberTable.insertRow(-1);
+        const nameCell = row.insertCell(0);
+        nameCell.textContent = data.memberName;
+        const categoryCell = row.insertCell(1);
+        categoryCell.textContent = data.memberCategory;
+        const statusCell = row.insertCell(2);
+        statusCell.textContent = data.memberStatus;
+        const viewCell = row.insertCell(3);
+        const viewButton = document.createElement("button");
+        viewButton.textContent = "View Profile";
+        viewButton.addEventListener("click", () => {
+          const memberName = data.memberName;
+          openProfileTab(memberName);
+        });
+        viewCell.appendChild(viewButton);
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching data: ", error);
+  }
+}
+document.getElementById('find').addEventListener('click', searchMem);
+document.getElementById('Gen').addEventListener('click', function() {
+  window.open('memberRenterReport.html');
 });

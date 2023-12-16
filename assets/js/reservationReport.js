@@ -277,7 +277,8 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 resetB.addEventListener("click", function() {
-  displayCollection();
-  selectMonth.selectedIndex = 0; 
-  selectYear.selectedIndex = 0; 
+  const trans = document.getElementById("showTable");
+  while (trans.rows.length > 1) {
+    trans.deleteRow(1);
+  }
 });
